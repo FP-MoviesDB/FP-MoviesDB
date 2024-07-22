@@ -5,7 +5,7 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.1
+ * Version:             1.1.2
  * Text Domain:         fp_movies
  * Requires PHP:        8.2
  * Requires at least:   6.5
@@ -113,9 +113,9 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.1');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.2');
             if (!defined('FP_MOVIES_REQUIRE')) define('FP_MOVIES_REQUIRE', '6.0');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.1');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.2');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
@@ -195,6 +195,7 @@ if (!class_exists('MoviePostGenerator')) {
             require_once FP_MOVIES_DIR . 'inc/templates-enqueue.php';
             require_once FP_MOVIES_DIR . 'helper/fp_player_ajax.php';
         }
+
 
         function flush_rewrite_rules_on_save($old_value, $new_value)
         {
@@ -278,24 +279,14 @@ if (!class_exists('MoviePostGenerator')) {
 
         function fp_enqueue_dismiss_script($notice_key)
         {
-            wp_enqueue_script('jquery');
+            global $fp_min_m;
             $ajax_nonce = wp_create_nonce('fp_dismiss_notice_nonce');
-            ?>
-            <script type="text/javascript">
-                jQuery(document).ready(function($) {
-                    $(document).on('click', '.notice.is-dismissible', function() {
-                        $.post(ajaxurl, {
-                            action: 'fp_dismiss_admin_notice',
-                            notice_key: '<?php echo $notice_key; ?>',
-                            _ajax_nonce: '<?php echo $ajax_nonce; ?>'
-
-                        });
-                    });
-                });
-            </script>
-
-
-            <?php
+            wp_enqueue_script('fp-dismiss-notice', FP_MOVIES_URL . 'js/fp_dismiss_notice' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+            wp_localize_script('fp-dismiss-notice', 'fpDismissVars', array(
+                'ajaxurl' => FP_MOVIES_AJAX,
+                'noticeKey' => $notice_key,
+                'nonce' => $ajax_nonce,
+            ));
         }
 
         function convert_memory_size($size)
