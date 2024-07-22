@@ -16,7 +16,6 @@ function mts_predefined_shortcodes()
 
 
                     <div class="pds_entry">
-
                         <div class="pds_shortcode_title">Implementation:</div>
                         <div class="pds_shortcode_desc">
                             <div class="pds_shortcode_desc_items pds_direct">
@@ -37,9 +36,6 @@ function mts_predefined_shortcodes()
 
 
                     </div>
-
-
-
 
                     <div class="pds_entry">
                         <div class="pds_shortcode_title">HomePage</div>
@@ -68,7 +64,32 @@ function mts_predefined_shortcodes()
                             </div>
                         </div>
                     </div>
+
+
+
+                    <div class="pds_entry">
+                        <div class="pds_shortcode_title">Adding in PHP File ?</div>
+                        <div class="pds_shortcode_desc">
+                            <div class="pds_shortcode_desc_items pds_direct">
+                                <div>1. Open your theme's PHP file.</div>
+                                <div>2. Add Shortcode like below:</div>
+                                <div><code>&lt;?php<br/>echo do_shortcode('[fp-homepage-view type="featured" content_type="both" title_background="normal"]'); <br/>?&gt;</code></div>
+                                <div>Note: Don't use <b>&lt;?php</b> and <b>?&gt;</b> if you are already inside that.</div>
+                                <div>4. Done!</div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+
+
+
+
+
+
+
+
 
                 <div class="pds_section_title">SinglePost Shortcodes Usage Details</div>
                 <div class="pds_entry-content">

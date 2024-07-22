@@ -8,7 +8,7 @@ function mts_bulk_import()
 {
     global $fp_min_m;
     if (!current_user_can('manage_options')) {
-        wp_die(__('You do not have sufficient permissions to access this page.'));
+        wp_die('You do not have sufficient permissions to access this page.');
     }
     require_once FP_MOVIES_DIR . 'inc/check_tmdb_exist.php';
     wp_enqueue_style('fp-bulk-import', FP_MOVIES_URL . 'css/fp_bulk_import' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');

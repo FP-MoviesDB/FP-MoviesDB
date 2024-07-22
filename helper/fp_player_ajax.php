@@ -89,28 +89,6 @@ function handle_player_ajax_request()
     }
     $url_iframe = $url;
 
-    // if ($player_type) {
-    //     switch ($player_type) {
-    //         case 'iframe':
-    //             // if $url is not a valid URL, then send ERROR
-    //             if (!filter_var($url, FILTER_VALIDATE_URL)) {
-    //                 wp_send_json_error('Invalid URL', 400);
-    //                 wp_die();
-    //             }
-    //             $url_iframe = $url;
-    //             break;
-    //         case 'dtshcode':
-    //             $url_iframe = do_shortcode($url);
-    //             break;
-    //         case 'trailer':
-    //             $url_iframe = trailer_id_iframe_url_embed($url, 0);
-    //             break;
-    //         case 'global':
-    //             $url_iframe = $url;
-    //             break;
-    //     }
-    // }
-
     if (!empty($url_iframe)) {
         wp_send_json_success(array('embed_url' => $url_iframe, 'type' => $player_type));
         return;
