@@ -5,9 +5,9 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.3
+ * Version:             1.1.4
  * Text Domain:         fp_movies
- * Requires PHP:        8.2
+ * Requires PHP:        8.1
  * Requires at least:   6.5
  * License:             GPL2
  */
@@ -113,9 +113,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.3');
-            if (!defined('FP_MOVIES_REQUIRE')) define('FP_MOVIES_REQUIRE', '6.0');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.3');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.4');
+            if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
+            if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.4');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
@@ -134,8 +135,22 @@ if (!class_exists('MoviePostGenerator')) {
             if (!defined('FP_MOVIES_FP_BASE_URL')) define('FP_MOVIES_FP_BASE_URL', 'https://filebee.xyz/api/v1/files');
             if (get_option('mtg_tmdb_api_key')) define('FP_MOVIES_TMDB_API_KEY', get_option('mtg_tmdb_api_key'));
             if (get_option('mtg_fp_api_key')) define('FP_MOVIES_FP_API_KEY', get_option('mtg_fp_api_key'));
-            if (!defined('FP_MOVIES_ENCRYPTION_KEY')) define('FP_MOVIES_ENCRYPTION_KEY', '1CDF5D16859FFACA4C265E8E26FB1');
             if (!defined('FP_MOVIES_ENCRYPTION_METHOD')) define('FP_MOVIES_ENCRYPTION_METHOD', 'AES-256-CBC');
+
+            if (!defined('FP_MOVIES_ENCRYPTION_KEY')) {
+                $e_key_settings = get_option('mtg_encryption_settings', []);
+                $e_key = isset($e_key_settings['link_encryption_key']) ? $e_key_settings['link_encryption_key'] : false;
+                if ($e_key !== false) {
+                    define('FP_MOVIES_ENCRYPTION_KEY', $e_key);
+                } else {
+                    require_once FP_MOVIES_DIR . 'helper/fp_get_encryption_key.php';
+                    $e_key = generate_encryption_key();
+                    $e_key_settings['link_encryption_key'] = $e_key;
+                    update_option('mtg_encryption_settings', $e_key_settings);
+                    define('FP_MOVIES_ENCRYPTION_KEY', $e_key);
+                }
+            }
+
 
             $logs = get_option('mtg_logs_status', 0);
             if ($logs == 1 || $logs == 'on' || $logs == 'true' || $logs == '1') {
@@ -233,25 +248,32 @@ if (!class_exists('MoviePostGenerator')) {
             $current_post_settings = get_option('mtg_postDefault_settings', false);
             if ($current_post_settings === false) update_option('mtg_postDefault_settings', $default_post_settings);
 
+            require_once FP_MOVIES_DIR . 'helper/fp_get_encryption_key.php';
+            $e_key_settings = get_option('mtg_encryption_settings', []);
+            if (!isset($e_key_settings['link_encryption_key'])) {
+                $e_key = generate_encryption_key();
+                $e_key_settings['link_encryption_key'] = $e_key;
+                update_option('mtg_encryption_settings', $e_key_settings);
+            }
+
+
             set_transient('fp_moviesdb_d_notice', 'waiting', WEEK_IN_SECONDS);
         }
 
         function fp_req()
         {
-            if (version_compare(get_bloginfo('version'), '6.5', '<') && get_user_meta(get_current_user_id(), 'fp_wordpress_version_notice', true) !== 'dismissed') {
+            if (version_compare(get_bloginfo('version'), FP_MOVIES_WP_REQUIRE, '<') && get_user_meta(get_current_user_id(), 'fp_wordpress_version_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () {
-                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends WordPress version 6.5 or higher.</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends WordPress version ' . FP_MOVIES_WP_REQUIRE . ' or higher.</p></div>';
                     $this->fp_enqueue_dismiss_script('fp_wordpress_version_notice');
                 });
-                return;
             }
 
-            if (version_compare(PHP_VERSION, '8.2', '<') && get_user_meta(get_current_user_id(), 'fp_php_version_notice', true) !== 'dismissed') {
+            if (version_compare(PHP_VERSION, FP_MOVIES_PHP_REQUIRE, '<') && get_user_meta(get_current_user_id(), 'fp_php_version_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () {
-                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB requires PHP version 8.2.</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB requires PHP version ' . FP_MOVIES_PHP_REQUIRE . ' .</p></div>';
                 });
                 $this->fp_enqueue_dismiss_script('fp_php_version_notice');
-                return;
             }
 
             $memory_limit = ini_get('memory_limit');
@@ -260,16 +282,14 @@ if (!class_exists('MoviePostGenerator')) {
                     echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends 256MB or higher.</p></div>';
                     $this->fp_enqueue_dismiss_script('fp_memory_limit_notice');
                 });
-                return;
             }
 
             $execution_time = ini_get('max_execution_time');
-            if ($execution_time != 0 && $execution_time < 120 && get_user_meta(get_current_user_id(), 'fp_execution_time_notice', true) !== 'dismissed') {
+            if ($execution_time != 0 && $execution_time < 90 && get_user_meta(get_current_user_id(), 'fp_execution_time_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () use ($execution_time) {
-                    echo '<div class="notice error is-dismissible"><p>Plugin recommends execution time of 120 seconds or higher. Current value: ' . $execution_time . ' seconds.</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>Plugin recommends execution time of 90 seconds or higher. Current value: ' . $execution_time . ' seconds.</p></div>';
                 });
                 $this->fp_enqueue_dismiss_script('fp_execution_time_notice');
-                return;
             }
 
             require_once FP_MOVIES_DIR . 'helper/fp_show_d_notice.php';

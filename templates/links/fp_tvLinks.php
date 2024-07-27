@@ -95,9 +95,13 @@ class FPSeriesLinks extends CreatePostHelper
                 $url = $filepressUrl . $elm['_id'];
                 $url = fp_encrypt_url($url);
 
-                $quality = $elm['quality'];
-                if (empty($quality)) $quality = $this->getQualityFromString($name);
-                if (empty($quality)) $quality = '144';
+                if (isset($elm['quality'])) {
+                    $quality = $elm['quality'];
+                    if (empty($quality)) $quality = $this->getQualityFromString($name);
+                    if (empty($quality)) $quality = '144';
+                } else {
+                    $quality = '144';
+                }
 
                 $combined_data[] = [
                     'name' => $name,

@@ -14,7 +14,8 @@
     <tbody>
         <?php if (!empty($links_rows)) : ?>
             <?php foreach ($links_rows as $row) : ?>
-                <?php error_log('Row: ' . print_r($row, true)); ?>
+                <?php 
+                    // error_log('Row: ' . print_r($row, true)); ?>
                 <tr class="fp_links_row">
                     <td data-label="Drag" class="fp-links-drag-handle">&#x2630;</td>
                     <td data-label="Title" style="min-width: 100px; flex-grow: 1;">

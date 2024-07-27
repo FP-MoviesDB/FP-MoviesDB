@@ -81,20 +81,25 @@ function base62_decode($data) {
 
 function fp_encrypt_url($url) {
     if (empty($url)) return '';
+
     $encryption_key = FP_MOVIES_ENCRYPTION_KEY;
     $encryption_method = FP_MOVIES_ENCRYPTION_METHOD;
     $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($encryption_method));
     $encrypted = openssl_encrypt($url, $encryption_method, $encryption_key, 0, $iv);
     $data = $encrypted . '::' . base64_encode($iv);
     $encoded = base62_encode($data);
-    return $encoded;
+    $safe_url = rawurlencode($encoded);
+    return $safe_url;
 }
 
 function fp_decrypt_url($encrypted_url) {
     $encryption_key = FP_MOVIES_ENCRYPTION_KEY;
     $encryption_method = FP_MOVIES_ENCRYPTION_METHOD;
-    $decoded_url = base62_decode($encrypted_url);
-    $parts = explode('::', $decoded_url);
+
+    $decoded_url = rawurldecode($encrypted_url);
+
+    $decoded_data = base62_decode($decoded_url);
+    $parts = explode('::', $decoded_data);
 
     if (count($parts) !== 2) {
         return false; // Invalid format

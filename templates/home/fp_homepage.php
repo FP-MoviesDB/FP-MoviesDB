@@ -244,10 +244,11 @@ if (!function_exists('fp_display_home')) {
                             $current_post++;
                         endwhile;
                         ?>
-                    </div>
-                    <div class="slider-controls">
-                        <button class="prev-slide">&#10094;</button>
-                        <button class="next-slide">&#10095;</button>
+
+                        <div class="slider-controls">
+                            <button class="prev-slide">&#10094;</button>
+                            <button class="next-slide">&#10095;</button>
+                        </div>
                     </div>
                 </div>
             <?php

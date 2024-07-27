@@ -5,6 +5,8 @@ if (!defined('ABSPATH')) exit;
 session_start();
 
 require_once FP_MOVIES_DIR . 'helper/fp_links_encryption.php';
+require_once FP_MOVIES_DIR . 'helper/fp_get_sLink.php';
+require_once FP_MOVIES_DIR . 'helper/fp_get_gLink.php';
 
 $encrypted_url = get_query_var('encrypted_url');
 $captcha_valid = $_SESSION['captcha_valid'] ?? false;
@@ -30,22 +32,82 @@ if ($encrypted_url) {
     if ($decrypted_url) {
         if ($captcha_method === 'none' || $captcha_valid || current_user_can('administrator')) {
             $soraLinksEnabled = isset($encryption_settings['mtg_soralink_status']) ? $encryption_settings['mtg_soralink_status'] : 'off';
-
+            $gyaniLinksEnabled = isset($encryption_settings['mtg_gyanilink_status']) ? $encryption_settings['mtg_gyanilink_status'] : 'off';
             $hideLinkRefer = isset($encryption_settings['mtg_hide_link_refer']) ? $encryption_settings['mtg_hide_link_refer'] : 'off';
 
             $soraLinksEnabled = $soraLinksEnabled === 'on' ? true : false;
+            $gyaniLinksEnabled = $gyaniLinksEnabled === 'on' ? true : false;
             $hideLinkRefer = $hideLinkRefer === 'on' ? true : false;
+
             if ($hideLinkRefer) {
                 // adds https://href.li/? to the decrypted url beginning
                 $decrypted_url = 'https://href.li/?' . $decrypted_url;
             }
-            if ($soraLinksEnabled) {
-                if (function_exists('sora_client_url')) {
-                    $sora_encrypted_url = sora_client_url($decrypted_url);
+
+            $final_url = $decrypted_url;
+
+            if ($gyaniLinksEnabled && $soraLinksEnabled) {
+                $soraPriority = isset($encryption_settings['mtg_soralink_priority']) ? intval($encryption_settings['mtg_soralink_priority']) : 1;
+                $gyaniPriority = isset($encryption_settings['mtg_gyanilink_priority']) ? intval($encryption_settings['mtg_gyanilink_priority']) : 2;
+                if ($soraPriority < $gyaniPriority) {
+                    $sora_encrypted_url = process_sora_encryption($decrypted_url);
+                    if ($sora_encrypted_url) {
+                        $gyani_encrypted_url = process_gyani_encryption($sora_encrypted_url, $encryption_settings);
+                    } else {
+                        $gyani_encrypted_url = process_gyani_encryption($decrypted_url, $encryption_settings);
+                    }
+                    if ($gyani_encrypted_url) {
+                        $final_url = $gyani_encrypted_url;
+                    } else if ($sora_encrypted_url) {
+                        $final_url = $sora_encrypted_url;
+                    } else {
+                        $final_url = $decrypted_url;
+                    }
                 } else {
-                    $sora_encrypted_url = "<p>Sora Links Plugin either not installed or not activated.</p>";
+                    $gyani_encrypted_url = process_gyani_encryption($decrypted_url, $encryption_settings);
+                    if ($gyani_encrypted_url) {
+                        $sora_encrypted_url = process_sora_encryption($gyani_encrypted_url);
+                    } else {
+                        $sora_encrypted_url = process_sora_encryption($decrypted_url);
+                    }
+                    if ($sora_encrypted_url) {
+                        $final_url = $sora_encrypted_url;
+                    } else if ($gyani_encrypted_url) {
+                        $final_url = $gyani_encrypted_url;
+                    } else {
+                        $final_url = $decrypted_url;
+                    }
+                }
+            } else {
+                if ($soraLinksEnabled) {
+                    $sora_encrypted_url = process_sora_encryption($decrypted_url);
+                    $final_url = $sora_encrypted_url ? $sora_encrypted_url : $decrypted_url;
+                }
+                if ($gyaniLinksEnabled) {
+                    $gyani_encrypted_url = process_gyani_encryption($decrypted_url, $encryption_settings);
+                    $final_url = $gyani_encrypted_url ? $gyani_encrypted_url : $decrypted_url;
                 }
             }
+            // if ($soraLinksEnabled) {
+            //     if (function_exists('sora_client_url')) {
+            //         $sora_encrypted_url = sora_client_url($decrypted_url);
+            //     } else {
+            //         $sora_encrypted_url = "<p>Sora Links Plugin either not installed or not activated.</p>";
+            //     }
+            // }
+            // if ($gyaniLinksEnabled) {
+            //     $gyani_api_token = isset($encryption_settings['mtg_gyanilink_api_token']) ? $encryption_settings['mtg_gyanilink_api_token'] : '';
+            //     if (!empty($gyani_api_token)) {
+            //         $long_url = urlencode($decrypted_url);
+            //         $api_url = "https://gyanilinks.com/api?api=$gyani_api_token&url=$long_url";
+            //         $result = @json_decode(file_get_contents($api_url), TRUE);
+            //         if ($result && isset($result['status']) && $result['status'] === 'error') {
+            //             $gyani_encrypted_url = false;
+            //         } else {
+            //             $gyani_encrypted_url = $result['shortenedUrl'];
+            //         }
+            //     }
+            // }
             global $fp_min_m;
             $poppins_url = FP_MOVIES_URL . 'fonts/poppins' . $fp_min_m . '.css';
             if (current_user_can('administrator')) {
@@ -61,19 +123,26 @@ if ($encrypted_url) {
                     if (function_exists('sora_client_url')) {
                         echo "<p>Sora Encrypted URL: " . esc_url($sora_encrypted_url) . "</p>";
                     } else {
-                        echo $sora_encrypted_url;
+                        echo "<p>Sora Links Plugin either not installed or not activated.</p>";
                     }
                 }
-                echo '<a href="' . esc_url($decrypted_url) . '" class="button-primary">Redirect Decrypted URL</a><br/>';
-                if ($soraLinksEnabled) {
-                    echo '<a href="' . esc_url($sora_encrypted_url) . '" class="button-primary">Redirect Sora Encrypted URL</a>';
+                if ($gyaniLinksEnabled) {
+                    echo "<p>Gyani Encrypted URL: " . esc_url($gyani_encrypted_url) . "</p>";
+                }
+                echo '<div class="redirect-btn"> <a href="' . esc_url($decrypted_url) . '" class="button-primary">Open Main URL</a></div>';
+                if ($soraLinksEnabled && function_exists('sora_client_url')) {
+                    echo '<div class="redirect-btn"> <a href="' . esc_url($sora_encrypted_url) . '" class="button-primary">Open Sora URL</a></div>';
+                }
+                if ($gyaniLinksEnabled) {
+                    echo '<div class="redirect-btn"> <a href="' . esc_url($gyani_encrypted_url) . '" class="button-primary">Open Gyani URL</a></div>';
                 }
             } else {
-                if ($soraLinksEnabled && function_exists('sora_client_url')) {
-                    wp_redirect($sora_encrypted_url, 301);
-                } else {
-                    wp_redirect($decrypted_url, 301);
-                }
+                // if ($soraLinksEnabled && function_exists('sora_client_url')) {
+                //     wp_redirect($sora_encrypted_url, 301);
+                // } else {
+                //     wp_redirect($decrypted_url, 301);
+                // }
+                wp_redirect($final_url);
                 echo '</div>';
                 echo '</body></html>';
                 exit();
@@ -94,6 +163,10 @@ if ($encrypted_url) {
 } else {
     require_once FP_MOVIES_DIR . 'templates/fp_404.php';
 }
+
+
+
+
 
 function validate_captcha($captcha_method, $secret_key)
 {
@@ -227,6 +300,24 @@ function display_admin_links()
     .admin-link-container h1 {
         text-align: center;
         font-family: "Poppins", sans-serif;
+    }
+    .redirect-btn{
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        min-width: 200px;
+        text-align: center;
+        max-width: 200px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .redirect-btn a {
+        text-decoration: none;
+        color: white;
+    }
+    .redirect-btn:hover {
+        background-color: #333;
     }
     </style>';
 }

@@ -20,7 +20,8 @@
             ?>
             <?php foreach ($links_rows as $rowIndex) : ?>
                 <?php foreach ($rowIndex as $index => $row) : ?>
-                    <?php // error_log(print_r($row, true)); 
+                    <?php 
+                    // error_log(print_r($row, true)); 
                     ?>
                     <tr class="fp_links_row">
                         <td data-label="Drag" class="fp-links-drag-handle">&#x2630;</td>

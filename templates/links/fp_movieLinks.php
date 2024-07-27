@@ -70,9 +70,13 @@ class FPMovieLinks extends CreatePostHelper
                 }, $audio);
                 $audio = $this->getAudioString($audioLangList ?? [], $name);
                 $url = $filepressOutputDownloadUrl . $elm['_id'];
-                $quality = $elm['quality'];
-                if (empty($quality)) $quality = $this->getQualityFromString($name);
-                if (empty($quality)) $quality = '144';
+                if (isset($elm['quality'])) {
+                    $quality = $elm['quality'];
+                    if (empty($quality)) $quality = $this->getQualityFromString($name);
+                    if (empty($quality)) $quality = '144';
+                } else {
+                    $quality = '144';
+                }
                 $combined_data[] =  [
                     'name' => $name,
                     'size' => $size,

@@ -18,7 +18,11 @@ function fp_settings_page()
         'mtg_encryption_turnstile_site_key' => '',
         'mtg_encryption_turnstile_secret_key' => '',
         'mtg_soralink_status' => 'off',
+        'mtg_gyanilink_status' => 'off',
+        'mtg_gyanilink_api_token' => '',
         'mtg_hide_link_refer' => 'off',
+        'mtg_soralink_priority' => '1',
+        'mtg_gyanilink_priority' => '2',
     ]);
 
     $checked_options = get_option('mtg_checked_options');
@@ -143,15 +147,62 @@ function fp_settings_page()
             </tr>
 
             <tr valign="top">
+                <th>NOTE: </th>
+                <td>
+                    <p style="font-weight: 600;">
+                        If both SoraLink & GyaniLink are enabled, then the priority will be considered.
+                        <br />
+                        Default: SoraLink Priority is 1 & GyaniLink Priority is 2.
+                    </p>
+
+                </td>
+            </tr>
+
+            <tr valign="top">
                 <th scope="row">Enable SoraLink:</th>
                 <td>
                     <input type="checkbox" name="mtg_encryption_settings[mtg_soralink_status]" <?php checked($links_options['mtg_soralink_status'], 'on'); ?> />
-                    <p> Make sure you have <strong>"SoraLink Client"</strong> Plugin installed and activated.</p>
+                    <select name="mtg_encryption_settings[mtg_soralink_priority]">
+                        <option value="1" <?php selected($links_options['mtg_soralink_priority'], '1'); ?>>Priority 1</option>
+                        <option value="2" <?php selected($links_options['mtg_soralink_priority'], '2'); ?>>Priority 2</option>
+                    </select>
+                    <p>Make sure you have <strong>"SoraLink Client"</strong> Plugin installed and activated.</p>
+                </td>
+            </tr>
+
+            <tr valign="top">
+                <th scope="row">Enable GyaniLink:</th>
+                <td>
+                    <input type="checkbox" id="mtg_gyanilink_status" name="mtg_encryption_settings[mtg_gyanilink_status]" <?php checked($links_options['mtg_gyanilink_status'], 'on'); ?> />
+                    <select name="mtg_encryption_settings[mtg_gyanilink_priority]">
+                        <option value="1" <?php selected($links_options['mtg_gyanilink_priority'], '1'); ?>>Priority 1</option>
+                        <option value="2" <?php selected($links_options['mtg_gyanilink_priority'], '2'); ?>>Priority 2</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr valign="top" class="gyanilink_row" style="display: none;">
+                <th scope="row">Gyanilink API Token:</th>
+                <td>
+                    <input type="text" style="width: 100%;" name="mtg_encryption_settings[mtg_gyanilink_api_token]" value="<?php echo esc_attr($links_options['mtg_gyanilink_api_token']); ?>" placeholder="Gyanilink API Token" />
                 </td>
             </tr>
 
 
-            <tr valign="top">
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr valign="top" style="margin-top: 20px;">
                 <th scope="row">
                     Title:
                     <a href=<?php echo FP_MOVIES_URL . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>

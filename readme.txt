@@ -12,3 +12,13 @@
 = 1.1.3 =
 * HomePage Slider Button Fix.
 * Mobile animation added.
+
+= 1.1.4 =
+* Implemented GyaniLinks.
+* Fixed Admin notice not dismissing.
+* SinglePage -> Links Quality error fixed.
+* PHP min requirement to 8.1.
+* Execution recommended requirement to 90 sec.
+* Encryption KEY now generate dynamically instead of static.
+* Some Improvements in Front Design.
+* Some other enhancements.
