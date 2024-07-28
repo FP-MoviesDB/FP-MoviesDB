@@ -205,28 +205,28 @@ function fp_settings_page()
             <tr valign="top" style="margin-top: 20px;">
                 <th scope="row">
                     Title:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[title]" value="<?php echo esc_attr($postDefault_settings['title']); ?>" placeholder="{title} {year}" /></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row">Slug:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[slug]" value="<?php echo esc_attr($postDefault_settings['slug']); ?>" placeholder="{title}-{year}-{p_type}" /></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row">Category:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[category]" value="<?php echo esc_attr($postDefault_settings['category']); ?>" placeholder="movies,tv,etc" /><br /><span>*multiple comma separated</span></td>
             </tr>
 
             <tr valign="top">
                 <th scope="row">Tags:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[tags]" value="<?php echo esc_attr($postDefault_settings['tags']); ?>" placeholder="movies,tv,etc" /><br /><span>*multiple comma separated</span></td>
             </tr>
@@ -234,7 +234,7 @@ function fp_settings_page()
             <!-- Default Quality -->
             <tr valign="top">
                 <th scope="row">Default Quality:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[default_quality]" value="<?php echo esc_attr($postDefault_settings['default_quality']); ?>" placeholder="HD" /></td>
             </tr>
@@ -242,7 +242,7 @@ function fp_settings_page()
             <!-- Default Network -->
             <tr valign="top">
                 <th scope="row">Default Network:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[default_network]" value="<?php echo esc_attr($postDefault_settings['default_network']); ?>" placeholder="Hollywood" /></td>
             </tr>
@@ -250,7 +250,7 @@ function fp_settings_page()
             <!-- Featured Image Name -->
             <tr valign="top">
                 <th scope="row">Featured Image Name:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td><input type="text" style="width: 100%;" name="mtg_postDefault_settings[image_name]" value="<?php echo esc_attr($postDefault_settings['image_name']); ?>" placeholder="{title} {year} {p_type}" /></td>
             </tr>
@@ -258,7 +258,7 @@ function fp_settings_page()
             <!-- Post Status -->
             <tr valign="top">
                 <th scope="row">Post Status:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting1.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td>
                     <select name="mtg_postDefault_settings[status]" id="status">
@@ -293,7 +293,7 @@ function fp_settings_page()
             <!-- Featured Image Size -->
             <tr valign="top">
                 <th scope="row">Featured Image Size:
-                    <a href=<?php echo FP_MOVIES_URL . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
+                    <a href=<?php echo esc_url(FP_MOVIES_URL) . '/img/setting2.webp' ?> target="_blank" style="text-decoration: none;" class="help-icon"> ? </a>
                 </th>
                 <td>
                     <!-- 

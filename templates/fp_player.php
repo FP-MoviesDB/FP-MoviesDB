@@ -26,8 +26,8 @@ class FPPlayer
 		global $fp_min_m;
 
 		if ($_postType == 'movie') {
-			wp_enqueue_style('fp-movie-player-css', FP_MOVIES_URL . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
-			wp_enqueue_script('fp-movie-player-js', FP_MOVIES_URL . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+			wp_enqueue_style('fp-movie-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+			wp_enqueue_script('fp-movie-player-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
 			wp_localize_script('fp-movie-player-js', 'fp_pAjax', array(
 				'ajax_url' => FP_MOVIES_AJAX,
 				'nonce' => wp_create_nonce('fp_player_nonce')
@@ -37,10 +37,10 @@ class FPPlayer
 			$moviePlayer = new FP_PlayerMovie();
 			$moviePlayer->fp_moviePlayer($post_id, $meta_data);
 		}else if ($_postType == 'tv') {
-			wp_enqueue_style('fp-movie-player-css', FP_MOVIES_URL . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
-			wp_enqueue_style('fp-tv-player-css', FP_MOVIES_URL . '/templates/css/fp_playerTV' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+			wp_enqueue_style('fp-movie-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+			wp_enqueue_style('fp-tv-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerTV' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
 
-			wp_enqueue_script('fp-movie-player-js', FP_MOVIES_URL . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+			wp_enqueue_script('fp-movie-player-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
 			wp_localize_script('fp-movie-player-js', 'fp_pAjax', array(
 				'ajax_url' => FP_MOVIES_AJAX,
 				'nonce' => wp_create_nonce('fp_player_nonce')

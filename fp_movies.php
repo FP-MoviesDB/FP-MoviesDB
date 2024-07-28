@@ -5,8 +5,8 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.4
- * Text Domain:         fp_movies
+ * Version:             1.1.5
+ * Text Domain:         fp-moviesdb
  * Requires PHP:        8.1
  * Requires at least:   6.5
  * License:             GPL2
@@ -64,7 +64,7 @@ if (!class_exists('MoviePostGenerator')) {
                 if ($feedback = get_transient('fp_user_feedback')) {
                     $class = 'notice notice-' . ($feedback['type'] === 'error' ? 'error' : 'success');
                     $message = $feedback['message'];
-                    echo "<div class=\"$class\"><p>$message</p></div>";
+                    echo esc_html("<div class=\"$class\"><p>$message</p></div>");
                     delete_transient('fp_user_feedback');
                 }
             });
@@ -113,10 +113,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.4');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.5');
             if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
             if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.4');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.5');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
@@ -264,14 +264,14 @@ if (!class_exists('MoviePostGenerator')) {
         {
             if (version_compare(get_bloginfo('version'), FP_MOVIES_WP_REQUIRE, '<') && get_user_meta(get_current_user_id(), 'fp_wordpress_version_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () {
-                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends WordPress version ' . FP_MOVIES_WP_REQUIRE . ' or higher.</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends WordPress version ' . esc_html(FP_MOVIES_WP_REQUIRE) . ' or higher.</p></div>';
                     $this->fp_enqueue_dismiss_script('fp_wordpress_version_notice');
                 });
             }
 
             if (version_compare(PHP_VERSION, FP_MOVIES_PHP_REQUIRE, '<') && get_user_meta(get_current_user_id(), 'fp_php_version_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () {
-                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB requires PHP version ' . FP_MOVIES_PHP_REQUIRE . ' .</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB requires PHP version ' . esc_html(FP_MOVIES_PHP_REQUIRE) . ' .</p></div>';
                 });
                 $this->fp_enqueue_dismiss_script('fp_php_version_notice');
             }
@@ -287,7 +287,7 @@ if (!class_exists('MoviePostGenerator')) {
             $execution_time = ini_get('max_execution_time');
             if ($execution_time != 0 && $execution_time < 90 && get_user_meta(get_current_user_id(), 'fp_execution_time_notice', true) !== 'dismissed') {
                 add_action('admin_notices', function () use ($execution_time) {
-                    echo '<div class="notice error is-dismissible"><p>Plugin recommends execution time of 90 seconds or higher. Current value: ' . $execution_time . ' seconds.</p></div>';
+                    echo '<div class="notice error is-dismissible"><p>Plugin recommends execution time of 90 seconds or higher. Current value: ' . esc_html($execution_time) . ' seconds.</p></div>';
                 });
                 $this->fp_enqueue_dismiss_script('fp_execution_time_notice');
             }
@@ -301,7 +301,7 @@ if (!class_exists('MoviePostGenerator')) {
         {
             global $fp_min_m;
             $ajax_nonce = wp_create_nonce('fp_dismiss_notice_nonce');
-            wp_enqueue_script('fp-dismiss-notice', FP_MOVIES_URL . 'js/fp_dismiss_notice' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+            wp_enqueue_script('fp-dismiss-notice', esc_url(FP_MOVIES_URL) . 'js/fp_dismiss_notice' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
             wp_localize_script('fp-dismiss-notice', 'fpDismissVars', array(
                 'ajaxurl' => FP_MOVIES_AJAX,
                 'noticeKey' => $notice_key,
@@ -327,7 +327,7 @@ if (!class_exists('MoviePostGenerator')) {
         function fp_enqueue_global_scripts()
         {
             global $fp_min_m;
-            wp_enqueue_script('fp-movies-global', FP_MOVIES_URL . 'js/fp_global_log' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_VERSION, true);
+            wp_enqueue_script('fp-movies-global', esc_url(FP_MOVIES_URL) . 'js/fp_global_log' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_VERSION, true);
             wp_localize_script('fp-movies-global', 'fpAjax', array('ajaxurl' => FP_MOVIES_AJAX));
         }
     }

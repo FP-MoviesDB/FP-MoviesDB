@@ -46,20 +46,20 @@ class FP_PlayerMovie
                 <!-- BACKDROP  -->
                 <div id="fp-backdrop-container" class="fp_backdrop">
                     <div id="jwplayer-container" style="display:none;"></div>
-                    <img src="<?php echo $backdrop; ?>" alt="<?php echo $meta_data['fp_title']; ?>" width="500px" height="300px">
+                    <img src="<?php echo esc_html($backdrop); ?>" alt="<?php echo esc_html($meta_data['fp_title']); ?>" width="500px" height="300px">
                 </div>
                 <!-- PLAY ICON  -->
                 <div class="play-icon-wrapper">
                     <div class="play-icon">
                         <!-- <i class="fas fa-play" style="font-size: 50px;"></i> -->
-                        <img src="<?php echo FP_MOVIES_URL . 'img/play_light.svg' ?>" alt="Play Icon" width="50" height="auto">
+                        <img src="<?php echo esc_url(FP_MOVIES_URL . 'img/play_light.svg'); ?>" alt="Play Icon" width="50" height="auto">
                     </div>
                 </div>
                 <!-- DISPLAY TITLE  -->
                 <?php if (!empty($title)) : ?>
                     <div class="play-title-wrapper">
                         <div class="play-title">
-                            <h1 data-text="<?php echo htmlspecialchars($title); ?>"><?php echo $title; ?></h1>
+                            <h1 data-text="<?php echo esc_attr($title); ?>"><?php echo esc_html($title); ?></h1>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -97,9 +97,9 @@ class FP_PlayerMovie
                                     // $icon = 'fas fa-globe';
                                 }
                                 ?>
-                                <li id="stream-source-<?php echo $position + 1; ?>" class="fp_player_option" data-type="<?php echo esc_attr($type); ?>" data-position="<?php echo esc_attr($position); ?>" data-post="<?php echo esc_attr($post_id); ?>" data-pType="<?php echo esc_attr($post_type); ?>" data-title="<?php echo esc_attr($player_field['title']); ?>">
+                                <li id="stream-source-<?php echo esc_attr($position + 1); ?>" class="fp_player_option" data-type="<?php echo esc_attr($type); ?>" data-position="<?php echo esc_attr($position); ?>" data-post="<?php echo esc_attr($post_id); ?>" data-pType="<?php echo esc_attr($post_type); ?>" data-title="<?php echo esc_attr($player_field['title']); ?>">
                                     <!-- <i class="<?php // echo esc_attr($icon); ?>"></i> -->
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/' . $icon ?>" alt="Youtube Icon" width="20" height="auto">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL . 'img/' . $icon); ?>" alt="Youtube Icon" width="20" height="auto">
                                     
                                     <span class="title"><?php echo esc_html($title); ?></span><span class="extra-meta"><?php echo esc_html($extra_meta); ?></span>
                                 </li>

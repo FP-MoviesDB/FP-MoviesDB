@@ -43,7 +43,7 @@
                                         $languages = languages();
                                         foreach ($languages as $label => $code) {
                                             $selected = ($row['language'] == $code) ? 'selected' : '';
-                                            echo '<option value="' . esc_attr($code) . '" ' . $selected . '>' . esc_html($label) . '</option>';
+                                            echo '<option value="' . esc_attr($code) . '" ' . esc_html($selected) . '>' . esc_html($label) . '</option>';
                                         }
                                         ?>
                                     </select>
@@ -78,7 +78,7 @@
                             $languages = languages();
                             foreach ($languages as $label => $code) {
                                 $selected = (null == $code) ? 'selected' : '';
-                                echo '<option value="' . esc_attr($code) . '" ' . $selected . '>' . esc_html($label) . '</option>';
+                                echo '<option value="' . esc_attr($code) . '" ' . esc_html($selected) . '>' . esc_html($label) . '</option>';
                             }
                             ?>
                         </select>

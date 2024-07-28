@@ -43,7 +43,7 @@
                                 $qualities = link_selector();
                                 foreach ($qualities as $label => $code) {
                                     $selected = ($row['l_quality'] == $code) ? 'selected' : '';
-                                    echo '<option value="' . esc_attr($code) . '" ' . $selected . '>' . esc_html($label) . '</option>';
+                                    echo '<option value="' . esc_attr($code) . '" ' . esc_html($selected) . '>' . esc_html($label) . '</option>';
                                 }
                                 ?>
                             </select>
@@ -79,7 +79,7 @@
                         $qualities = link_selector();
                         foreach ($qualities as $label => $code) {
                             $selected = ($code == 144) ? ' selected' : '';
-                            echo '<option value="' . esc_attr($code) . '"' . $selected . '>' . esc_html($label) . '</option>';
+                            echo '<option value="' . esc_attr($code) . '"' . esc_html($selected) . '>' . esc_html($label) . '</option>';
                         }
                         ?>
                     </select>
@@ -161,7 +161,7 @@
                             $qualities = link_selector();
                             foreach ($qualities as $label => $code) {
                                 $selected = ($code == 144) ? ' selected' : '';
-                                echo '<option value="' . esc_attr($code) . '"' . $selected . '>' . esc_html($label) . '</option>';
+                                echo '<option value="' . esc_attr($code) . '"' . esc_html($selected) . '>' . esc_html($label) . '</option>';
                             }
                             ?>
                         </select>

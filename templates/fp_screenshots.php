@@ -77,7 +77,7 @@ class FP_PostScreenshots extends CreatePostHelper
 ?>
         <div class="image-gallery">
             <span class="image-gallery-heading" style="margin: 20px 0px; width: 100%; text-align: center;">
-                <h2><?php echo $screenshot_title ?></h2>
+                <h2><?php echo esc_html($screenshot_title); ?></h2>
             </span>
             <div class="single-image-gallery">
                 <?php foreach ($single_sc as $index => $image_url) : ?>
@@ -86,7 +86,7 @@ class FP_PostScreenshots extends CreatePostHelper
                             <div class="loading-animation">
                                 <div class="loading-spinner"></div>
                             </div>
-                            <img id="single-image-<?php echo $index; ?>" data-src="<?php echo trim($image_url); ?>" src="<?php echo trim($image_url); ?>" alt="Download <?php echo $meta_data['fp_title'] ?> (<?php echo $meta_data['fp_latest_year'] ?>) <?php echo $meta_data['fp_post_type_upper'] ?>" title="Download <?php echo $meta_data['fp_title'] ?> (<?php echo $meta_data['fp_latest_year'] ?>) <?php echo $meta_data['fp_post_type_upper'] ?>" class="fp-screenshot-responsive-image" loading="lazy" width="100%" height="auto" />
+                            <img id="single-image-<?php echo esc_attr($index); ?>" data-src="<?php echo esc_url(trim($image_url)); ?>" src="<?php echo esc_url(trim($image_url)); ?>" alt="Download <?php echo esc_attr($meta_data['fp_title']) ?> (<?php echo esc_attr($meta_data['fp_latest_year']) ?>) <?php echo esc_attr($meta_data['fp_post_type_upper']) ?>" title="Download <?php echo esc_attr($meta_data['fp_title']) ?> (<?php echo esc_attr($meta_data['fp_latest_year']) ?>) <?php echo esc_attr($meta_data['fp_post_type_upper']) ?>" class="fp-screenshot-responsive-image" loading="lazy" width="100%" height="auto" />
                         </div>
                     <?php endif; ?>
                 <?php endforeach; ?>
@@ -96,7 +96,8 @@ class FP_PostScreenshots extends CreatePostHelper
                             <div class="loading-animation">
                                 <div class="loading-spinner"></div>
                             </div>
-                            <img id="splash-image-<?php echo $index; ?>" data-src="<?php echo trim($image_url); ?>" src="<?php echo trim($image_url); ?>" alt="Download <?php echo $meta_data['fp_title'] ?> (<?php echo $meta_data['fp_latest_year'] ?>) <?php echo $meta_data['fp_post_type_upper'] ?> Screenshots" title="Download <?php echo $meta_data['fp_title'] ?> (<?php echo $meta_data['fp_latest_year'] ?>) <?php echo $meta_data['fp_post_type_upper'] ?> Screenshots" class="fp-screenshot-responsive-image" loading="lazy" width="100%" height="auto">
+                            <img id="splash-image-<?php echo esc_attr($index); ?>" data-src="<?php echo esc_url(trim($image_url)); ?>" src="<?php echo esc_url(trim($image_url)); ?>" alt="Download <?php echo esc_attr($meta_data['fp_title']) ?> (<?php echo esc_attr($meta_data['fp_latest_year']) ?>) <?php echo esc_attr($meta_data['fp_post_type_upper']) ?> Screenshots" title="Download <?php echo esc_attr($meta_data['fp_title']) ?> (<?php echo esc_attr($meta_data['fp_latest_year']) ?>) <?php echo esc_attr($meta_data['fp_post_type_upper']) ?> Screenshots" class="fp-screenshot-responsive-image" loading="lazy" width="100%" height="auto">
+
                         </div>
                     <?php endif; ?>
                 <?php endforeach; ?>

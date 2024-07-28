@@ -299,13 +299,13 @@ function theme_template_settings()
                 <div class="shortcode-usage-content">
                     <p style="margin: 0px; font-weight: 600;"><span class="text-bold">Method 1: </span>Use this PHP code in your theme single.php or its referenced file:</p>
                     <pre class="text-wrap text-mobile-center" style="margin-top: 2px;">&lt;?php echo do_shortcode( '[replace_shortcodes]'); ?&gt;
-                    <p style="margin: 0px;">If you already inside <span style='font-weight: 600;'>&lt;?php</span> block then just use 'echo do_shortcode( '[replace_shortcodes]');' directly.</p><img src="<?php echo esc_url(FP_MOVIES_URL . 'img/method_1_demo.png'); ?>" alt="shortcode-usage" style="width: 500px; margin-top: 1px;"></pre>
+                    <p style="margin: 0px;">If you already inside <span style='font-weight: 600;'>&lt;?php</span> block then just use 'echo do_shortcode( '[replace_shortcodes]');' directly.</p><img src="<?php echo esc_url(esc_url(FP_MOVIES_URL) . 'img/method_1_demo.png'); ?>" alt="shortcode-usage" style="width: 500px; margin-top: 1px;"></pre>
 
                 </div>
                 <div class="shortcode-usage-content">
                     <p style="margin: 0px; font-weight: 600;"><span class="text-bold">Method 2: </span>Use Shortcode in theme [Gutenberg]: Editor -> Template -> Single Post
                         </br>Add as Shortcode [don't forget brackets]</br>
-                    <pre class="text-wrap text-mobile-center" style="margin-top: 2px;">[replace_shortcodes]</br><img src="<?php echo esc_url(FP_MOVIES_URL . 'img/method_2_demo.png'); ?>" alt="shortcode-usage" style="width: 500px; margin-top: 1px;"></pre>
+                    <pre class="text-wrap text-mobile-center" style="margin-top: 2px;">[replace_shortcodes]</br><img src="<?php echo esc_url(esc_url(FP_MOVIES_URL) . 'img/method_2_demo.png'); ?>" alt="shortcode-usage" style="width: 500px; margin-top: 1px;"></pre>
                 </div>
             </div>
 

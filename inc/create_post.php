@@ -166,7 +166,7 @@ class FP_CreatePost extends CreatePostHelper
         $post_id = wp_insert_post($post_data);
 
         if (is_wp_error($post_id)) {
-            echo 'Error creating post: ' . $post_id->get_error_message();
+            echo 'Error creating post: ' . esc_html($post_id->get_error_message());
             wp_send_json_error(array('message' => 'Failed to create post'), 400);
         }
 
@@ -190,7 +190,7 @@ class FP_CreatePost extends CreatePostHelper
         // error_log("METADATA: " . print_r($meta_data, TRUE));
 
         // location pluginURl + img/no-screenshots.webp
-        $screenshot_fallback = FP_MOVIES_URL . 'img/no-screenshots.webp';
+        $screenshot_fallback = esc_url(FP_MOVIES_URL) . 'img/no-screenshots.webp';
         $vote_avg_to_one_decimal = number_format($postData['vote_average'], 1, '.', '');
         $mtg_vote_average = !empty($vote_avg_to_one_decimal) && $vote_avg_to_one_decimal != '0'
             ? (float)$vote_avg_to_one_decimal  // Cast to float if non-empty

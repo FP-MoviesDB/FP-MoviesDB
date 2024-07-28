@@ -50,19 +50,42 @@ class FP_PostLinks extends CreatePostHelper
         $tmdb_id = $meta_data['fp_tmdb'];
         $user_links_data = $meta_data['fp_links_data'];
         require_once FP_MOVIES_DIR . 'helper/fp_links_encryption.php';
-        
+
         global $fp_min_m;
+        $allowed_html = array(
+            'div' => array('class' => array()),
+            'a' => array('href' => array(), 'target' => array()),
+            'span' => array('class' => array()),
+            'br' => array()
+        );
+
+        $allowed_html_tv = array(
+            'div' => array(
+                'class' => array(),
+                'id' => array(),
+                'style' => array(),
+                'onclick' => array()
+            ),
+            'a' => array(
+                'href' => array(),
+                'class' => array(),
+                'target' => array()
+            ),
+            'span' => array(
+                'class' => array()
+            )
+        );
         if ($_postType == 'movie') {
-            wp_enqueue_style('fp-post-movie-links-css', FP_MOVIES_URL . '/templates/css/fp_movieLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_style('fp-post-movie-links-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_movieLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
             require_once FP_MOVIES_DIR . 'templates/links/fp_movieLinks.php';
             $movieLinks = new FPMovieLinks();
             $movie_data = $movieLinks->fp_movies_links($tmdb_id, $meta_data, $user_links_data);
             // $user_title = get_option_with_fallback('mtg_template_movies_links_title', "{title} {p_type} Links");
             $user_title = $this->get_arrayValue_with_fallback($template_settings, 'sLinks_Movies_Title', "{title} {p_type} Links");
         } else if ($_postType == 'tv') {
-            wp_enqueue_script('fp-post-link-js', FP_MOVIES_URL . '/templates/js/fp_postLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
-            wp_enqueue_script('fp-post-tv-links-js', FP_MOVIES_URL . '/templates/js/fp_seriesLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
-            wp_enqueue_style('fp-post-tv-links-css', FP_MOVIES_URL . '/templates/css/fp_seriesLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_script('fp-post-link-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_postLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
+            wp_enqueue_script('fp-post-tv-links-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_seriesLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
+            wp_enqueue_style('fp-post-tv-links-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_seriesLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
             require_once FP_MOVIES_DIR . 'templates/links/fp_tvLinks.php';
             $tv_links = new FPSeriesLinks();
             $tv_data = $tv_links->fp_series_links($tmdb_id, $meta_data, $user_links_data);
@@ -78,25 +101,26 @@ class FP_PostLinks extends CreatePostHelper
 
         <div class='post-links-wrapper'>
             <div class="post-links-title">
-                <h2><?php echo $post_download_title; ?></h2>
+                <h2><?php echo esc_html($post_download_title); ?></h2>
             </div>
             <!-- removed  id="moviesDetails" from below div -->
             <div class='post-download-links-wrapper'>
                 <?php
                 if ($_postType == 'movie') {
                     if (!empty($movie_data)) {
-                        echo '<div class="links-preview">' . $movie_data . '</div>';
+                        echo '<div class="links-preview">' . wp_kses($movie_data, $allowed_html) . '</div>';
                     }
                 } else {
                     if (!empty($seasons_output)) {
-                        echo $seasons_output;
+                        echo wp_kses($seasons_output, $allowed_html);
                     }
 
                     // Check if there are any packs data before displaying the pack section
                     if (!empty($packs_output)) {
                         echo '<div class="down-btn" onclick="togglePacks()">Season PACKs</div>';
                         echo '<div id="season-pack-content" style="display: none;">';
-                        echo '<div class="mdownlinks mdownlinks-zip">' . $packs_output . '</div></div>';
+                        echo wp_kses('<div class="mdownlinks mdownlinks-zip">' . $packs_output . '</div>', $allowed_html);
+                        echo '</div>';
                     }
                 ?>
                 <?php

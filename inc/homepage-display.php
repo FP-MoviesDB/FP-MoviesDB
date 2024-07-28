@@ -29,7 +29,7 @@ function plugin_options_page()
             <div class="result-report-wrapper"><div id='result-report' class="search-report"></div></div>
             <div id="results-outer-container">
                 <div id="search_loading" class="animate-spin" style="display: none; justify-content: center; align-items: center; width: 100%; height: 100%; min-height: 300px;">
-                    <img src="<?php echo FP_MOVIES_URL . 'img/loading.webp'; ?>" alt="Loading..." />
+                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/loading.webp'; ?>" alt="Loading..." />
                 </div>
                 <!-- <div id="no-result-found" style="display: none;">
                     <h3 id="no-result-text">No Results Found</h3>

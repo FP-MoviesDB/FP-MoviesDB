@@ -11,8 +11,8 @@ function mts_bulk_import()
         wp_die('You do not have sufficient permissions to access this page.');
     }
     require_once FP_MOVIES_DIR . 'inc/check_tmdb_exist.php';
-    wp_enqueue_style('fp-bulk-import', FP_MOVIES_URL . 'css/fp_bulk_import' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
-    wp_enqueue_script('fp-bulk-import', FP_MOVIES_URL . 'js/fp_bulk_import' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+    wp_enqueue_style('fp-bulk-import', esc_url(FP_MOVIES_URL) . 'css/fp_bulk_import' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+    wp_enqueue_script('fp-bulk-import', esc_url(FP_MOVIES_URL) . 'js/fp_bulk_import' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
     $tmdb_exist = get_option('mtg_tmdb_api_key');
     $fp_exist = get_option('mtg_fp_api_key');
     $is_ready = true;

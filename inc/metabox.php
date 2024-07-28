@@ -204,7 +204,8 @@ function get_custom_post_meta($post_id)
 function custom_fields_meta_box_content($post)
 {
     global $fp_min_m;
-    wp_enqueue_script('post-button-admin-script', FP_MOVIES_URL . 'js/fp_post_button' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+    wp_enqueue_script('post-button-admin-script', esc_url(FP_MOVIES_URL) . 'js/fp_post_button' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+    wp_enqueue_style('post-button-admin-style', esc_url(FP_MOVIES_URL) . '/css/fp_post_button' . $fp_min_m . '.css', array(), FP_MOVIES_FILES);
     wp_localize_script('post-button-admin-script', 'btnData', array(
         'ajax_url' => FP_MOVIES_AJAX,
         'update-nonce' => wp_create_nonce('fp_post_update_nonce'),
@@ -213,7 +214,7 @@ function custom_fields_meta_box_content($post)
 
     // enqueue mts-admin.css if not already enqueued
     if (!wp_style_is('mts-admin-style', 'enqueued')) {
-        wp_enqueue_style('mts-admin-style', FP_MOVIES_URL . '/css/mts-admin' . $fp_min_m . '.css', array(), FP_MOVIES_FILES);
+        wp_enqueue_style('mts-admin-style', esc_url(FP_MOVIES_URL) . '/css/mts-admin' . $fp_min_m . '.css', array(), FP_MOVIES_FILES);
     }
 
     wp_nonce_field('save_fp_custom_fields_meta_box_data', 'fp_custom_fields_meta_box_nonce');
@@ -225,7 +226,7 @@ function custom_fields_meta_box_content($post)
         $c_post_type = get_post_meta($c_post_id, '_content_type', true);
         $c_tmdb_id = get_post_meta($c_post_id, 'mtg_tmdb_id', true);
         if ($c_post_type || $c_tmdb_id) {
-            echo '<div class="refetch-btn-wrapper"><div class="fp-custom-button update-post" data-page="single" data-id="' . $c_post_id . '" data-tmdb="' . $c_tmdb_id . '" data-type="' . $c_post_type . '">ReFetch</div></div>';
+            echo '<div class="refetch-btn-wrapper"><div class="fp-custom-button update-post fp-internal-refetch" data-page="single" data-id="' . esc_html($c_post_id) . '" data-tmdb="' . esc_html($c_tmdb_id) . '" data-type="' . esc_html($c_post_type) . '">ReFetch</div></div>';
         }
     }
 
@@ -237,7 +238,7 @@ function custom_fields_meta_box_content($post)
         } else {
             $fp_new_post_checkbox = '';
         }
-        echo '<div class="fp-single-' . esc_attr($field['type']) . '-field" style="' . $fp_new_post_checkbox . '">';
+        echo '<div class="fp-single-' . esc_attr($field['type']) . '-field" style="' . esc_html($fp_new_post_checkbox) . '">';
         echo '<div class="field-container" style="margin-bottom: 20px;">';
         echo '<label for="' . esc_attr($field['name']) . '">' . esc_html($field['label']) . '</label>';
 
@@ -247,14 +248,14 @@ function custom_fields_meta_box_content($post)
             echo '<select id="' . esc_attr($field['name']) . '" name="' . esc_attr($field['name']) . '" class="widefat">';
             foreach ($field['options'] as $option_value => $option_label) {
                 $selected = (strtolower($field['value']) === $option_value) ? 'selected' : '';
-                echo '<option value="' . esc_attr($option_value) . '" ' . $selected . '>' . esc_html($option_label) . '</option>';
+                echo '<option value="' . esc_attr($option_value) . '" ' . esc_html($selected) . '>' . esc_html($option_label) . '</option>';
             }
             echo '</select>';
         } else if ($field['type'] === 'checkbox') {
             // error_log("FIELD: " . print_r($field, true));
             $checked = $field['value'] === '1' ? 'checked' : '';
             $value = $field['value'] === '1' ? '1' : '0';
-            echo '<input type="checkbox" id="' . esc_attr($field['name']) . '" name="' . esc_attr($field['name']) . '" value="' . esc_attr($value) . '"' . $checked . ' />';
+            echo '<input type="checkbox" id="' . esc_attr($field['name']) . '" name="' . esc_attr($field['name']) . '" value="' . esc_attr($value) . '"' . esc_html($checked) . ' />';
         } else {
             echo '<input type="text" id="' . esc_attr($field['name']) . '" name="' . esc_attr($field['name']) . '" value="' . esc_attr($field['value']) . '" class="widefat" />';
         }

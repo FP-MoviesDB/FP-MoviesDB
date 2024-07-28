@@ -57,7 +57,7 @@ if (!function_exists('fp_display_home')) {
 
         );
 
-        wp_enqueue_script('fp-homepage-view', FP_MOVIES_URL . '/templates/js/fp_homepage' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+        wp_enqueue_script('fp-homepage-view', esc_url(FP_MOVIES_URL) . '/templates/js/fp_homepage' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
         wp_localize_script('fp-homepage-view', 'fp_homepage_data', $fp_home_localized_data);
 
         $args = array(
@@ -171,13 +171,13 @@ if (!function_exists('fp_display_home')) {
                         while ($query->have_posts()) : $query->the_post();
                             $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
                             if (empty($landscape_img_tmdb_path)) {
-                                $landscape_img = FP_MOVIES_URL . 'img/image-not-found.webp';
+                                $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
                             } else {
                                 $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . 'original' . $landscape_img_tmdb_path;
                             }
                             $portrait_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
                             if (empty($portrait_img_tmdb_path)) {
-                                $portrait_img = FP_MOVIES_URL . 'img/poster-not-found.png';
+                                $portrait_img = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
                             } else {
                                 $portrait_img = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $portrait_img_tmdb_path;
                             }
@@ -219,19 +219,19 @@ if (!function_exists('fp_display_home')) {
                                         </a>
                                         <div class="content-wrapper">
                                             <div class="f-title">
-                                                <h2 class="title" data-text="<?php echo $title; ?>">
-                                                    <?php echo $title; ?></h2>
-                                                <?php echo $tagline ?>
+                                                <h2 class="title" data-text="<?php echo esc_attr($title); ?>">
+                                                    <?php echo esc_html($title); ?></h2>
+                                                <?php echo $tagline; ?>
                                             </div>
                                             <div class="content">
 
-                                                <?php echo $storyline ?>
+                                                <?php echo esc_html($storyline); ?>
                                             </div>
                                             <a href="<?php echo esc_url($permalink); ?>">
-                                                <div class="featured-button" style="<?php echo $bk_gd; ?>">
-                                                    <img src="<?php echo FP_MOVIES_URL . 'img/play_light.svg' ?>" alt="Play Icon" width="50" height="auto" loading="lazy">
+                                                <div class="featured-button" style="<?php echo esc_attr($bk_gd); ?>">
+                                                    <img src="<?php echo esc_url(FP_MOVIES_URL . 'img/play_light.svg'); ?>" alt="Play Icon" width="50" height="auto" loading="lazy">
                                                     <span class="read-more">
-                                                        <?php echo $btn_heading; ?>
+                                                        <?php echo esc_html($btn_heading); ?>
                                                     </span>
                                                 </div>
                                             </a>
@@ -336,7 +336,7 @@ if (!function_exists('fp_display_home')) {
                                 $image_url = get_the_post_thumbnail_url($post_id, $f_atts['image_size']);
                             }
                             if (empty($image_url) || !filter_var($image_url, FILTER_VALIDATE_URL)) {
-                                $image_url = FP_MOVIES_URL . 'img/poster-not-found.png';
+                                $image_url = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
                             }
                             // get quality taxonomy at 1st position
                             $quality = get_the_terms($post_id, 'mtg_quality');
@@ -362,10 +362,10 @@ if (!function_exists('fp_display_home')) {
                             $ratings_html = '';
                             if ($f_atts['show_ratings'] === 'true' && !empty($rating)) {
                                 $ratings_html = '
-                                <img class="fp-image-rating-icon" src="' . FP_MOVIES_URL . 'img/star-dark.svg" alt="IMDb" width="15" height="auto">
+                                <img class="fp-image-rating-icon" src="' . esc_url(FP_MOVIES_URL) . 'img/star-dark.svg" alt="IMDb" width="15" height="auto">
                                 <div class="fp-image-rating">' . esc_html($rating) . '</div>';
                             }
-                            $play_background_url = FP_MOVIES_URL . 'img/play_1.svg';
+                            $play_background_url = esc_url(FP_MOVIES_URL) . 'img/play_1.svg';
 
                             $quality_html = '';
                             if ($f_atts['show_quality'] === 'true') {

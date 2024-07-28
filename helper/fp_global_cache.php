@@ -25,7 +25,7 @@ function fp_decrypt_data($data)
 }
 
 
-function fp_store_cache($key, $data, $expiry = 60*60*24) //60*60*24
+function fp_store_cache($key, $data, $expiry = 60 * 60 * 24) //60*60*24
 {
     // error_log('Storing cache for key: ' . $key);
     $cache_file = FP_CACHE_DIR . '/' . md5($key) . '.cache';
@@ -42,7 +42,21 @@ function fp_get_cache($key)
 {
     $cache_file = FP_CACHE_DIR . '/' . md5($key) . '.cache';
     if (file_exists($cache_file)) {
-        $cache_data = unserialize(file_get_contents($cache_file));
+        // $cache_data = unserialize(file_get_contents($cache_file));
+        $file_contents = file_get_contents($cache_file);
+        if ($file_contents === false) {
+            // error_log('Unable to read cache file: ' . $cache_file);
+            return false;
+        }
+
+        // Deserialize safely
+        $cache_data = @unserialize($file_contents);
+        if ($cache_data === false) {
+            // error_log('Failed to unserialize data from cache file: ' . $cache_file);
+            wp_delete_file($cache_file);  // Remove corrupted cache file
+            return false;
+        }
+
         if (time() < $cache_data['expiry']) {
             if (isEncrypted) {
                 return fp_decrypt_data($cache_data['data']);
@@ -50,7 +64,8 @@ function fp_get_cache($key)
                 return $cache_data['data'];
             }
         } else {
-            unlink($cache_file);
+            // unlink($cache_file);
+            wp_delete_file($cache_file);
             // $resp = ['error' => 'Cache expired'];
             return false;
         }
@@ -62,7 +77,8 @@ function fp_delete_cache($key)
 {
     $cache_file = FP_CACHE_DIR . '/' . md5($key) . '.cache';
     if (file_exists($cache_file)) {
-        unlink($cache_file);
+        // unlink($cache_file);
+        wp_delete_file($cache_file);
     }
 }
 
@@ -113,7 +129,8 @@ function delete_directory($dir)
         if ($item->isDir()) {
             rmdir($item->getRealPath());
         } else {
-            unlink($item->getRealPath());
+            // unlink($item->getRealPath());
+            wp_delete_file($item->getRealPath());
         }
     }
     rmdir($dir);
@@ -126,7 +143,7 @@ function delete_all_expired()
         if (is_file($file)) {
             $cache_data = unserialize(file_get_contents($file));
             if (time() >= $cache_data['expiry']) {
-                unlink($file);
+                wp_delete_file($file);
             }
         }
     }

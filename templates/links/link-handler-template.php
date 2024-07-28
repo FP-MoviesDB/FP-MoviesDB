@@ -17,11 +17,12 @@ $secret_key = ($captcha_method === 'recaptcha') ? $encryption_settings['mtg_encr
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['link_verify_captcha_nonce']) || !wp_verify_nonce($_POST['link_verify_captcha_nonce'], 'link_verify_captcha')) {
-        echo "Invalid request.";
-        exit();
+        wp_die('Invalid Request', 'Invalid Request', array('response' => 403));
     }
 
-    $captcha_valid = validate_captcha($captcha_method, $secret_key);
+    $nonce = $_POST['validate_captcha_nonce'] ?? '';
+    $captcha_valid = validate_captcha($captcha_method, $secret_key, $nonce);
+
     if ($captcha_valid) {
         $_SESSION['captcha_valid'] = true;
     }
@@ -109,7 +110,7 @@ if ($encrypted_url) {
             //     }
             // }
             global $fp_min_m;
-            $poppins_url = FP_MOVIES_URL . 'fonts/poppins' . $fp_min_m . '.css';
+            $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
             if (current_user_can('administrator')) {
                 echo '<!DOCTYPE html><html lang="en-US"><head>';
                 echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
@@ -168,8 +169,13 @@ if ($encrypted_url) {
 
 
 
-function validate_captcha($captcha_method, $secret_key)
+function validate_captcha($captcha_method, $secret_key, $nonce)
 {
+
+    if (!wp_verify_nonce($nonce, 'validate_captcha_action')) {
+        return false;
+    }
+
     $captcha_response = '';
     if ($captcha_method === 'recaptcha' && isset($_POST['g-recaptcha-response'])) {
         $captcha_response = $_POST['g-recaptcha-response'];
@@ -187,6 +193,10 @@ function validate_captcha($captcha_method, $secret_key)
                 'response' => $captcha_response
             )
         ));
+        if (is_wp_error($response)) {
+            error_log('Captcha API request failed: ' . $response->get_error_message());
+            return false;
+        }
         $response_body = wp_remote_retrieve_body($response);
         $result = json_decode($response_body, true);
         // error_log('Captcha validation result: ' . print_r($result, true));
@@ -205,7 +215,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
         echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
     }
     global $fp_min_m;
-    $poppins_url = FP_MOVIES_URL . 'fonts/poppins' . $fp_min_m . '.css';
+    $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
     echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
     display_captcha_styles();
     // page title: Verifying Request
@@ -215,6 +225,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
     echo '<div class="verification-container">';
     echo '<h1>Please Complete the captcha to Proceed</h1>';
     echo '<form id="captcha-form" method="post" action="' . esc_url($_SERVER['REQUEST_URI']) . '">';
+    wp_nonce_field('validate_captcha_action', 'validate_captcha_nonce');
     echo '<div class="captcha-error"></div>';
     echo '<div class="captcha-box-wrapper">';
 
@@ -225,6 +236,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
         echo '<div id="captcha-box" class="cf-turnstile" data-sitekey="' . esc_attr($site_key) . '"></div>';
     }
     echo '</div>';
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Safe output from wp_nonce_field()
     echo wp_nonce_field('link_verify_captcha', 'link_verify_captcha_nonce', true, false);
     echo '<input type="hidden" name="encrypted_url" value="' . esc_attr($encrypted_url) . '">';
     echo '<div class="captcha-submit-wrapper"><input class="captcha-submit" type="submit" name="submit" value="Verify"></div>';

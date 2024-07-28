@@ -40,8 +40,8 @@ class LinkHandler
         if (!get_page_by_path('fp-links-encryption')) {
 ?>
             <div class="notice notice-warning is-dismissible">
-                <p><?php _e('The Link Handler page is not created yet. Click the button below to create it.', 'your-text-domain'); ?></p>
-                <p><a href="<?php echo esc_url(admin_url('?create_link_handler_page=1')); ?>" class="button-primary"><?php _e('Create Link Handler Page', 'your-text-domain'); ?></a></p>
+                <p>The Link Handler page is not created yet. Click the button below to create it.</p>
+                <p><a href="<?php echo esc_url(wp_nonce_url(admin_url('?create_link_handler_page=1'), 'create_link_handler_page')); ?>" class="button-primary">Create Link Handler Page</a></p>
             </div>
 <?php
         }
@@ -50,6 +50,12 @@ class LinkHandler
     public function handle_page_creation()
     {
         if (isset($_GET['create_link_handler_page']) && $_GET['create_link_handler_page'] == '1') {
+
+            if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'create_link_handler_page')) {
+                wp_die('Security check failed');
+            }
+
+
             $this->create_page();
             wp_redirect(admin_url());
             exit();
@@ -73,7 +79,7 @@ class LinkHandler
             if (!is_wp_error($page_id)) {
                 $this->flush_rewrite_rules();
             } else {
-                echo 'Error creating page: ' . $page_id->get_error_message();
+                echo esc_html('Error creating page: ' . $page_id->get_error_message());
             }
         } else {
             echo 'Link Handler page already exists.';
@@ -103,9 +109,9 @@ class LinkHandler
     }
 
     function flush_rewrite_rules()
-        {
-            flush_rewrite_rules();
-        }
+    {
+        flush_rewrite_rules();
+    }
 }
 
 new LinkHandler();

@@ -44,9 +44,9 @@ if (!class_exists('PostButtons')) {
             $post_type = isset($all_meta['_content_type'][0]) ? $all_meta['_content_type'][0] : '';
 
             if ($column == 'update_button') {
-                echo '<div class="fp-custom-button update-post" data-page="all" data-id="' . $post_id . '" data-tmdb="' . $tmdb_id . '" data-type="' . $post_type . '"><img src="' . FP_MOVIES_URL . 'img/sync-blue.svg' . '" alt="Sync Icon" width="15" height="auto"></div>';
+                echo '<div class="fp-custom-button update-post" data-page="all" data-id="' . esc_html($post_id) . '" data-tmdb="' . esc_html($tmdb_id) . '" data-type="' . esc_html($post_type) . '"><img src="' . esc_url(FP_MOVIES_URL) . 'img/sync-blue.svg' . '" alt="Sync Icon" width="15" height="auto"></div>';
             } elseif ($column == 'featured_button') {
-                echo '<div class="fp-custom-button feature-post" data-id="' . $post_id . '" data-value="' . $f_value . '">' . $f_text . '</div>';
+                echo '<div class="fp-custom-button feature-post" data-id="' . esc_html($post_id) . '" data-value="' . esc_html($f_value) . '">' . esc_html($f_text) . '</div>';
             }
         }
 
@@ -66,15 +66,15 @@ if (!class_exists('PostButtons')) {
         function enqueue_custom_admin_script()
         {
             global $fp_min_m;
-            wp_enqueue_script('post-button-admin-script', FP_MOVIES_URL . 'js/fp_post_button' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+            wp_enqueue_script('post-button-admin-script', esc_url(FP_MOVIES_URL) . 'js/fp_post_button' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
             wp_localize_script('post-button-admin-script', 'btnData', array(
                 'ajax_url' => FP_MOVIES_AJAX,
                 'update-nonce' => wp_create_nonce('fp_post_update_nonce'),
                 'featured-nonce' => wp_create_nonce('fp-set-featured-nonce'),
-                'web_url' => FP_MOVIES_URL
+                'web_url' => esc_url(FP_MOVIES_URL)
             ));
 
-            wp_enqueue_style('post-button-admin-style', FP_MOVIES_URL . '/css/fp_post_button' . $fp_min_m . '.css', array(), FP_MOVIES_FILES);
+            wp_enqueue_style('post-button-admin-style', esc_url(FP_MOVIES_URL) . '/css/fp_post_button' . $fp_min_m . '.css', array(), FP_MOVIES_FILES);
         }
 
 

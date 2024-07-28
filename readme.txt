@@ -22,3 +22,6 @@
 * Encryption KEY now generate dynamically instead of static.
 * Some Improvements in Front Design.
 * Some other enhancements.
+
+= 1.1.4 =
+* Optimization as per WP Standards.

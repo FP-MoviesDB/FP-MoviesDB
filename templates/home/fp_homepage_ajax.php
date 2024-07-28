@@ -128,7 +128,7 @@ if (!function_exists('fp_load_posts_view')) {
                 }
 
                 if (empty($image_url) || !filter_var($image_url, FILTER_VALIDATE_URL)) {
-                    $image_url = FP_MOVIES_URL . 'img/poster-not-found.png';
+                    $image_url = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
                 }
 
                 $quality = get_the_terms($post_id, 'mtg_quality');
@@ -153,11 +153,11 @@ if (!function_exists('fp_load_posts_view')) {
                 $ratings_html = '';
                 if ($home_data['show_ratings'] === 'true' && !empty($rating)) {
                     $ratings_html = '
-                                <img class="fp-image-rating-icon" src="' . FP_MOVIES_URL . 'img/star-dark.svg" alt="IMDb" width="15" height="auto">
+                                <img class="fp-image-rating-icon" src="' . esc_url(FP_MOVIES_URL) . 'img/star-dark.svg" alt="IMDb" width="15" height="auto">
                                 <div class="fp-image-rating">' . esc_html($rating) . '</div>';
                 }
 
-                $play_background_url = FP_MOVIES_URL . 'img/play_1.svg';
+                $play_background_url = esc_url(FP_MOVIES_URL) . 'img/play_1.svg';
 
                 $quality_html = '';
                 if ($home_data['show_quality'] === 'true') {

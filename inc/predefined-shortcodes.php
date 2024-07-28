@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 function mts_predefined_shortcodes()
 {
     global $fp_min_m;
-    wp_enqueue_style('fp-pre-defined-shortcodes', FP_MOVIES_URL . 'css/fp_pds_' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+    wp_enqueue_style('fp-pre-defined-shortcodes', esc_url(FP_MOVIES_URL) . 'css/fp_pds_' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
 ?>
     <div class="fp_pre_defined_main_wrapper">
         <div class="pds_section">
@@ -111,10 +111,10 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/movie_player.webp'; ?>" alt="Single Post Player">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/movie_player.webp'; ?>" alt="Single Post Player">
                                 </div>
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/tv_player.webp'; ?>" alt="Single Post Player">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/tv_player.webp'; ?>" alt="Single Post Player">
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/title.webp'; ?>" alt="Single Post Title">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/title.webp'; ?>" alt="Single Post Title">
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/imdb_box.webp'; ?>" alt="IMDB Box">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/imdb_box.webp'; ?>" alt="IMDB Box">
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/synopsis.webp'; ?>" alt="Synopsis">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/synopsis.webp'; ?>" alt="Synopsis">
                                 </div>
                             </div>
                         </div>
@@ -206,7 +206,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/post_info.webp'; ?>" alt="Post Info">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/post_info.webp'; ?>" alt="Post Info">
                                 </div>
                             </div>
                         </div>
@@ -229,7 +229,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/screenshots.webp'; ?>" alt="Screenshot">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/screenshots.webp'; ?>" alt="Screenshot">
                                 </div>
                             </div>
                         </div>
@@ -252,10 +252,10 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_title">Screenshot:</div>
                             <div class="pds_shortcode_desc">
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/movie_links.webp'; ?>" alt="Single Post Player">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/movie_links.webp'; ?>" alt="Single Post Player">
                                 </div>
                                 <div>
-                                    <img src="<?php echo FP_MOVIES_URL . 'img/tv_links.webp'; ?>" alt="Single Post Player">
+                                    <img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/tv_links.webp'; ?>" alt="Single Post Player">
                                 </div>
                             </div>
                         </div>
@@ -294,7 +294,7 @@ function mts_predefined_shortcodes()
 
                         <div class="pds_entry">
                             <div class="pds_shortcode_title">Screenshot:</div>
-                            <div class="pds_shortcode_desc"><img src="<?php echo FP_MOVIES_URL . 'img/homepage-slider.webp'; ?>" alt="Homepage Slider"></div>
+                            <div class="pds_shortcode_desc"><img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/homepage-slider.webp'; ?>" alt="Homepage Slider"></div>
                         </div>
 
                     </div>
@@ -340,7 +340,7 @@ function mts_predefined_shortcodes()
                         </div>
                         <div class="pds_entry">
                             <div class="pds_shortcode_title">Screenshot:</div>
-                            <div class="pds_shortcode_desc"><img src="<?php echo FP_MOVIES_URL . 'img/homepage_meta.webp'; ?>" alt="Homepage Meta"></div>
+                            <div class="pds_shortcode_desc"><img src="<?php echo esc_url(FP_MOVIES_URL) . 'img/homepage_meta.webp'; ?>" alt="Homepage Meta"></div>
                         </div>
                     </div>
                 </div>

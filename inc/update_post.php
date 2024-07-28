@@ -156,7 +156,7 @@ class FP_UpdatePost extends CreatePostHelper
             }
         }
 
-        $screenshot_fallback = FP_MOVIES_URL . 'img/no-screenshots.webp';
+        $screenshot_fallback = esc_url(FP_MOVIES_URL) . 'img/no-screenshots.webp';
         $vote_avg_to_one_decimal = number_format($postData['vote_average'], 1, '.', '');
         $mtg_vote_average = !empty($vote_avg_to_one_decimal) && $vote_avg_to_one_decimal != '0'
             ? (float)$vote_avg_to_one_decimal  // Cast to float if non-empty

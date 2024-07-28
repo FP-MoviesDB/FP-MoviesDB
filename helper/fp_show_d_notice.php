@@ -26,7 +26,7 @@ function fp_display_d_notice()
                         jQuery.post(ajaxurl, {
                             action: 'fp_dismiss_d_notice',
                             silence_days: d,
-                            nonce: '<?php echo $nonce; ?>'
+                            nonce: '<?php echo esc_attr($nonce); ?>'
                         }, function(response) {
                             if (url && d === '10') {
                                 window.open('https://' + url, '_blank');

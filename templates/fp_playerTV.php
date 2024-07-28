@@ -140,20 +140,20 @@ class FP_PlayerTV
             <div class="fp-player">
                 <!-- BACKDROP  -->
                 <div id="fp-backdrop-container" class="fp_backdrop">
-                    <img src="<?php echo $backdrop; ?>" alt="<?php echo $meta_data['fp_title']; ?>" width="500px" height="300px">
+                    <img src="<?php echo esc_attr($backdrop); ?>" alt="<?php echo esc_attr($meta_data['fp_title']); ?>" width="500px" height="300px">
                 </div>
                 <!-- PLAY ICON  -->
                 <div class="play-icon-wrapper">
                     <div class="play-icon">
                         <!-- <i class="fas fa-play" style="font-size: 50px;"></i> -->
-                        <img src="<?php echo FP_MOVIES_URL . 'img/play_light.svg' ?>" alt="Play Icon" width="50" height="auto">
+                        <img src="<?php echo esc_url(FP_MOVIES_URL . 'img/play_light.svg'); ?>" alt="Play Icon" width="50" height="auto">
                     </div>
                 </div>
                 <!-- DISPLAY TITLE  -->
                 <?php if (!empty($title)) : ?>
                     <div class="play-title-wrapper">
                         <div class="play-title">
-                            <h1 data-text="<?php echo htmlspecialchars($title); ?>"><?php echo $title; ?></h1>
+                            <h1 data-text="<?php echo esc_attr($title); ?>"><?php echo esc_html($title); ?></h1>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -177,7 +177,7 @@ class FP_PlayerTV
                             $extra_meta = $youtube_array['extra'];
                             $icon = 'fab fa-youtube';
                             ?>
-                            <li id="stream-source-<?php echo $position + 1; ?>" class="fp_player_option" data-type="<?php echo esc_attr($type); ?>" data-position="<?php echo esc_attr($position); ?>" data-post="<?php echo esc_attr($post_id); ?>" data-pType="<?php echo esc_attr($post_type); ?>" data-title="<?php echo esc_attr($youtube_array['title']); ?>">
+                            <li id="stream-source-<?php echo esc_attr($position + 1); ?>" class="fp_player_option" data-type="<?php echo esc_attr($type); ?>" data-position="<?php echo esc_attr($position); ?>" data-post="<?php echo esc_attr($post_id); ?>" data-pType="<?php echo esc_attr($post_type); ?>" data-title="<?php echo esc_attr($youtube_array['title']); ?>">
                                 <i class="<?php echo esc_attr($icon); ?>"></i><span class="title"><?php echo esc_html($title); ?></span><span class="extra-meta
                                 "><?php echo esc_html($extra_meta); ?></span>
                             </li>
@@ -194,8 +194,8 @@ class FP_PlayerTV
                                     <?php
                                     $firstSeason = key($fp_player_data);
                                     foreach ($fp_player_data as $season => $episodes) : ?>
-                                        <option value="season-<?php echo $season; ?>" <?php echo $season == $firstSeason ? 'selected' : ''; ?>>
-                                            Season <?php echo $season; ?>
+                                        <option value="season-<?php echo esc_attr($season); ?>" <?php echo esc_attr($season == $firstSeason ? 'selected' : ''); ?>>
+                                            Season <?php echo esc_html($season); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -203,10 +203,10 @@ class FP_PlayerTV
 
                             <div id="episodes-container">
                                 <?php foreach ($fp_player_data as $season => $episodes) : ?>
-                                    <div class="episodes" id="episodes-season-<?php echo $season; ?>" style="display: none;">
+                                    <div class="episodes" id="episodes-season-<?php echo esc_attr($season); ?>" style="display: none;">
                                         <?php foreach ($episodes as $episode => $sources) : ?>
-                                            <div class="episode-box" data-season="<?php echo $season; ?>" data-episode="<?php echo $episode; ?>" data-postid="<?php echo $post_id; ?>">
-                                                <span class="episode-number"><?php echo $episode < 10 ? '0' . $episode : $episode; ?></span>
+                                            <div class="episode-box" data-season="<?php echo esc_attr($season); ?>" data-episode="<?php echo esc_attr($episode); ?>" data-postid="<?php echo esc_attr($post_id); ?>">
+                                                <span class="episode-number"><?php echo esc_html($episode < 10 ? '0' . $episode : $episode); ?></span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>

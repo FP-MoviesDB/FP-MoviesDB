@@ -55,7 +55,7 @@ class FP_PostTitle extends CreatePostHelper
 
 ?>
         <div class="fp-post-title-wrapper">
-            <h1 class="fp-post-title-head"><?php echo $post_title; ?></h1>
+            <h1 class="fp-post-title-head"><?php echo esc_html($post_title); ?></h1>
         </div>
 <?php
 

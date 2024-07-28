@@ -41,7 +41,7 @@ class FP_Movies_Shortcodes
     public static function enqueue_local_poppins_font()
     {
         global $fp_min_m;
-        wp_enqueue_style('local-poppins-font', FP_MOVIES_URL . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('local-poppins-font', esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
     }
 
     private static function enqueue_global_files()
@@ -88,11 +88,11 @@ class FP_Movies_Shortcodes
         }
 
         if (!self::$css_enqueued) {
-            wp_enqueue_style('fp_movies_global_css', FP_MOVIES_URL . '/templates/global/global' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_style('fp_movies_global_css', esc_url(FP_MOVIES_URL) . '/templates/global/global' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
             self::$css_enqueued = true;
         }
         if (!self::$js_enqueued) {
-            wp_enqueue_script('fp_movies_global_js', FP_MOVIES_URL . '/templates/global/global' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+            wp_enqueue_script('fp_movies_global_js', esc_url(FP_MOVIES_URL) . '/templates/global/global' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
             if (is_singular('post')) {
                 wp_localize_script('fp_movies_global_js', 'local_ajax_object', array(
                     'ajax_url' => FP_MOVIES_AJAX,
@@ -138,7 +138,7 @@ class FP_Movies_Shortcodes
     {
         global $fp_min_m;
         if (!self::$view_enqueued) {
-            wp_enqueue_script('fp_views_global_js', FP_MOVIES_URL . '/templates/global/views' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+            wp_enqueue_script('fp_views_global_js', esc_url(FP_MOVIES_URL) . '/templates/global/views' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
             wp_localize_script('fp_views_global_js', 'fp_views_data', array(
                 'ajax_url' => FP_MOVIES_AJAX,
                 'nonce' => wp_create_nonce('fp_views_nonce'),
@@ -169,7 +169,7 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-post-title', FP_MOVIES_URL . '/templates/css/fp_postTitle' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-post-title', esc_url(FP_MOVIES_URL) . '/templates/css/fp_postTitle' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         // $post_title_color = get_option_with_fallback('mtg_post_title_color', "white");
         // $post_title_wrapper_color = get_option_with_fallback('mtg_post_title_wrapper_color', "black");
         $post_title_color = self::get_color_option('post_title_color', "white");
@@ -195,7 +195,7 @@ class FP_Movies_Shortcodes
         $start = microtime(true);
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-tmdb-view', FP_MOVIES_URL . '/templates/css/fp_imdbBox' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-tmdb-view', esc_url(FP_MOVIES_URL) . '/templates/css/fp_imdbBox' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
 
         // $imdb_wrapper_bg_color = get_option_with_fallback('mtg_imdb_wrapper_bg_color', "black");
         // $imdb_box_bg_color = get_option_with_fallback('mtg_imdb_box_bg_color', "#222");
@@ -249,8 +249,8 @@ class FP_Movies_Shortcodes
         $start = microtime(true);
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-screenshot-view', FP_MOVIES_URL . '/templates/css/fp_screenshots' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
-        wp_enqueue_script('fp-screenshot-view', FP_MOVIES_URL . '/templates/js/fp_screenshots' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
+        wp_enqueue_style('fp-screenshot-view', esc_url(FP_MOVIES_URL) . '/templates/css/fp_screenshots' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_script('fp-screenshot-view', esc_url(FP_MOVIES_URL) . '/templates/js/fp_screenshots' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
         // $image_gallery_bg_color = get_option_with_fallback('mtg_screenshot_gallery_bg_color', "black");
         // $image_gallery_heading_color = get_option_with_fallback('mtg_screenshot_gallery_heading_color', "white");
 
@@ -277,7 +277,7 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-post-info', FP_MOVIES_URL . '/templates/css/fp_postInfo' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-post-info', esc_url(FP_MOVIES_URL) . '/templates/css/fp_postInfo' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         // $post_info_wrapper_bg_color = get_option_with_fallback('mtg_post_info_wrapper_bg_color', "black");
         // $post_info_heading_color = get_option_with_fallback('mtg_post_info_heading_color', "white");
         // $post_info_li_color = get_option_with_fallback('mtg_post_info_li_color', "white");
@@ -319,7 +319,7 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-synopsis-view', FP_MOVIES_URL . '/templates/css/fp_synopsis' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-synopsis-view', esc_url(FP_MOVIES_URL) . '/templates/css/fp_synopsis' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         // $synopsis_wrapper_bg_color = get_option_with_fallback('mtg_synopsis_wrapper_bg_color', "black");
         // $synopsis_heading_color = get_option_with_fallback('mtg_synopsis_heading_color', "white");
         // $synopsis_content_color = get_option_with_fallback('mtg_synopsis_content_color', "white");
@@ -350,7 +350,7 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         self::enqueue_views_files();
         self::enqueue_global_files();
-        wp_enqueue_style('fp-post-links', FP_MOVIES_URL . '/templates/css/fp_postLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-post-links', esc_url(FP_MOVIES_URL) . '/templates/css/fp_postLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         /*
             $post_links_wrapper_bg_color = get_option_with_fallback('mpl_wrapper_bg_color', "#000000");
             $post_links_heading_color = get_option_with_fallback('mpl_heading_color', "#ffffff");
@@ -470,11 +470,11 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         $_postType = self::$current_post_type;
         if ($_postType == 'movie') {
-            wp_enqueue_style('fp-post-movie-links-css', FP_MOVIES_URL . '/templates/css/fp_movieLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_style('fp-post-movie-links-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_movieLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         } else if ($_postType == 'tv') {
-            wp_enqueue_script('fp-post-link-js', FP_MOVIES_URL . '/templates/js/fp_postLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
-            wp_enqueue_script('fp-post-tv-links-js', FP_MOVIES_URL . '/templates/js/fp_seriesLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
-            wp_enqueue_style('fp-post-tv-links-css', FP_MOVIES_URL . '/templates/css/fp_seriesLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_script('fp-post-link-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_postLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
+            wp_enqueue_script('fp-post-tv-links-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_seriesLinks' . $fp_min_m . '.js', array(), FP_MOVIES_FILES, true);
+            wp_enqueue_style('fp-post-tv-links-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_seriesLinks' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         }
     }
 
@@ -483,14 +483,14 @@ class FP_Movies_Shortcodes
         global $fp_min_m;
         $_postType = self::$current_post_type;
 
-        wp_enqueue_style('fp-movie-player-css', FP_MOVIES_URL . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
-        wp_enqueue_script('fp-movie-player-js', FP_MOVIES_URL . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
+        wp_enqueue_style('fp-movie-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_script('fp-movie-player-js', esc_url(FP_MOVIES_URL) . '/templates/js/fp_playerMovie' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_FILES, true);
         wp_localize_script('fp-movie-player-js', 'fp_pAjax', array(
             'ajax_url' => FP_MOVIES_AJAX,
             'nonce' => wp_create_nonce('fp_player_nonce')
         ));
         if ($_postType == 'tv') {
-            wp_enqueue_style('fp-tv-player-css', FP_MOVIES_URL . '/templates/css/fp_playerTV' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+            wp_enqueue_style('fp-tv-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerTV' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         }
     }
 
@@ -500,7 +500,7 @@ class FP_Movies_Shortcodes
         $start = microtime(true);
         self::enqueue_views_files();
         self::enqueue_global_files();
-        // wp_enqueue_style('fp-post-player', FP_MOVIES_URL . '/templates/css/fp_postPlayer.css', array(), FP_MOVIES_FILES, 'all');
+        // wp_enqueue_style('fp-post-player', esc_url(FP_MOVIES_URL) . '/templates/css/fp_postPlayer.css', array(), FP_MOVIES_FILES, 'all');
 
         $cache_key = 'fp_cache_postPlayer_' . self::$current_post_id;
 
@@ -537,7 +537,7 @@ class FP_Movies_Shortcodes
         // $start = microtime(true);
         self::enqueue_global_files();
         global $fp_min_m;
-        wp_enqueue_style('fp-homepage-view', FP_MOVIES_URL . '/templates/css/fp_homepage' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        wp_enqueue_style('fp-homepage-view', esc_url(FP_MOVIES_URL) . '/templates/css/fp_homepage' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         include FP_MOVIES_DIR . 'helper/fp_get_img_gradient.php';
         include FP_MOVIES_DIR . 'templates/home/fp_homepage.php';
 

@@ -254,6 +254,7 @@ class CreatePostHelper extends FP_moviesHelpers
 
         if (is_wp_error($attachment_id)) {
             @unlink($temp_file);  // Clean up temporary file
+            @wp_delete_file($temp_file);
             // error_log('Error sideloading image: ' . $attachment_id->get_error_message());
             return false;
         }

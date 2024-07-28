@@ -1,6 +1,8 @@
 <?php
 
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 function fp_sizes_column($cols)
 {
@@ -16,8 +18,8 @@ function fp_sizes_value($column_name, $id)
         $dir = $up_load_dir['url'];
         $meta = wp_get_attachment_metadata($id);
         foreach ($meta['sizes'] as $name => $info) {
-            echo "<strong>" . ucfirst($name) . "</strong>:<br>";
-            echo "<small><a href='" . $dir . "/" . $info['file'] . "' target='_blank'>" . $info['file'] . "</a></small><br><br>";
+            echo esc_html("<strong>" . ucfirst($name) . "</strong>:<br>");
+            echo "<small><a href='" . esc_url($dir) . "/" . esc_html($info['file']) . "' target='_blank'>" . esc_html($info['file']) . "</a></small><br><br>";
         }
     }
 }

@@ -11,7 +11,7 @@ function getBackdrop($meta_data, $fallback_image, $userQuality) {
     }
 
     if (empty($backdrop)) {
-        $default_img = FP_MOVIES_URL . 'img/image-not-found.webp';
+        $default_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
         // error_log('Default image: ' . $default_img);
         // $fallback_image = get_option_with_fallback('mtg_template_player_fallback_image_url', $default_img);
         if (empty($fallback_image)) $fallback_image = $default_img;

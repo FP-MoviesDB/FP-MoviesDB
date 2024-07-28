@@ -9,4 +9,4 @@ function formatBytes($size, $precision = 2)
 }
 
 global $fp_min_m;
-wp_enqueue_style('local-poppins-font', FP_MOVIES_URL . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+wp_enqueue_style('local-poppins-font', esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');

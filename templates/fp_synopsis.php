@@ -56,8 +56,8 @@ class FP_PostSynopsis extends CreatePostHelper
         ?>
 
         <div class="fp_post_synopsis_wrapper">
-            <h2 class="fp_post_synopsis_heading"><?php echo $synopsis_title; ?></h2>
-            <p class="fp_post_synopsis_content"><?php echo $meta_data['fp_overview']; ?></p>
+            <h2 class="fp_post_synopsis_heading"><?php echo esc_html($synopsis_title); ?></h2>
+            <p class="fp_post_synopsis_content"><?php echo esc_html($meta_data['fp_overview']); ?></p>
         </div>
 
         <?php
