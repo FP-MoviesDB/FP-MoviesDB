@@ -108,18 +108,21 @@ class FP_PostLinks extends CreatePostHelper
                 <?php
                 if ($_postType == 'movie') {
                     if (!empty($movie_data)) {
-                        echo '<div class="links-preview">' . wp_kses($movie_data, $allowed_html) . '</div>';
+                        echo '<div class="links-preview">' . $movie_data . '</div>';
+                        // echo '<div class="links-preview">' . wp_kses($movie_data, $allowed_html) . '</div>';
                     }
                 } else {
                     if (!empty($seasons_output)) {
-                        echo wp_kses($seasons_output, $allowed_html);
+                        echo $seasons_output;
+                        // echo wp_kses($seasons_output, $allowed_html);
                     }
 
                     // Check if there are any packs data before displaying the pack section
                     if (!empty($packs_output)) {
                         echo '<div class="down-btn" onclick="togglePacks()">Season PACKs</div>';
                         echo '<div id="season-pack-content" style="display: none;">';
-                        echo wp_kses('<div class="mdownlinks mdownlinks-zip">' . $packs_output . '</div>', $allowed_html);
+                        echo '<div class="mdownlinks mdownlinks-zip">' . $packs_output . '</div>';
+                        // echo wp_kses('<div class="mdownlinks mdownlinks-zip">' . $packs_output . '</div>', $allowed_html);
                         echo '</div>';
                     }
                 ?>
