@@ -5,7 +5,7 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.5
+ * Version:             1.1.6
  * Text Domain:         fp-moviesdb
  * Requires PHP:        8.1
  * Requires at least:   6.5
@@ -113,10 +113,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.5');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.6');
             if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
             if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.5');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.6');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
@@ -134,7 +134,7 @@ if (!class_exists('MoviePostGenerator')) {
             if (!defined('FP_MOVIES_TMDB_IMG_BASE_URL')) define('FP_MOVIES_TMDB_IMG_BASE_URL', 'https://image.tmdb.org/t/p/');
             if (!defined('FP_MOVIES_FP_BASE_URL')) define('FP_MOVIES_FP_BASE_URL', 'https://filebee.xyz/api/v1/files');
             if (get_option('mtg_tmdb_api_key')) define('FP_MOVIES_TMDB_API_KEY', get_option('mtg_tmdb_api_key'));
-            if (get_option('mtg_fp_api_key')) define('FP_MOVIES_FP_API_KEY', get_option('mtg_fp_api_key'));
+            if (get_option('mtg_fp_api_key')) define('FP_MOVIES_FP_API_KEY', urlencode(get_option('mtg_fp_api_key')));
             if (!defined('FP_MOVIES_ENCRYPTION_METHOD')) define('FP_MOVIES_ENCRYPTION_METHOD', 'AES-256-CBC');
 
             if (!defined('FP_MOVIES_ENCRYPTION_KEY')) {

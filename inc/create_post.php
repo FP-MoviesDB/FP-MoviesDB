@@ -213,7 +213,7 @@ class FP_CreatePost extends CreatePostHelper
             'mtg_vote_count' => $postData['vote_count'] ?? 1,
             'mtg_single_screenshot' => !empty($single_screenshot) ? $single_screenshot : $screenshot_fallback,
             'mtg_splash_screenshot' => !empty($splash_screenshot) ? $splash_screenshot : $screenshot_fallback,
-            'mtg_subtitles' => !empty($subtitles) ? json_encode($subtitles) : '',
+            'mtg_subtitles' => !empty($subtitles) ? wp_json_encode($subtitles) : '',
             'mtg_size_480p' => $processedData['size_480p'] ?? '',
             'mtg_size_720p' => $processedData['size_720p'] ?? '',
             'mtg_size_1080p' => $processedData['size_1080p'] ?? '',

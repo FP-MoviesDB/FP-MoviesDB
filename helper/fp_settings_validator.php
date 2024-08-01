@@ -28,6 +28,10 @@ function validate_fp_api_key($input)
 
     // error_log($resURL);
 
+    if (function_exists('fp_log_error')) {
+        fp_log_error('VR_URL: ' . $resURL);
+    }
+
     $response = wp_remote_get($resURL, array('timeout' => 10));
     // error_log(print_r($response, true));
     if (is_wp_error($response) || wp_remote_retrieve_response_code($response) != 200) {
