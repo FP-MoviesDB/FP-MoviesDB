@@ -2,7 +2,8 @@
 /* Template Name: Link Handler Template */
 if (!defined('ABSPATH')) exit;
 
-session_start();
+// session_start();
+if (!isset($_SESSION)) session_start();
 
 require_once FP_MOVIES_DIR . 'helper/fp_links_encryption.php';
 require_once FP_MOVIES_DIR . 'helper/fp_get_sLink.php';
@@ -164,6 +165,9 @@ if ($encrypted_url) {
 } else {
     require_once FP_MOVIES_DIR . 'templates/fp_404.php';
 }
+
+// Session end
+if (isset($_SESSION)) session_destroy();
 
 
 

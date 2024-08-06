@@ -5,7 +5,7 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.7
+ * Version:             1.1.8
  * Text Domain:         fp-moviesdb
  * Requires PHP:        8.1
  * Requires at least:   6.5
@@ -113,10 +113,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.7');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.8');
             if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
             if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.7');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.8');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
