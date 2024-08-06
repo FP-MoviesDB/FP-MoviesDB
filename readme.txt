@@ -23,5 +23,19 @@
 * Some Improvements in Front Design.
 * Some other enhancements.
 
-= 1.1.4 =
+= 1.1.5 =
 * Optimization as per WP Standards.
+
+= 1.1.6 =
+* fix: api key urlencode().
+* log: while debugging VR URL.
+* wp_standards:
+* replacing json_encode to wp_json_encode.
+* removing @Unlink as wp_delete_file is used.
+
+= 1.1.7 =
+* Single Post Season not folding.
+
+= 1.1.8 =
+* FIX - Media Size HTML encoding.
+* FIX - Link Session Issue.
