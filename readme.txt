@@ -50,3 +50,6 @@
 * 	-Fix Homepage low width css issue.
 * 	-Added Option to show image local/tmdb
 * Many Other Security and Performance updates.
+
+= 1.2.1 =
+* HotFix : Fatal error - Uncaught Error in logs handler
