@@ -16,10 +16,13 @@ function clear_post_specific_transient($post_id, $post, $update)
         $post_player_key = 'fp_cache_postPlayer_' . $post_id;
         $post_links_key = 'fp_cache_postLinks_' . $post_id;
 
+        $theme_trending_list = "fp_theme_trending_searches";
+
         $all_transients = [
             $transient_name,
             $post_player_key,
-            $post_links_key
+            $post_links_key,
+            $theme_trending_list
         ];
 
         foreach ($all_transients as $transient) {

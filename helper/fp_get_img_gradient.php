@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) exit;
 if (!function_exists('fp_calculateImageGradient')) {
     function fp_calculateImageGradient($imageUrl)
     {
-        $numSlices = 5;
+        $numSlices = 7;
         $response = wp_remote_get($imageUrl);
         
         // Check for HTTP request errors

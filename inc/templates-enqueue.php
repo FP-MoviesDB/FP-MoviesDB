@@ -35,13 +35,16 @@ class FP_Movies_Shortcodes
         add_shortcode('fp-synopsis-view', array(__CLASS__, 'shortcode_synopsis'));
         add_shortcode('fp-post-links', array(__CLASS__, 'shortcode_links'));
         add_shortcode('fp-homepage-view', array(__CLASS__, 'fp_homepage_view'));
+        add_shortcode('fp-universal-view', array(__CLASS__, 'fp_universal_view'));
     }
 
 
     public static function enqueue_local_poppins_font()
     {
-        global $fp_min_m;
-        wp_enqueue_style('local-poppins-font', esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        // global $fp_min_m;
+        // wp_enqueue_style('local-poppins-font', esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
+        // wp_enqueue_style('fp-google-fonts', 'https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap', array(), null, 'all');
+        wp_enqueue_style('fp-google-fonts', 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&family=Roboto:wght@500;600;700;800&display=swap', array(), null, 'all');
     }
 
     private static function enqueue_global_files()
@@ -388,7 +391,7 @@ class FP_Movies_Shortcodes
 
         $post_links_mov_single_item_size = self::get_color_option('single_item_size', "#ff8f00");
         $post_links_mov_single_item_quality = self::get_color_option('single_item_quality', "#0c97c2");
-        $post_links_mov_single_item_audio = self::get_color_option('single_item_audio', "#9b0a6a");
+        $post_links_mov_single_item_audio = self::get_color_option('single_item_audio', "#7d7279");
 
         $post_links_tv_season_bg = self::get_color_option('tv_season_bg_color', "#004dbb");
         $post_links_tv_season_bg_hover = self::get_color_option('tv_season_bg_color_hover', "#03268e");
@@ -548,6 +551,25 @@ class FP_Movies_Shortcodes
 
         $end = microtime(true);
         // error_log('Time taken for HOMEPAGE: ' . ($end - $start)) . 'PostID: ' . self::$current_post_id;
+        return $content;
+    }
+
+    public static function fp_universal_view($atts){
+        fp_log_error('UNIVERSAL shortcode called');
+        fp_log_error('UNIVERSAL shortcode atts: ' . json_encode($atts));
+        $start = microtime(true);
+        self::enqueue_views_files();
+        self::enqueue_global_files();
+        global $fp_min_m;
+        include FP_MOVIES_DIR . 'templates/fp_universal.php';
+        $shortcode_handler = new FP_Universal_Shortcode();
+        $content = $shortcode_handler->fp_display_universal($atts);
+        fp_log_error('UNIVERSAL shortcode content: ' . $content);
+        $content = trim($content);
+        $content = preg_replace('/\s+/', ' ', $content);
+        $content = str_replace("> <", "><", $content);
+        $end = microtime(true);
+        fp_log_error('Time taken for UNIVERSAL: ' . ($end - $start)) . 'PostID: ' . self::$current_post_id;
         return $content;
     }
 }

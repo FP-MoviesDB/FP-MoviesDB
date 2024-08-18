@@ -111,10 +111,13 @@ if ($encrypted_url) {
             //     }
             // }
             global $fp_min_m;
-            $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
+            // $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
+            $font_url = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&family=Roboto:wght@500;600;700;800&display=swap';
             if (current_user_can('administrator')) {
                 echo '<!DOCTYPE html><html lang="en-US"><head>';
-                echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
+                // echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
+                echo '<link rel="preconnect" href="https://fonts.gstatic.com">';
+                echo '<link href="' . esc_url($font_url) . '" rel="stylesheet" type="text/css">';
                 echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
                 display_admin_links();
                 echo '</head><body>';
@@ -264,7 +267,7 @@ function display_captcha_styles()
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-family: "Poppins", sans-serif;
+            font-family: "Nunito", "Poppins", sans-serif;
         }
         .verification-container h1 {
             text-align: center;

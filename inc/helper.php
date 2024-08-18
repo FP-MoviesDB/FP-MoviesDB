@@ -108,6 +108,32 @@ class CreatePostHelper extends FP_moviesHelpers
         return $replaced;
     }
 
+    function replace_template_placeholders_2($template, $data)
+    {
+        $pattern = '/\{(\w+)\}/';
+
+        $replaced = preg_replace_callback($pattern, function ($matches) use ($data) {
+            $templateKey = $matches[1];
+
+            // Check if the data exists and is an array (specifically for 'audio')
+            if (isset($data[$templateKey])) {
+                if (is_array($data[$templateKey])) {
+                    // Join array elements with a hyphen
+                    return implode('-', $data[$templateKey]);
+                } else {
+                    // Return the data as is if it's not an array
+                    return $data[$templateKey];
+                }
+            }
+
+            // Return the original placeholder if no data is found
+            return $matches[0];
+        }, $template);
+
+        return $replaced;
+    }
+
+
     function normalize_to_array($input)
     {
         if (empty($input)) {
@@ -265,7 +291,7 @@ class CreatePostHelper extends FP_moviesHelpers
             return false;
         }
 
-        
+
         $gradient_color = fp_calculateImageGradient($image_url);
 
         try {
@@ -282,13 +308,22 @@ class CreatePostHelper extends FP_moviesHelpers
     function getQualityFromString($name)
     {
         $quality = [
-            '4k' => '2160p', '2160p' => '2160p', '2160' => '2160p', '4k' => '2160p',
-            '1080p' => '1080p', '1080' => '1080p',
-            '720p' => '720p', '720' => '720p',
-            '480p' => '480p', '480' => '480p',
-            '360p' => '360p', '360' => '360p',
-            '240p' => '240p', '240' => '240p',
-            '144p' => '144p', '144' => '144p',
+            '4k' => '2160p',
+            '2160p' => '2160p',
+            '2160' => '2160p',
+            '4k' => '2160p',
+            '1080p' => '1080p',
+            '1080' => '1080p',
+            '720p' => '720p',
+            '720' => '720p',
+            '480p' => '480p',
+            '480' => '480p',
+            '360p' => '360p',
+            '360' => '360p',
+            '240p' => '240p',
+            '240' => '240p',
+            '144p' => '144p',
+            '144' => '144p',
         ];
         $name = strtolower($name);
         foreach ($quality as $key => $value) {
@@ -303,26 +338,46 @@ class CreatePostHelper extends FP_moviesHelpers
     function getAudioString($audioLangList, $name)
     {
         $audio_from_name = [
-            'tam' => 'Tamil', 'tamil' => 'Tamil',
-            'tel' => 'Telugu', 'telugu' => 'Telugu',
-            'hin' => 'Hindi', 'hindi' => 'Hindi',
-            'eng' => 'English', 'english' => 'English',
-            'kan' => 'Kannada', 'kannada' => 'Kannada',
-            'mal' => 'Malayalam', 'malayalam' => 'Malayalam',
-            'jpn' => 'Japanese', 'japanese' => 'Japanese',
-            'mar' => 'Marathi', 'marathi' => 'Marathi',
-            'ben' => 'Bengali', 'bengali' => 'Bengali',
-            'pun' => 'Punjabi', 'punjabi' => 'Punjabi',
-            'pan' => 'Punjabi', 'punjabi' => 'Punjabi',
-            'kor' => 'Korean', 'korean' => 'Korean',
-            'chi' => 'Chinese', 'chinese' => 'Chinese',
-            'spa' => 'Spanish', 'spanish' => 'Spanish',
-            'fre' => 'French', 'french' => 'French',
-            'ger' => 'German', 'german' => 'German',
-            'ita' => 'Italian', 'italian' => 'Italian',
-            'rus' => 'Russian', 'russian' => 'Russian',
-            'ara' => 'Arabic', 'arabic' => 'Arabic',
-            'tur' => 'Turkish', 'turkish' => 'Turkish',
+            'tam' => 'Tamil',
+            'tamil' => 'Tamil',
+            'tel' => 'Telugu',
+            'telugu' => 'Telugu',
+            'hin' => 'Hindi',
+            'hindi' => 'Hindi',
+            'eng' => 'English',
+            'english' => 'English',
+            'kan' => 'Kannada',
+            'kannada' => 'Kannada',
+            'mal' => 'Malayalam',
+            'malayalam' => 'Malayalam',
+            'jpn' => 'Japanese',
+            'japanese' => 'Japanese',
+            'mar' => 'Marathi',
+            'marathi' => 'Marathi',
+            'ben' => 'Bengali',
+            'bengali' => 'Bengali',
+            'pun' => 'Punjabi',
+            'punjabi' => 'Punjabi',
+            'pan' => 'Punjabi',
+            'punjabi' => 'Punjabi',
+            'kor' => 'Korean',
+            'korean' => 'Korean',
+            'chi' => 'Chinese',
+            'chinese' => 'Chinese',
+            'spa' => 'Spanish',
+            'spanish' => 'Spanish',
+            'fre' => 'French',
+            'french' => 'French',
+            'ger' => 'German',
+            'german' => 'German',
+            'ita' => 'Italian',
+            'italian' => 'Italian',
+            'rus' => 'Russian',
+            'russian' => 'Russian',
+            'ara' => 'Arabic',
+            'arabic' => 'Arabic',
+            'tur' => 'Turkish',
+            'turkish' => 'Turkish',
         ];
         if (empty($audioLangList)) {
             $name_split = preg_split('/[\s,.-]+/', $name);
@@ -394,26 +449,46 @@ class CreatePostHelper extends FP_moviesHelpers
         $size_quality_type = array();
 
         $audio_from_name = [
-            'tam' => 'Tamil', 'tamil' => 'Tamil',
-            'tel' => 'Telugu', 'telugu' => 'Telugu',
-            'hin' => 'Hindi', 'hindi' => 'Hindi',
-            'eng' => 'English', 'english' => 'English',
-            'kan' => 'Kannada', 'kannada' => 'Kannada',
-            'mal' => 'Malayalam', 'malayalam' => 'Malayalam',
-            'jpn' => 'Japanese', 'japanese' => 'Japanese',
-            'mar' => 'Marathi', 'marathi' => 'Marathi',
-            'ben' => 'Bengali', 'bengali' => 'Bengali',
-            'pun' => 'Punjabi', 'punjabi' => 'Punjabi',
-            'pan' => 'Punjabi', 'punjabi' => 'Punjabi',
-            'kor' => 'Korean', 'korean' => 'Korean',
-            'chi' => 'Chinese', 'chinese' => 'Chinese',
-            'spa' => 'Spanish', 'spanish' => 'Spanish',
-            'fre' => 'French', 'french' => 'French',
-            'ger' => 'German', 'german' => 'German',
-            'ita' => 'Italian', 'italian' => 'Italian',
-            'rus' => 'Russian', 'russian' => 'Russian',
-            'ara' => 'Arabic', 'arabic' => 'Arabic',
-            'tur' => 'Turkish', 'turkish' => 'Turkish',
+            'tam' => 'Tamil',
+            'tamil' => 'Tamil',
+            'tel' => 'Telugu',
+            'telugu' => 'Telugu',
+            'hin' => 'Hindi',
+            'hindi' => 'Hindi',
+            'eng' => 'English',
+            'english' => 'English',
+            'kan' => 'Kannada',
+            'kannada' => 'Kannada',
+            'mal' => 'Malayalam',
+            'malayalam' => 'Malayalam',
+            'jpn' => 'Japanese',
+            'japanese' => 'Japanese',
+            'mar' => 'Marathi',
+            'marathi' => 'Marathi',
+            'ben' => 'Bengali',
+            'bengali' => 'Bengali',
+            'pun' => 'Punjabi',
+            'punjabi' => 'Punjabi',
+            'pan' => 'Punjabi',
+            'punjabi' => 'Punjabi',
+            'kor' => 'Korean',
+            'korean' => 'Korean',
+            'chi' => 'Chinese',
+            'chinese' => 'Chinese',
+            'spa' => 'Spanish',
+            'spanish' => 'Spanish',
+            'fre' => 'French',
+            'french' => 'French',
+            'ger' => 'German',
+            'german' => 'German',
+            'ita' => 'Italian',
+            'italian' => 'Italian',
+            'rus' => 'Russian',
+            'russian' => 'Russian',
+            'ara' => 'Arabic',
+            'arabic' => 'Arabic',
+            'tur' => 'Turkish',
+            'turkish' => 'Turkish',
         ];
 
         foreach ($fpData as $file) {

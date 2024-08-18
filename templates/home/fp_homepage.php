@@ -176,11 +176,32 @@ if (!function_exists('fp_display_home')) {
                                 $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . 'original' . $landscape_img_tmdb_path;
                             }
                             $portrait_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
-                            if (empty($portrait_img_tmdb_path)) {
-                                $portrait_img = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
+
+
+                            $image_url = '';
+                            if ($f_atts['image_source'] === 'tmdb') {
+                                $poster_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
+                                if (!empty($poster_path)) {
+                                    if (str_starts_with($poster_path, '/')) {
+                                        $image_size = $image_size_mapping[$f_atts['image_size']] ?? 'w500';
+                                        $image_url = 'https://image.tmdb.org/t/p/' . $image_size . $poster_path;
+                                    } else {
+                                        $image_url = $poster_path;
+                                    }
+                                } else {
+                                    $image_url = get_the_post_thumbnail_url(get_the_ID(), $f_atts['image_size']);
+                                }
                             } else {
-                                $portrait_img = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $portrait_img_tmdb_path;
+                                $image_url = get_the_post_thumbnail_url(get_the_ID(), $f_atts['image_size']);
                             }
+
+
+                            if (empty($image_url)) {
+                                $image_url = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
+                            } 
+                            // else {
+                            //     $image_url = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $portrait_img_tmdb_path;
+                            // }
                             $post_count = $query->post_count;
                             // error_log('Post Count: ' . $post_count);
                             $title = get_the_title();
@@ -214,7 +235,7 @@ if (!function_exists('fp_display_home')) {
                                     <div class="absolute-wrapper">
                                         <a href="<?php echo esc_url($permalink); ?>">
                                             <div class="image-wrapper">
-                                                <img src="<?php echo esc_url($portrait_img); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="portrait-image" loading="lazy">
+                                                <img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="portrait-image" loading="lazy">
                                             </div>
                                         </a>
                                         <div class="content-wrapper">

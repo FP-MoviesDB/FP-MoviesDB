@@ -182,6 +182,7 @@ class FP_UpdatePost extends CreatePostHelper
             'mtg_size_720p' => $processedData['size_720p'] ?? '',
             'mtg_size_1080p' => $processedData['size_1080p'] ?? '',
             'mtg_size_2160p' => $processedData['size_2160p'] ?? '',
+            'mtg_storyline' => $overview
         );
 
         $current_meta_values = get_post_meta($this->post_id);

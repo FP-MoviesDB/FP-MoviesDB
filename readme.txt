@@ -39,3 +39,14 @@
 = 1.1.8 =
 * FIX - Media Size HTML encoding.
 * FIX - Link Session Issue.
+
+= 1.2.0 =
+* ADD Post Modified Date option at Post Editor
+* ADD [fp-universal-view] shortcode
+* ADD Taxonomy will Shows in Nav/Menu/UI
+* ADD Roboto, Poppins & Nunito Font
+* FIX Shortcodes: 
+*   -No Longer forces font-family.
+* 	-Fix Homepage low width css issue.
+* 	-Added Option to show image local/tmdb
+* Many Other Security and Performance updates.

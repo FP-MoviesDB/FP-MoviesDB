@@ -22,6 +22,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'audio'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
 
@@ -32,6 +35,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'year'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
 
@@ -42,6 +48,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'genre'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
 
@@ -52,6 +61,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'resolution'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
 
@@ -62,6 +74,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'quality'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
 
@@ -72,8 +87,9 @@ function fp_register_taxonomies()
             'rewrite' => array('slug' => 'network'),
             'public' => true,
             'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
         ));
     }
-
-
 }

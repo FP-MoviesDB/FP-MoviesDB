@@ -33,23 +33,46 @@ class FPMovieLinks extends CreatePostHelper
 
         // error_log('Request URL: ' . print_r($request_url, TRUE));
         // $start_time = microtime(true);
-        if (function_exists('curl_version')) {
-            $curl = curl_init($request_url);
-            curl_setopt_array($curl, array(
-                // CURLOPT_URL => $request_url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-            ));
-            $response = curl_exec($curl);
-        } else {
-            $response = file_get_contents($request_url);
+
+        if (function_exists('fp_log_error')) {
+            fp_log_error('API KEY: ' . FP_MOVIES_FP_API_KEY);
+            fp_log_error('Request URL: ' . $request_url);
         }
-        $data = json_decode($response, TRUE);
+
+
+        if (function_exists('wp_remote_get')) {
+            // Make an HTTP GET request
+            $response = wp_remote_get($request_url, array(
+                'timeout'     => 30,
+                'redirection' => 10,
+                'httpversion' => '1.1'
+            ));
+
+            // Check for WP Error
+            if (is_wp_error($response)) {
+                $error_message = $response->get_error_message();
+                // Log error if the logging function exists
+                if (function_exists('fp_log_error')) {
+                    fp_log_error('Error fetching data: ' . $error_message);
+                }
+                return;
+            }
+
+            // Decode the JSON response
+            $data = json_decode(wp_remote_retrieve_body($response), TRUE);
+            // Log the data if the logging function exists
+            if (function_exists('fp_log_error')) {
+                fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
+            }
+        } else {
+            // Fallback to using `file_get_contents` if `wp_remote_get` is not available
+            $response = file_get_contents($request_url);
+            $data = json_decode($response, TRUE);
+            // Log the data if the logging function exists
+            if (function_exists('fp_log_error')) {
+                fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
+            }
+        }
         $combined_data = [];
         if ($data['status']) {
             $files = $data['data']['files'];
@@ -123,6 +146,10 @@ class FPMovieLinks extends CreatePostHelper
             return intval($a['quality']) - intval($b['quality']);
         });
 
+        // chec if fp_log_error function exists and log the data
+        if (function_exists('fp_log_error')) {
+            fp_log_error('Movie Links Data: ' . print_r($combined_data, TRUE));
+        }
 
 
         $movie_data = '';

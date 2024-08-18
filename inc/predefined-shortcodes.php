@@ -73,7 +73,7 @@ function mts_predefined_shortcodes()
                             <div class="pds_shortcode_desc_items pds_direct">
                                 <div>1. Open your theme's PHP file.</div>
                                 <div>2. Add Shortcode like below:</div>
-                                <div><code>&lt;?php<br/>echo do_shortcode('[fp-homepage-view type="featured" content_type="both" title_background="normal"]'); <br/>?&gt;</code></div>
+                                <div><code>&lt;?php<br />echo do_shortcode('[fp-homepage-view type="featured" content_type="both" title_background="normal"]'); <br />?&gt;</code></div>
                                 <div>Note: Don't use <b>&lt;?php</b> and <b>?&gt;</b> if you are already inside that.</div>
                                 <div>4. Done!</div>
                             </div>
@@ -93,6 +93,31 @@ function mts_predefined_shortcodes()
 
                 <div class="pds_section_title">SinglePost Shortcodes Usage Details</div>
                 <div class="pds_entry-content">
+
+                    <div class="pds_shortcode_wrapper">
+                        <div class="pds_entry">
+                            <div class="pds_shortcode_title">Name:</div>
+                            <div class="pds_shortcode_desc">Universal Shortcode</div>
+                        </div>
+                        <div class="pds_entry">
+                            <div class="pds_shortcode_title">Description:</div>
+                            <div class="pds_shortcode_desc">This shortcode will display plain/html text on single post with all ATTRIBUTES.</div>
+                        </div>
+                        <div class="pds_entry">
+                            <div class="pds_shortcode_title">Usage:</div>
+                            <div class="pds_shortcode_desc">[fp-universal-view content="Your Content" type="text/html"]</div>
+                        </div>
+                        <div class="pds_entry">
+                            <div class="pds_shortcode_title">Attributes</div>
+                            <div class="pds_shortcode_desc">
+                                <div class="pds_s_atts">
+                                    <div class="pds_s_atts_flex"><span>content:</span><span>Your Content [Content to display]</span></div>
+                                    <div class="pds_s_atts_flex"><span>type:</span><span>text/html [Type of Content] If using html tags then use html</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="pds_shortcode_wrapper">
                         <div class="pds_entry">
@@ -302,7 +327,7 @@ function mts_predefined_shortcodes()
                     <div class="pds_shortcode_wrapper">
                         <div class="pds_entry">
                             <div class="pds_shortcode_title">Name:</div>
-                            <div class="pds_shortcode_desc">[mts_homepage_view]</div>
+                            <div class="pds_shortcode_desc">[fp_homepage_view]</div>
                         </div>
                         <div class="pds_entry">
                             <div class="pds_shortcode_title">Description:</div>

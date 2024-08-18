@@ -5,7 +5,7 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.1.8
+ * Version:             1.2.0
  * Text Domain:         fp-moviesdb
  * Requires PHP:        8.1
  * Requires at least:   6.5
@@ -42,6 +42,7 @@ if (!class_exists('MoviePostGenerator')) {
             }
             add_action('init', 'fp_register_taxonomies', 10);
             add_action('admin_bar_menu', 'fp_movies_admin_bar', 100);
+            // add_action('admin_head-nav-menus.php', [$this, 'add_custom_taxonomies_to_menu']);
         }
 
         function setup_admin_hooks()
@@ -55,7 +56,9 @@ if (!class_exists('MoviePostGenerator')) {
                 add_action('save_post', 'fp_save_video_meta_box_data');
                 add_action('save_post', 'fp_save_links_meta_box_data');
             }
+            add_action('post_submitbox_misc_actions', 'fp_add_post_modified_date_to_publish_box');
             add_action('save_post', 'clear_post_specific_transient', 10, 3);
+            add_action('save_post', 'fp_update_post_modified_date');
             add_action('add_meta_boxes', 'custom_meta_boxes_init');
             add_action('add_meta_boxes', 'video_meta_box_init');
             add_action('add_meta_boxes', 'links_meta_box_init');
@@ -113,10 +116,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.1.8');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.2.0');
             if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
             if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.1.8');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.2.0');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_AJAX'))    define('FP_MOVIES_AJAX',    $ajax_url);
@@ -204,6 +207,8 @@ if (!class_exists('MoviePostGenerator')) {
                 require_once FP_MOVIES_DIR . 'inc/meta/player/fp_metabox_video.php';
                 require_once FP_MOVIES_DIR . 'inc/meta/links/fp_metabox_links.php';
                 require_once FP_MOVIES_DIR . 'helper/fp_clear_transient.php';
+                require_once FP_MOVIES_DIR . 'helper/fp_add_meta_post_date.php';
+                require_once FP_MOVIES_DIR . 'helper/fp_add_post_modified.php';
                 require_once FP_MOVIES_DIR . 'helper/fp_settings_validator.php';
             }
 
@@ -330,6 +335,34 @@ if (!class_exists('MoviePostGenerator')) {
             wp_enqueue_script('fp-movies-global', esc_url(FP_MOVIES_URL) . 'js/fp_global_log' . $fp_min_m . '.js', array('jquery'), FP_MOVIES_VERSION, true);
             wp_localize_script('fp-movies-global', 'fpAjax', array('ajaxurl' => FP_MOVIES_AJAX));
         }
+
+        // function add_custom_taxonomies_to_menu()
+        // {
+        //     $taxonomies = ['mtg_audio', 'mtg_year', 'mtg_genre', 'mtg_resolution', 'mtg_quality', 'mtg_network'];
+
+        //     foreach ($taxonomies as $taxonomy) {
+        //         $tax = get_taxonomy($taxonomy);
+
+        //         if ($tax === false) {
+        //             error_log("Taxonomy $taxonomy is not registered.");
+        //             continue;
+        //         }
+
+        //         fp_log_error('TAXONOMY: ' . print_r($tax, true));
+
+        //         if ($tax && is_object($tax) && isset($tax->labels) && isset($tax->labels->name)) {
+        //             add_meta_box(
+        //                 'add-' . esc_attr($taxonomy),
+        //                 esc_html($tax->labels->name),
+        //                 'wp_nav_menu_item_taxonomy_meta_box',
+        //                 'nav-menus',
+        //                 'side',
+        //                 'default',
+        //                 array('taxonomy' => $taxonomy)
+        //             );
+        //         }
+        //     }
+        // }
     }
     new MoviePostGenerator;
 }

@@ -218,6 +218,7 @@ class FP_CreatePost extends CreatePostHelper
             'mtg_size_720p' => $processedData['size_720p'] ?? '',
             'mtg_size_1080p' => $processedData['size_1080p'] ?? '',
             'mtg_size_2160p' => $processedData['size_2160p'] ?? '',
+            'mtg_storyline' => $overview
         );
         $all_updates_successful = true; // Flag to track if all updates are successful
 
