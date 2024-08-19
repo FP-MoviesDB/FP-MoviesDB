@@ -555,8 +555,8 @@ class FP_Movies_Shortcodes
     }
 
     public static function fp_universal_view($atts){
-        fp_log_error('UNIVERSAL shortcode called');
-        fp_log_error('UNIVERSAL shortcode atts: ' . json_encode($atts));
+        // fp_log_error('UNIVERSAL shortcode called');
+        // fp_log_error('UNIVERSAL shortcode atts: ' . json_encode($atts));
         $start = microtime(true);
         self::enqueue_views_files();
         self::enqueue_global_files();
@@ -564,12 +564,12 @@ class FP_Movies_Shortcodes
         include FP_MOVIES_DIR . 'templates/fp_universal.php';
         $shortcode_handler = new FP_Universal_Shortcode();
         $content = $shortcode_handler->fp_display_universal($atts);
-        fp_log_error('UNIVERSAL shortcode content: ' . $content);
+        // fp_log_error('UNIVERSAL shortcode content: ' . $content);
         $content = trim($content);
         $content = preg_replace('/\s+/', ' ', $content);
         $content = str_replace("> <", "><", $content);
         $end = microtime(true);
-        fp_log_error('Time taken for UNIVERSAL: ' . ($end - $start)) . 'PostID: ' . self::$current_post_id;
+        // fp_log_error('Time taken for UNIVERSAL: ' . ($end - $start)) . 'PostID: ' . self::$current_post_id;
         return $content;
     }
 }

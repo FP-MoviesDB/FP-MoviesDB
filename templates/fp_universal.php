@@ -23,14 +23,21 @@ if (!class_exists('FP_Universal_Shortcode')) {
 
             $content_type = $atts['type'];
 
+            $d_content = base64_decode($atts['content']);
+
+            // fp_log_error('Universal DECODED (base64): ' . $d_content);
+
             if ($content_type === 'text') {
-                $final_content = esc_html($atts['content']);
+                // fp_log_error('Universal content (text): ' . esc_html($d_content));
+                $final_content = esc_html($d_content);
             } else if ($content_type === 'html') {
-                $final_content = htmlspecialchars_decode($atts['content']);
+                // fp_log_error('Universal ORG (html): ' . $d_content);
+                $final_content = htmlspecialchars_decode($d_content);
+                // fp_log_error('Universal DECODED (html): ' . $final_content);
             }
 
-            fp_log_error('Universal content (func): ' . $final_content);
-            fp_log_error('Universal contentType: ' . $content_type);
+            // fp_log_error('Universal content (func): ' . $final_content);
+            // fp_log_error('Universal contentType: ' . $content_type);
             
             if (!$final_content) return '';
 
@@ -42,7 +49,7 @@ if (!class_exists('FP_Universal_Shortcode')) {
 
             $postData = $this->prepare_post_data($meta_data);
 
-            fp_log_error('Universal shortcode post data: ' . json_encode($postData));
+            // fp_log_error('Universal shortcode post data: ' . json_encode($postData));
 
 
             $final_content = $this->format_title($this->replace_template_placeholders_2($final_content, $postData));

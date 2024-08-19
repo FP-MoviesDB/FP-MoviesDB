@@ -169,17 +169,27 @@ if (!function_exists('fp_display_home')) {
                     <div class="image-slider-wrapper">
                         <?php
                         while ($query->have_posts()) : $query->the_post();
-                            $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
-                            if (empty($landscape_img_tmdb_path)) {
-                                $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
-                            } else {
-                                $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . 'original' . $landscape_img_tmdb_path;
-                            }
-                            $portrait_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
+
+                            // $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
+                            // if (empty($landscape_img_tmdb_path)) {
+                            //     $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
+                            // } else {
+                            //     $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . 'original' . $landscape_img_tmdb_path;
+                            // }
+                            
+                            // $portrait_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
 
 
                             $image_url = '';
                             if ($f_atts['image_source'] === 'tmdb') {
+                                $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
+
+                                if (empty($landscape_img_tmdb_path)) {
+                                    $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
+                                } else {
+                                    $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $landscape_img_tmdb_path;
+                                }
+
                                 $poster_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
                                 if (!empty($poster_path)) {
                                     if (str_starts_with($poster_path, '/')) {
@@ -383,7 +393,7 @@ if (!function_exists('fp_display_home')) {
                             $ratings_html = '';
                             if ($f_atts['show_ratings'] === 'true' && !empty($rating)) {
                                 $ratings_html = '
-                                <img class="fp-image-rating-icon" src="' . esc_url(FP_MOVIES_URL) . 'img/star-dark.svg" alt="IMDb" width="15" height="auto">
+                                <img class="fp-image-rating-icon" src="' . esc_url(FP_MOVIES_URL) . 'img/star-dark.svg" alt="IMDb" width="15px" height="15px">
                                 <div class="fp-image-rating">' . esc_html($rating) . '</div>';
                             }
                             $play_background_url = esc_url(FP_MOVIES_URL) . 'img/play_1.svg';

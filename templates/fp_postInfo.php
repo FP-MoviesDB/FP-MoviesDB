@@ -134,10 +134,8 @@ class FP_PostInfo extends CreatePostHelper
                 <li class="fp__post_info_li"><span class='fp__post_info_li_name'>Format</span><span class="fp__post_info_colon">:</span><span class="fp__post_info_span">MKV</span></li>
                 <?php if ($meta_data['fp_imdb']) : ?>
                     <li class="fp__post_info_li fp__post_info_li_imdb">
-                        <div class="fp__post_info_li_imdb_link"><a href="<?php esc_url(FP_MOVIES_IMDB_BASE_URL . '/' . $meta_data['fp_imdb']); ?>" target="_blank">
+                        <div class="fp__post_info_li_imdb_link"><a href="<?php echo esc_url(FP_MOVIES_IMDB_BASE_URL . '/' . esc_attr($meta_data['fp_imdb'])); ?>" target="_blank">
                             <span style="display: inline-flex; align-items: center; justify-content: center;">
-                                <!-- <i class="fab fa-imdb fp_info_imdb_icon"></i> -->
-                                 <!-- USE LOCAL SVG IMAGE -->
                                   <img class="fp_info_imdb_icon imdb_icon_pc" src="<?php echo esc_html(esc_url(FP_MOVIES_URL) . 'img/imdb_light.svg') ?>" alt="IMDb" width="25" height="auto">
 
                                   <img class="fp_info_imdb_icon imdb_icon_mobile" src="<?php echo esc_html(esc_url(FP_MOVIES_URL) . 'img/imdb_dark.svg') ?>" alt="IMDb" width="30" height="auto">
