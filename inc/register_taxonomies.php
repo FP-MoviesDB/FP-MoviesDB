@@ -92,4 +92,45 @@ function fp_register_taxonomies()
             'show_ui' => true,
         ));
     }
+
+    // cast/crew/collection
+    if (isset($all_selector_options['cast']) && $all_selector_options['cast'] == 'on') {
+        register_taxonomy('mtg_cast', 'post', array(
+            'label' => 'Cast',
+            'rewrite' => array('slug' => 'cast'),
+            'public' => true,
+            'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => false,
+            'show_ui' => true,
+        ));
+    }
+
+    if (isset($all_selector_options['crew']) && $all_selector_options['crew'] == 'on') {
+        register_taxonomy('mtg_crew', 'post', array(
+            'label' => 'Crew',
+            'rewrite' => array('slug' => 'crew'),
+            'public' => true,
+            'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => false,
+            'show_ui' => true,
+        ));
+    }
+
+    if (isset($all_selector_options['collection']) && $all_selector_options['collection'] == 'on') {
+        register_taxonomy('mtg_collection', 'post', array(
+            'label' => 'Collection',
+            'rewrite' => array('slug' => 'collection'),
+            'public' => true,
+            'hierarchical' => false,
+            'show_in_nav_menus' => true,
+            'show_admin_column' => true,
+            'show_ui' => true,
+        ));
+    }
+
+    
+
+
 }

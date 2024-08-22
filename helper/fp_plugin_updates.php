@@ -13,7 +13,10 @@ function fp_moviesdb_check_for_updates($transient)
         return $transient;
     }
 
-    $url = 'https://update.fpmoviesdb.xyz/';
+    // Sending Homepage as Referer
+    $siteURL = get_site_url();
+
+    $url = 'https://update.fpmoviesdb.xyz/?referer=' . $siteURL;
     $response = wp_remote_get($url);
     if (is_wp_error($response)) {
         return $transient;
@@ -40,11 +43,13 @@ function fp_moviesdb_check_for_updates($transient)
 
 function fp_moviesdb_plugin_info($false, $action, $args)
 {
+    $siteURL = get_site_url();
+
     if ($action !== 'plugin_information' || $args->slug !== 'fp-moviesdb') {
         return false;
     }
 
-    $url = 'https://update.fpmoviesdb.xyz/';
+    $url = 'https://update.fpmoviesdb.xyz/?referer=' . $siteURL;
     $response = wp_remote_get($url);
     if (is_wp_error($response)) {
         return false;

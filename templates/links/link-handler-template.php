@@ -215,9 +215,12 @@ function validate_captcha($captcha_method, $secret_key, $nonce)
 
 function display_captcha_form($captcha_method, $site_key, $encrypted_url)
 {
+
     echo '<!DOCTYPE html><html lang="en-US"><head>';
     if ($captcha_method === 'recaptcha') {
         echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        
+        // wp_enqueue_script('sp-l-safety', FP_MOVIES_URL . 'templates/js/fp_cSecurity.js', array(''), FP_MOVIES_VERSION, true);
     } elseif ($captcha_method === 'turnstile') {
         echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
     }
@@ -228,6 +231,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
     // page title: Verifying Request
     echo '<title>Verifying Request</title>';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
+    echo '<meta name="robots" content="noindex, nofollow">';
     echo '</head><body>';
     echo '<div class="verification-container">';
     echo '<h1>Please Complete the captcha to Proceed</h1>';
@@ -249,6 +253,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
     echo '<div class="captcha-submit-wrapper"><input class="captcha-submit" type="submit" name="submit" value="Verify"></div>';
     echo '</form>';
     echo '</div>';
+    // echo '<script src=' . esc_url(FP_MOVIES_URL) . 'templates/js/fp_cSecurity.js></script>';
     echo '</body></html>';
 }
 
@@ -260,6 +265,9 @@ function display_captcha_styles()
         body {
             margin: 0;
             padding: 0;
+        }
+        body,p,a,h1,h2,h3,h4,h5,h6 {
+            font-family: "Nunito", "Roboto", "Poppins", sans-serif;
         }
         .verification-container {
             display: flex;

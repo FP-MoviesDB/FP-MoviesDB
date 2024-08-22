@@ -181,20 +181,21 @@ if (!function_exists('fp_display_home')) {
 
 
                             $image_url = '';
+                            $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
+                            
+                            if (empty($landscape_img_tmdb_path)) {
+                                $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
+                            } else {
+                                $image_size = isset($f_atts['image_size']) ? $image_size_mapping[$f_atts['image_size']] : 'w500';
+                                $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $landscape_img_tmdb_path;
+                            }
+
                             if ($f_atts['image_source'] === 'tmdb') {
-                                $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
-
-                                if (empty($landscape_img_tmdb_path)) {
-                                    $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
-                                } else {
-                                    $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $landscape_img_tmdb_path;
-                                }
-
                                 $poster_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
                                 if (!empty($poster_path)) {
                                     if (str_starts_with($poster_path, '/')) {
-                                        $image_size = $image_size_mapping[$f_atts['image_size']] ?? 'w500';
-                                        $image_url = 'https://image.tmdb.org/t/p/' . $image_size . $poster_path;
+                                        // $image_size = $image_size_mapping[$f_atts['image_size']] ?? 'w500';
+                                        $image_url = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $poster_path;
                                     } else {
                                         $image_url = $poster_path;
                                     }

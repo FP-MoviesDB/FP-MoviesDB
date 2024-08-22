@@ -53,3 +53,23 @@
 
 = 1.2.1 =
 * HotFix : Fatal error - Uncaught Error in logs handler
+
+= 1.2.2 =
+* FIX: Template Changes:
+* -Homepage Featured View Image quality Selection added.
+* -Padding to Universal View.
+* -IMDB BOX Title CSS.
+* -Increased Default Quality Width.
+* FIX: fp-universal-view shortcodes various bugs
+
+= 1.2.3 =
+* FIX: error thrown when IMAGICK extension not available
+* FIX: quality default term
+* FIX: error thrown while uploading featured image
+* ADD: updated css.
+* ADD: Universal view now support text,html-scripts,php,shortcodes
+* 
+* [Enable it from plugin MAIN Settings]
+* ADD: cast, crew & collection Taxonomy
+* ADD: enable/disable developer tools open protection
+* Many Other Security and Performance updates.

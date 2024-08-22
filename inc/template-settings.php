@@ -152,7 +152,7 @@ function theme_template_settings()
                     <input type="checkbox" name="mtg_template_settings[enable_shortcode_cache]" value="1" <?php checked(isset($template_settings['enable_shortcode_cache']) ? $template_settings['enable_shortcode_cache'] : 0, 1); ?> />
                     <!-- <input type="checkbox" name="mtg_template_enable_shortcode_cache" value="1" <?php // checked(get_option('mtg_template_enable_shortcode_cache'), 1); 
                                                                                                         ?> /> -->
-                    <p class="description">Enable Shortcode Cache.</p>
+                    <p class="description">Enable Shortcode Cache.<br>SpeedUp Page Load After initial request.</p>
                 </td>
             </tr>
 
@@ -377,66 +377,3 @@ function theme_template_settings()
     </form>
 <?php
 }
-
-
-
-        /*
-            $color_settings = [
-                'mtg_post_title_wrapper_color' => ['label' => 'Post Title Wrapper', 'description' => 'post title background color.', 'default' => '#000000'],
-                'mtg_post_title_color' => ['label' => 'Post Title', 'description' => 'post main title.', 'default' => '#ffffff'],
-                
-                'mtg_synopsis_wrapper_bg_color' => ['label' => 'Synopsis Wrapper Background', 'description' => 'background color for the synopsis wrapper.', 'default' => '#000000'],
-                'mtg_synopsis_heading_color' => ['label' => 'Synopsis Heading', 'description' => 'heading color for the synopsis.', 'default' => '#ffffff'],
-                'mtg_synopsis_content_color' => ['label' => 'Synopsis Content', 'description' => 'content color for the synopsis.', 'default' => '#ffffff'],
-                
-                'mtg_screenshot_gallery_bg_color' => ['label' => 'Screenshots Background', 'description' => 'background color for the screenshot gallery.', 'default' => '#000000'],
-                'mtg_screenshot_gallery_heading_color' => ['label' => 'Screenshot Heading', 'description' => 'heading color for the screenshot gallery.', 'default' => '#ffffff'],
-                
-                'mtg_imdb_wrapper_bg_color' => ['label' => 'IMDB Wrapper Background', 'description' => 'background color for the IMDB wrapper.', 'default' => '#000000'],
-                'mtg_imdb_box_bg_color' => ['label' => 'IMDB Box Background', 'description' => 'background color for the IMDB box.', 'default' => '#222'],
-                'mtg_imdb_title_color' => ['label' => 'IMDB Title', 'description' => 'color for the IMDB title.', 'default' => '#ffffff'],
-                'mtg_imdb_title_year_color' => ['label' => 'IMDB Title [Year]', 'description' => 'color for the IMDB title year.', 'default' => '#ffffff'],
-                'mtg_imdb_meta_key_color' => ['label' => 'IMDB Genre Option Name', 'description' => 'color for the IMDB items [All_KEYs].', 'default' => '#ffffff'],
-                'mtg_imdb_genre_color' => ['label' => 'IMDB Genre value', 'description' => 'color for the IMDB genre.', 'default' => '#8CC411'],
-                'mtg_imdb_audio_color' => ['label' => 'IMDB Audio value', 'description' => 'color for the IMDB audio.', 'default' => '#ec39d9'],
-                'mtg_imdb_network_color' => ['label' => 'IMDB Network value', 'description' => 'color for the IMDB network.', 'default' => 'cornflowerblue'],
-                'mtg_imdb_rating_color' => ['label' => 'IMDB Rating', 'description' => 'color for the IMDB rating.', 'default' => '#ffffff'],
-                'mtg_imdb_teaser_color' => ['label' => 'IMDB Teaser', 'description' => 'color for the IMDB teaser.', 'default' => '#ffffff'],
-                
-                'mtg_post_info_wrapper_bg_color' => ['label' => 'Post Info Wrapper Background', 'description' => 'background color for the post info wrapper.', 'default' => '#000000'],
-                'mtg_post_info_heading_color' => ['label' => 'Post Info Heading', 'description' => 'heading color for the post info.', 'default' => '#ffffff'],
-                'mtg_post_info_li_color' => ['label' => 'Post Info List', 'description' => 'color for the post info list.', 'default' => '#ffffff'],
-                'mtg_post_info_li_span_color' => ['label' => 'Post Info List Span', 'description' => 'color for the post info list span.', 'default' => '#ffffff'],
-                
-                // mpl: movie-post-links
-                'mpl_wrapper_bg_color' => ['label' => 'Links Wrapper Background', 'description' => 'background color for the post links wrapper.', 'default' => '#000000'],
-                'mpl_heading_color' => ['label' => 'Links Heading', 'description' => 'color for the download links heading.', 'default' => '#ffffff'],
-                
-                'mpl_single_item_size' => ['label' => 'Links Meta Item Size', 'description' => 'font size for the download links single item.', 'default' => '#ff8f00'],
-                'mpl_single_item_quality' => ['label' => 'Links Meta Item Quality', 'description' => 'color for the download links single item quality.', 'default' => '#0c97c2'],
-                'mpl_single_item_audio' => ['label' => 'Links Meta Item Audio', 'description' => 'color for the download links single item audio.', 'default' => '#9b0a6a'],
-                
-                'mpl_movie_single_item_color' => ['label' => 'Links Movie Single Item', 'description' => 'color for the download links single item.', 'default' => '#ffffff'],
-                'mpl_movie_single_item_hover_color' => ['label' => 'Links Movie Single Item Hover', 'description' => 'color for the download links single item hover.', 'default' => '#808080'],
-                'mpl_movie_single_item_bg_color' => ['label' => 'Links Movie Single Item Background', 'description' => 'background color for the download links single item.', 'default' => '#242222'],
-                
-                'mpl_tv_season_bg_color' => ['label' => 'Post Links TV Season Background', 'description' => 'background color for the download links tv season.', 'default' => '#004dbb'],
-                'mpl_tv_season_bg_color_hover' => ['label' => 'Post Links TV Season Background Hover', 'description' => 'background color for the download links tv season hover.', 'default' => '#03268e'],
-                'mpl_tv_season_color' => ['label' => 'Post Links TV Season', 'description' => 'text color for the tv "seasons".', 'default' => '#ffffff'],
-                
-                'mpl_tv_quality_bg_color' => ['label' => 'Post Links TV Quality Background', 'description' => 'background color for the download links tv quality.', 'default' => '#059862'],
-                'mpl_tv_quality_bg_color_hover' => ['label' => 'Post Links TV Quality Background Hover', 'description' => 'background color for the download links tv quality hover.', 'default' => '#f4e32c'],
-                'mpl_tv_quality_bg_color_hover_color' => ['label' => 'Post Links TV Quality Background Hover Color', 'description' => 'text color for the download links tv quality hover.', 'default' => '#000000'],
-                'mpl_tv_quality_color' => ['label' => 'Post Links TV Quality', 'description' => 'text color for the tv "quality".', 'default' => '#ffffff'],
-                
-                
-                'mpl_tv_ep_pack_item_bg_color' => ['label' => 'Post Links TV Episode Background', 'description' => 'background color for the download links tv episode.', 'default' => '#282727'],
-                'mpl_tv_ep_pack_item_bg_color_hover' => ['label' => 'Post Links TV Episode Background Hover', 'description' => 'background color for the download links tv episode hover.', 'default' => '#3e3838'],
-                
-                
-                'mpl_tv_episode_color' => ['label' => 'Post Links TV Episode', 'description' => 'text color for the tv "episode".', 'default' => '#ffffff'],
-                'mpl_tv_episode_meta_color' => ['label' => 'Post Links TV Episode Meta', 'description' => 'text color for the tv "episode meta".', 'default' => '#708090'],
-                'mpl_tv_episode_packs_single_season_color' => ['label' => 'Post Links TV Episode Packs Single Season', 'description' => 'text color for the tv "episode packs single season".', 'default' => '#d2691e'],
-
-            ];
-        */

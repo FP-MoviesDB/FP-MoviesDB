@@ -23,19 +23,26 @@ function fp_settings_page()
         'mtg_hide_link_refer' => 'off',
         'mtg_soralink_priority' => '1',
         'mtg_gyanilink_priority' => '2',
+        'mtg_enable_dev_protection' => 'off',
     ]);
 
     $checked_options = get_option('mtg_checked_options');
-    $checked_options = wp_parse_args($checked_options, [
+
+    $default_options = [
         'genre' => 'on',
         'audio' => 'on',
         'year' => 'on',
         'network' => 'on',
         'quality' => 'on',
         'resolution' => 'on',
+        'cast' => 'off',
+        'crew' => 'off',
+        'collection' => 'off',
         'activeClassicEditor' => 'on',
         'displayAllSizes' => 'off',
-    ]);
+    ];
+
+    $checked_options = wp_parse_args($checked_options, $default_options);
 
     $postDefault_settings = get_option('mtg_postDefault_settings', []);
     $postDefault_settings = wp_parse_args($postDefault_settings, [
@@ -136,6 +143,14 @@ function fp_settings_page()
             <tr valign="top" class="turnstile_row" style="display: none;">
                 <th scope="row">Turnstile API Secret Key:</th>
                 <td><input type="text" style="width: 100%;" name="mtg_encryption_settings[mtg_encryption_turnstile_secret_key]" value="<?php echo esc_attr($links_options['mtg_encryption_turnstile_secret_key']); ?>" placeholder="Secret Key" /></td>
+            </tr>
+
+            <tr valign="top">
+                <th scope="row">Enable Dev Protection:</th>
+                <td>
+                    <input type="checkbox" name="mtg_encryption_settings[mtg_enable_dev_protection]" <?php checked($links_options['mtg_enable_dev_protection'], 'on'); ?> />
+                    <p>Make Hard for users to open Developer Tools. [Administrators Excluded]</p>
+                </td>
             </tr>
 
             <tr valign="top">
@@ -341,6 +356,18 @@ function fp_settings_page()
                     <div class="mtg_checked_options">
                         <input type="checkbox" name="mtg_checked_options[resolution]" <?php checked($checked_options['resolution'], 'on'); ?> />
                         <span>Enable Resolution Taxonomy</span>
+                    </div>
+                    <div class="mtg_checked_options">
+                        <input type="checkbox" name="mtg_checked_options[cast]" <?php checked($checked_options['cast'], 'on'); ?> />
+                        <span>Enable Cast Taxonomy</span>
+                    </div>
+                    <div class="mtg_checked_options">
+                        <input type="checkbox" name="mtg_checked_options[crew]" <?php checked($checked_options['crew'], 'on'); ?> />
+                        <span>Enable Crew Taxonomy</span>
+                    </div>
+                    <div class="mtg_checked_options">
+                        <input type="checkbox" name="mtg_checked_options[collection]" <?php checked($checked_options['collection'], 'on'); ?> />
+                        <span>Enable Collection Taxonomy</span>
                     </div>
                     <div class="mtg_checked_options">
                         <input type="checkbox" name="mtg_checked_options[activeClassicEditor]" <?php checked($checked_options['activeClassicEditor'], 'on'); ?> />

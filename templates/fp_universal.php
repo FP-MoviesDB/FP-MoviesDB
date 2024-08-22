@@ -2,12 +2,15 @@
 if (!defined('ABSPATH')) exit;
 
 if (!class_exists('FP_Universal_Shortcode')) {
-    class FP_Universal_Shortcode extends CreatePostHelper {
-        function __construct() {
+    class FP_Universal_Shortcode extends CreatePostHelper
+    {
+        function __construct()
+        {
             // Constructor logic if needed
         }
 
-        function fp_display_universal($atts) {
+        function fp_display_universal($atts)
+        {
 
             fp_log_error('Universal shortcode attributes: ' . json_encode($atts));
             $post_id = get_the_ID();
@@ -31,14 +34,46 @@ if (!class_exists('FP_Universal_Shortcode')) {
                 // fp_log_error('Universal content (text): ' . esc_html($d_content));
                 $final_content = esc_html($d_content);
             } else if ($content_type === 'html') {
-                // fp_log_error('Universal ORG (html): ' . $d_content);
                 $final_content = htmlspecialchars_decode($d_content);
-                // fp_log_error('Universal DECODED (html): ' . $final_content);
+            } else if ($content_type === 'shortcode') {
+
+                if (preg_match('/^\[.*\]$/', trim($d_content))) {
+                    // Extract the shortcode tag to check its validity
+                    preg_match('/\[([a-zA-Z0-9-_]+)[\s\S]*\]/', trim($d_content), $matches);
+                    $shortcode_tag = $matches[1] ?? '';
+
+                    if ($shortcode_tag && shortcode_exists($shortcode_tag)) {
+                        // Process it as a shortcode if it exists
+                        $final_content = do_shortcode($d_content);
+                    } else {
+                        // fp_log_error('Universal shortcode: Invalid or non-existent shortcode.');
+                        $final_content = esc_html($d_content); // Treat as text if invalid
+                    }
+                } else {
+                    // Otherwise, treat it as regular text
+                    $final_content = esc_html($d_content);
+                }
+            } else if ($content_type === 'php') {
+
+                $decoded_php = htmlspecialchars_decode($d_content);
+
+                if (preg_match('/^<\?php/', trim($decoded_php))) {
+                    // If it starts with <?php, execute it as PHP
+                    ob_start();
+                    try {
+                        eval('?>' . $decoded_php);
+                        $final_content = ob_get_clean();
+                    } catch (ParseError $e) {
+                        ob_end_clean();
+                        fp_log_error('Universal shortcode: PHP execution error: ' . $e->getMessage());
+                        $final_content = '';
+                    }
+                } else {
+                    // Otherwise, treat it as regular text
+                    $final_content = esc_html($d_content);
+                }
             }
 
-            // fp_log_error('Universal content (func): ' . $final_content);
-            // fp_log_error('Universal contentType: ' . $content_type);
-            
             if (!$final_content) return '';
 
             // Load post metadata
@@ -59,7 +94,8 @@ if (!class_exists('FP_Universal_Shortcode')) {
             return $final_content ? "<div class='post-universal-wrapper'>$final_content</div>" : '';
         }
 
-        private function prepare_post_data($meta_data) {
+        private function prepare_post_data($meta_data)
+        {
             return [
                 'title' => $meta_data['fp_title'],
                 't_title' => $meta_data['fp_tmdb_title'],
@@ -80,4 +116,3 @@ if (!class_exists('FP_Universal_Shortcode')) {
 }
 
 // Initialize the shortcode class only when needed
-

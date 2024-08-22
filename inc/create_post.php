@@ -10,6 +10,7 @@ class FP_CreatePost extends CreatePostHelper
 
     function __construct()
     {
+        fp_log_error('FP_CreatePost class loaded');
         add_action('wp_ajax_create_movie_post', array($this, 'handle_create_post'));
         $this->apilang = get_option('mtg_language', 'en-US');
         $this->tmdbkey = get_option('mtg_tmdb_api_key', FP_MOVIES_TMDB_API_KEY);
@@ -25,6 +26,7 @@ class FP_CreatePost extends CreatePostHelper
 
     function handle_create_post()
     {
+        fp_log_error('Create post request received');
         if (!wp_verify_nonce($_POST['nonce'], 'movie_tv_nonce') || !current_user_can('publish_posts')) {
             wp_send_json_error(array('message' => 'Unauthorized'), 400);
             return;
@@ -84,8 +86,8 @@ class FP_CreatePost extends CreatePostHelper
         $post_template_status = $this->get_arrayValue_with_fallback($post_template_Default, 'status', 'draft');
         $post_template_category = $this->get_arrayValue_with_fallback($post_template_Default, 'category', $postType);
         $post_template_tags = $this->get_arrayValue_with_fallback($post_template_Default, 'tags', '');
-        $post_template_quality = $this->get_arrayValue_with_fallback($post_template_Default, 'quality', false);
-        $post_template_quality_values = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', 'HD');
+        // $post_template_quality = $this->get_arrayValue_with_fallback($post_template_Default, 'quality', false);
+        $post_template_quality_values = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
 
         // ┌───────────────────────────────┐
         // │ ADD FP DATA TO $POSTDATA   │
@@ -98,17 +100,19 @@ class FP_CreatePost extends CreatePostHelper
         $postData['c_subs'] = $sub_count == 1 ? 'ESub' : ($sub_count > 1 ? 'MSubs' : '');
         $postData['p_type_2'] = $postType_2;
 
-
-
-
         $overview = sanitize_text_field($postData['overview']);
+
         $selectors_settings = get_option('mtg_checked_options', []);
+
         $isGenre = $this->get_arrayValue_with_fallback($selectors_settings, 'genre', false);
         $isAudio = $this->get_arrayValue_with_fallback($selectors_settings, 'audio', false);
         $isYear = $this->get_arrayValue_with_fallback($selectors_settings, 'year', false);
         $isResolution = $this->get_arrayValue_with_fallback($selectors_settings, 'resolution', false);
         $isQuality = $this->get_arrayValue_with_fallback($selectors_settings, 'quality', false);
         $isNetwork = $this->get_arrayValue_with_fallback($selectors_settings, 'network', false);
+        $isCast = $this->get_arrayValue_with_fallback($selectors_settings, 'cast', false);
+        $isCrew = $this->get_arrayValue_with_fallback($selectors_settings, 'crew', false);
+        $isCollection = $this->get_arrayValue_with_fallback($selectors_settings, 'collection', false);
 
         // $isGenre = get_option_with_fallback('mtg_selectors[mtg_genre]', false);
         // $isAudio = get_option_with_fallback('mtg_selectors[mtg_audio]', false);
@@ -198,7 +202,7 @@ class FP_CreatePost extends CreatePostHelper
 
         // error_log("Saving single_screenshot: " . $single_screenshot);
 
-        $meta_data = array(
+        $meta_data = array( 
             '_content_type' => $postType,
             'mtg_post_type' => $postType_2,
             'mtg_tmdb_id' => $postData['tmdb_id'],
@@ -294,22 +298,55 @@ class FP_CreatePost extends CreatePostHelper
         }
 
         if ($isQuality === 'on') {
-            if (!empty($post_template_quality)) {
-                $quality_ids = $this->process_taxonomy_terms('mtg_quality', array($post_template_quality_values));
-                $quality_update_result = wp_set_post_terms($post_id, $quality_ids, 'mtg_quality');
-                if (is_wp_error($quality_update_result)) {
-                    // error_log('Failed to update quality terms for post ID: ' . $post_id);
-                    // $all_updates_successful = true;
-                }
+            $quality_array_names = $postData['quality'];
+            if (!empty($quality_array_names)) {
+                $quality_ids = $this->process_taxonomy_terms('mtg_quality', $quality_array_names);
+                wp_set_post_terms($post_id, $quality_ids, 'mtg_quality');
             }
         }
 
         if ($isNetwork === 'on') {
             if (!empty($networkUpdatedValue)) {
                 $network_ids = $this->process_taxonomy_terms('mtg_network', $networkUpdatedValue);
-                $network_update_result = wp_set_post_terms($post_id, $network_ids, 'mtg_network');
-                if (is_wp_error($network_update_result)) {
-                    // error_log('Failed to update network terms for post ID: ' . $post_id);
+                wp_set_post_terms($post_id, $network_ids, 'mtg_network');
+            }
+        }
+
+        if ($isCast === 'on') {
+            $cast = $postData['cast'];
+            // error_log("CAST: " . print_r($cast, TRUE));
+            if (!empty($cast)) {
+                $cast_ids = $this->process_taxonomy_terms('mtg_cast', $cast);
+                $cast_update_result = wp_set_post_terms($post_id, $cast_ids, 'mtg_cast');
+                if (is_wp_error($cast_update_result)) {
+                    // error_log('Failed to update cast terms for post ID: ' . $post_id);
+                    // $all_updates_successful = true;
+                }
+            }
+        }
+
+        if ($isCrew === 'on') {
+            $crew = $postData['crew'];
+            // error_log("CREW: " . print_r($crew, TRUE));
+            if (!empty($crew)) {
+                $crew_ids = $this->process_taxonomy_terms('mtg_crew', $crew);
+                $crew_update_result = wp_set_post_terms($post_id, $crew_ids, 'mtg_crew');
+                if (is_wp_error($crew_update_result)) {
+                    // error_log('Failed to update crew terms for post ID: ' . $post_id);
+                    // $all_updates_successful = true;
+                }
+            }
+        }
+
+        if ($isCollection === 'on') {
+            $collection = $postData['collection'];
+            // error_log("COLLECTION: " . print_r($collection, TRUE));
+            if (!empty($collection)) {
+                // send collection as array
+                $collection_ids = $this->process_taxonomy_terms('mtg_collection', array($collection));
+                $collection_update_result = wp_set_post_terms($post_id, $collection_ids, 'mtg_collection');
+                if (is_wp_error($collection_update_result)) {
+                    // error_log('Failed to update collection terms for post ID: ' . $post_id);
                     // $all_updates_successful = true;
                 }
             }

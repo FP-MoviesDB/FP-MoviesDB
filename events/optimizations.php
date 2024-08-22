@@ -17,6 +17,7 @@ function fp_check_optimizations_status_handler() {
 }
 
 register_deactivation_hook(__FILE__, 'fp_deactivation');
+
 function fp_deactivation() {
     wp_clear_scheduled_hook('fp_check_optimizations_status');
     if (function_exists('fp_log_error')) fp_log_error('Optimizations check event unscheduled');

@@ -22,7 +22,7 @@ function fp_add_post_modified_date_to_publish_box()
     // $fp_post_modified_custom = get_post_meta($post->ID, '_fp_post_modified_custom', true);
 
     //log as string
-    fp_log_error('LOG AS STR: ' . print_r($post, true));
+    // fp_log_error('LOG AS STR: ' . print_r($post, true));
 
     $fp_post_modified = $post->fp_post_modified;
 

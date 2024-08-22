@@ -230,6 +230,30 @@ class CreatePostHelper extends FP_moviesHelpers
         return $genre_name;
     }
 
+    function fp_get_mime_type($file_path)
+    {
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime_type = finfo_file($finfo, $file_path);
+            finfo_close($finfo);
+            return $mime_type;
+        }
+
+        if (function_exists('mime_content_type')) {
+            return mime_content_type($file_path);
+        }
+
+        $ext = pathinfo($file_path, PATHINFO_EXTENSION);
+        $mime_types = [
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'gif'  => 'image/gif',
+            'webp' => 'image/webp',
+        ];
+        return isset($mime_types[$ext]) ? $mime_types[$ext] : 'image/jpeg';
+    }
+
 
     function set_featured_image_from_url($post_id, $tmdbData, $image_size = 'w780', $image_name = '')
     {
@@ -261,10 +285,11 @@ class CreatePostHelper extends FP_moviesHelpers
             $final_title = $this->format_title($this->replace_template_placeholders($image_name, $tmdbData));
         }
 
+
         // Prepare an array of post data for the attachment.
         $file = [
             'name'     => $final_title . '.' . pathinfo($image_url, PATHINFO_EXTENSION),  // Ensure proper extension
-            'type'     => mime_content_type($temp_file),  // Get the MIME type of the current file
+            'type'     => $this->fp_get_mime_type($temp_file),
             'tmp_name' => $temp_file,
             'error'    => 0,
             'size'     => filesize($temp_file),
@@ -637,7 +662,7 @@ class CreatePostHelper extends FP_moviesHelpers
             'api_key' => $tmdbkey,
             'language' => $apilang,
         );
-        $append_to_response = '&append_to_response=external_ids,videos';
+        $append_to_response = '&append_to_response=external_ids,videos,credits';
         $tmdb_apiURL = FP_MOVIES_TMDB_API_BASE_URL . '/' . $postType . '/' . $tmdb_id;
         $json_tmdb = $this->RemoteJson($args, $tmdb_apiURL, $append_to_response);
         // Verify status code
@@ -704,6 +729,37 @@ class CreatePostHelper extends FP_moviesHelpers
             $genre_names = array();
         }
 
+        $credits = $this->Disset($json_tmdb, 'credits');
+
+        if (!empty($credits) && is_array($credits)) {
+            $cast = $this->Disset($credits, 'cast');
+            $crew = $this->Disset($credits, 'crew');
+
+            if (!empty($cast) && is_array($cast)) {
+                // $cast = array_slice($cast, 0, 5);
+                $cast = array_map(function ($actor) {
+                    return $actor['name'];
+                }, $cast);
+            } else {
+                $cast = array();
+            }
+
+            if (!empty($crew) && is_array($crew)) {
+                $crew = array_map(function ($member) {
+                    return $member['name'];
+                }, $crew);
+            } else {
+                $crew = array();
+            }
+        }
+
+        $collection = $this->Disset($json_tmdb, 'belongs_to_collection');
+        if (!empty($collection)) {
+            $collection_name = $this->Disset($collection, 'name');
+        } else {
+            $collection_name = '';
+        }
+
         $postData = array(
             'p_type' => $postType,
             'title' => $title,
@@ -720,7 +776,10 @@ class CreatePostHelper extends FP_moviesHelpers
             'tmdb_id' => $tmdb_id,
             'imdb_id' => $imdb_id,
             'tagline' => $this->Disset($json_tmdb, 'tagline'),
-            'trailer' => $trailer_key
+            'trailer' => $trailer_key,
+            'cast' => (isset($cast)) ? $cast : array(),
+            'crew' => (isset($crew)) ? $crew : array(),
+            'collection' => $collection_name,
         );
 
         if ($postType === 'tv') {
