@@ -251,7 +251,9 @@ class FP_UpdatePost extends CreatePostHelper
 
         if ($isQuality === 'on') {
             $quality_array_names = $postData['quality'];
-
+            if (!is_array($quality_array_names)) {
+                $quality_array_names = array($quality_array_names);
+            }
             fp_log_error('QUALITY: ' . print_r($quality_array_names, TRUE));
             if (!empty($quality_array_names)) {
                 $quality_ids = $this->process_taxonomy_terms('mtg_quality', $quality_array_names);

@@ -177,6 +177,8 @@ class FP_CreatePost extends CreatePostHelper
         // error_log("POST_ID: " . print_r($post_id, TRUE));
         // error_log("POSTER_URL: " . print_r($tmdbData['poster_url'], TRUE));
 
+        fp_log_error('Stage 1');
+
 
         if (!empty($postData['poster_path'])) {
             // error_log("POSTER_PATH: " . print_r($postData['poster_path'], TRUE));
@@ -188,6 +190,8 @@ class FP_CreatePost extends CreatePostHelper
                 $all_updates_successful = false;
             }
         }
+
+        fp_log_error('Stage 2');
 
         // genre, audio and year is a taxonomy term, so we need to create a function to handle this
 
@@ -299,6 +303,9 @@ class FP_CreatePost extends CreatePostHelper
 
         if ($isQuality === 'on') {
             $quality_array_names = $postData['quality'];
+            if (!is_array($quality_array_names)) {
+                $quality_array_names = array($quality_array_names);
+            }
             if (!empty($quality_array_names)) {
                 $quality_ids = $this->process_taxonomy_terms('mtg_quality', $quality_array_names);
                 wp_set_post_terms($post_id, $quality_ids, 'mtg_quality');
