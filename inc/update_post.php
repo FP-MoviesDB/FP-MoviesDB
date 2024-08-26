@@ -67,13 +67,15 @@ class FP_UpdatePost extends CreatePostHelper
         $resolution = $processedData['resolution'];
         $audios = $processedData['audios'];
         $subtitles = $processedData['subtitles'];
+        $qualities = $processedData['qualities'];
+        $networks = $processedData['networks'];
 
         $post_template_Default = get_option('mtg_postDefault_settings', []);
         // error_log("POST TEMPLATE DEFAULT: " . print_r($post_template_Default, TRUE));
         $post_template_default_network = $this->get_arrayValue_with_fallback($post_template_Default, 'default_network', '');
         $post_template_default_network = $this->normalize_to_array($post_template_default_network);
 
-        $postData = $this->fetchTMDBdata($this->tmdb_id, $this->post_type, $this->tmdbkey, $this->apilang, $post_template_default_network);
+        $postData = $this->fetchTMDBdata($this->tmdb_id, $this->post_type, $this->tmdbkey, $this->apilang);
         $this->validate_array($postData, 'Failed to fetch data from TMDB API');
 
         $post_template_title = $this->get_arrayValue_with_fallback($post_template_Default, 'title', '{title}');
@@ -82,19 +84,33 @@ class FP_UpdatePost extends CreatePostHelper
         $post_template_category = $this->get_arrayValue_with_fallback($post_template_Default, 'category', $this->post_type);
         $post_template_tags = $this->get_arrayValue_with_fallback($post_template_Default, 'tags', '');
         // $post_template_quality = $this->get_arrayValue_with_fallback($post_template_Default, 'quality', false);
-        $post_template_quality_values = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
-        $post_template_quality_values = $this->normalize_to_array($post_template_quality_values);
+        if (!empty($qualities)) {
+            $quality_values_final = $qualities;
+        } else {
+            $quality_values_final = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
+            $quality_values_final = $this->normalize_to_array($quality_values_final);
+        }
 
         // ┌───────────────────────────────┐
         // │ ADD FP DATA TO $POSTDATA   │
         // └───────────────────────────────┘
-        $postData['quality'] = $post_template_quality_values;
+        $postData['quality'] = $quality_values_final;
         $postData['audio'] = implode('-', $audios);
         $audio_count = count($audios);
         $postData['c_audio'] = $audio_count > 0 && $audio_count <= 2 ? implode('-', $audios) : 'Multi Audio';
         $sub_count = count($subtitles);
         $postData['c_subs'] = $sub_count == 1 ? 'ESub' : ($sub_count > 1 ? 'MSubs' : '');
         $postData['p_type_2'] = $postType_2;
+
+        if (isset($postData['networks'])) {
+            $postData['networks'] = array_merge($postData['networks'], $networks);
+        } else {
+            if (!empty($networks) && is_array($networks)) {
+                $postData['networks'] = $networks;
+            } else {
+                $postData['networks'] = $post_template_default_network;
+            }
+        }
 
         $overview = sanitize_text_field($postData['overview']);
         $selectors_settings = get_option('mtg_checked_options', []);
@@ -108,18 +124,18 @@ class FP_UpdatePost extends CreatePostHelper
         $isCrew = $this->get_arrayValue_with_fallback($selectors_settings, 'crew', false);
         $isCollection = $this->get_arrayValue_with_fallback($selectors_settings, 'collection', false);
 
-        $networkUpdatedValue = array();
-        if (!empty($postData['networks']) && $postData['networks']) {
-            $networkUpdatedValue = array_merge($postData['networks'], $post_template_default_network);
-        } else {
-            $networkUpdatedValue = $post_template_default_network;
-        }
-        $networkUpdatedValue = array_unique($networkUpdatedValue);
-        if (!empty($post_template_tags)) {
-            $tag_names = $this->normalize_to_array($post_template_tags);
-            $tag_names = $this->replace_template_placeholders($tag_names, $postData);
-            $tag_ids = $this->process_taxonomy_terms('post_tag', $tag_names);
-        }
+        // $networkUpdatedValue = array();
+        // if (!empty($postData['networks']) && $postData['networks']) {
+        //     $networkUpdatedValue = array_merge($postData['networks'], $post_template_default_network);
+        // } else {
+        //     $networkUpdatedValue = $post_template_default_network;
+        // }
+        // $networkUpdatedValue = array_unique($networkUpdatedValue);
+        // if (!empty($post_template_tags)) {
+        //     $tag_names = $this->normalize_to_array($post_template_tags);
+        //     $tag_names = $this->replace_template_placeholders($tag_names, $postData);
+        //     $tag_ids = $this->process_taxonomy_terms('post_tag', $tag_names);
+        // }
 
         $category_replace = $this->replace_template_placeholders($post_template_category, $postData);
         $category_names = $this->normalize_to_array($category_replace);
@@ -257,15 +273,22 @@ class FP_UpdatePost extends CreatePostHelper
             fp_log_error('QUALITY: ' . print_r($quality_array_names, TRUE));
             if (!empty($quality_array_names)) {
                 $quality_ids = $this->process_taxonomy_terms('mtg_quality', $quality_array_names);
-                fp_log_error('QUALITY IDs Type: ' . gettype($quality_ids));
-                $q_result = wp_set_post_terms($this->post_id, $quality_ids, 'mtg_quality');
-                fp_log_error('Post ID: ' . $this->post_id);
-                fp_log_error('QUALITY IDS: ' . print_r($quality_ids, TRUE));
-                fp_log_error('QUALITY RESULT: ' . print_r($q_result, TRUE));
+                if ($term_differs('mtg_quality', $quality_ids)) {
+                    $quality_update_result = wp_set_post_terms($this->post_id, $quality_ids, 'mtg_quality');
+                    if (is_wp_error($quality_update_result)) {
+                        $all_updates_successful = false;
+                    }
+                }
+                // fp_log_error('QUALITY IDs Type: ' . gettype($quality_ids));
+                // $q_result = wp_set_post_terms($this->post_id, $quality_ids, 'mtg_quality');
+                // fp_log_error('Post ID: ' . $this->post_id);
+                // fp_log_error('QUALITY IDS: ' . print_r($quality_ids, TRUE));
+                // fp_log_error('QUALITY RESULT: ' . print_r($q_result, TRUE));
             }
         }
 
         if ($isNetwork === 'on') {
+            $networkUpdatedValue = $postData['networks'];
             if (!empty($networkUpdatedValue)) {
                 $network_ids = $this->process_taxonomy_terms('mtg_network', $networkUpdatedValue);
                 if ($term_differs('mtg_network', $network_ids)) {

@@ -149,35 +149,36 @@ class CreatePostHelper extends FP_moviesHelpers
     {
         $term_ids = [];
 
-        foreach ($term_names as $term_name) {
-            $term = term_exists($term_name, $taxonomy_name);
+        foreach ($term_names as $term) {
+            if (is_array($term) && isset($term['slug'])) {
+                $term_slug = $term['slug'];  // Use the slug for lookup
+                $term_title = $term['name']; // Use the name for the title
+            } else {
+                $term_slug = $term;  // Otherwise, use the term as both slug and title
+                $term_title = ucwords($term_slug); // Capitalize for title
+            }
+
+            $term = term_exists($term_slug, $taxonomy_name);
             if ($term) {
                 // Term exists, use its ID | save as integer
                 $term_ids[] = (int)$term['term_id'];
-                // error_log("term__EXISTS. TermName: " . print_r($term_name, TRUE));
-                // error_log("term__EXISTS. TermID: " . print_r($term['term_id'], TRUE));
             } else {
                 // Term does not exist, create it
-                // Capitalize the first letter of each word in the term name
-                $term_name = ucwords($term_name);
-                $new_term = wp_insert_term($term_name, $taxonomy_name);
+                $new_term = wp_insert_term(
+                    $term_title,
+                    $taxonomy_name,
+                    ['slug' => $term_slug]
+                );
                 if (is_wp_error($new_term)) {
-                    // Optionally log the error or handle it as needed
-                    // log to wp_debug in wordpress if enabled
-                    // error_log(print_r($new_term->get_error_message(), TRUE));
                     continue;
                 }
-                // error_log("new_term__CREATED. TermName: " . print_r($term_name, TRUE));
-                // error_log("new_term__CREATED. TermID: " . print_r($new_term['term_id'], TRUE));
-
                 $term_ids[] = $new_term['term_id'];  // Use the new term ID
             }
         }
 
-        // error_log("Return term_ids: " . print_r($term_ids, TRUE));
-
         return $term_ids;
     }
+
 
 
     function isTaxonomyTermExists($term_name, $taxonomy_name)
@@ -460,6 +461,617 @@ class CreatePostHelper extends FP_moviesHelpers
         return $files;
     }
 
+    function get_network_details($name_split)
+    {
+
+        $network_from_name = [
+            'netflix' => 'nf',
+            'nf' => 'nf',
+            'netflix movie' => 'nf',
+            'netflix original' => 'nf',
+            'netflixseries' => 'nf',
+            'netflixfilm' => 'nf',
+            'amazon prime' => 'amzn',
+            'amazon prime video' => 'amzn',
+            'amazon primevideo' => 'amzn',
+            'prime video' => 'amzn',
+            'primevideo' => 'amzn',
+            'prime' => 'amzn',
+            'amzn' => 'amzn',
+            'amzn mini tv' => 'amzn',
+            'mini tv' => 'amzn',
+            'amzn mini-tv' => 'amzn',
+            'mini-tv' => 'amzn',
+            'hotstar' => 'hs',
+            'hs' => 'hs',
+            'hotstarmovie' => 'hs',
+            'hotstarseries' => 'hs',
+            'disney hotstar' => 'hs',
+            'disney+' => 'dsnp',
+            'disneyplus' => 'dsnp',
+            'disney plus' => 'dsnp',
+            'dsnp' => 'dsnp',
+            'disney' => 'dsnp',
+            'disneyplushotstar' => 'dsnp',
+            'zee5' => 'zee5',
+            'zee5original' => 'zee5',
+            'zee5series' => 'zee5',
+            'zee5film' => 'zee5',
+            'sony liv' => 'sonyliv',
+            'sonyliv' => 'sonyliv',
+            'sony' => 'sonyliv',
+            'sonylivseries' => 'sonyliv',
+            'sonylivfilm' => 'sonyliv',
+            'voot' => 'voot',
+            'voot select' => 'voot',
+            'vootselect' => 'voot',
+            'vootseries' => 'voot',
+            'vootfilm' => 'voot',
+            'jio cinema' => 'jio',
+            'jiocinema' => 'jio',
+            'jio' => 'jio',
+            'jiocinemafilm' => 'jio',
+            'jiocinemaseries' => 'jio',
+            'mx player' => 'mx',
+            'mxplayer' => 'mx',
+            'mx' => 'mx',
+            'mxplayertv' => 'mx',
+            'mxplayermovie' => 'mx',
+            'alt balaji' => 'altbalaji',
+            'altbalaji' => 'altbalaji',
+            'alt' => 'altbalaji',
+            'altseries' => 'altbalaji',
+            'ullu' => 'ullu',
+            'ullu app' => 'ullu',
+            'ulluapp' => 'ullu',
+            'ullumovie' => 'ullu',
+            'ulluseries' => 'ullu',
+            'crunchyroll' => 'crunchyroll',
+            'crunchy roll' => 'crunchyroll',
+            'crunchyrollanime' => 'crunchyroll',
+            'crunchyrolldubbed' => 'crunchyroll',
+            'hulu' => 'hulu',
+            'huluoriginal' => 'hulu',
+            'huluseries' => 'hulu',
+            'hulufilm' => 'hulu',
+            'hbo' => 'hbo',
+            'hbomax' => 'hbo',
+            'hbooriginal' => 'hbo',
+            'hboseries' => 'hbo',
+            'hbofilm' => 'hbo',
+            'hoichoi' => 'hoichoi',
+            'hoichoitv' => 'hoichoi',
+            'hoichoitvseries' => 'hoichoi',
+            'tvf' => 'tvf',
+            'tvf play' => 'tvf',
+            'tvfplay' => 'tvf',
+            'acorn tv' => 'acorntv',
+            'acorntv' => 'acorntv',
+            'acorn' => 'acorntv',
+            'the cw' => 'thecw',
+            'cw' => 'cw',
+            'the cw network' => 'thecw',
+            'cwnetwork' => 'thecw',
+            'cbs' => 'cbs',
+            'cbs all access' => 'cbs',
+            'cbsallaccess' => 'cbs',
+            'book my show' => 'bms',
+            'bookmyshow' => 'bms',
+            'bms' => 'bms',
+            'bmsstream' => 'bms',
+            'bmsstreaming' => 'bms',
+            'atv' => 'atvp',
+            'atvp' => 'atvp',
+            'apple tv+' => 'atvp',
+            'appletv+' => 'atvp',
+            'max' => 'hmax',
+            'hbo max' => 'max',
+            'hbo max original' => 'max',
+            'maxoriginal' => 'max',
+            'abc' => 'abc',
+            'aubc' => 'aubc',
+            'as' => 'as',
+            'apps' => 'apps',
+            'bbc' => 'bbc',
+            'bcore' => 'bcore',
+            'bluray' => 'bluray',
+            'bd' => 'bluray',
+            'boom' => 'boom',
+            'cbc' => 'cbc',
+            'cc' => 'cc',
+            'cnlp' => 'cnlp',
+            'crav' => 'crav',
+            'criterion' => 'criterion',
+            'dcu' => 'dcu',
+            'dscp' => 'dscp',
+            'dsny' => 'dsny',
+            'fbwatch' => 'fbwatch',
+            'free' => 'free',
+            'fox' => 'fox',
+            'gplay' => 'gplay',
+            'hmax' => 'hmax',
+            'hplay' => 'hplay',
+            'htsr' => 'htsr',
+            'ip' => 'ip',
+            'it' => 'it',
+            'jc' => 'jc',
+            'lgp' => 'lgp',
+            'life' => 'life',
+            'ma' => 'ma',
+            'mmax' => 'mmax',
+            'mtv' => 'mtv',
+            'mubi' => 'mubi',
+            'nbc' => 'nbc',
+            'nick' => 'nick',
+            'oar' => 'oar',
+            'pcok' => 'pcok',
+            'pmtp' => 'pmtp',
+            'pf' => 'pf',
+            'red' => 'red',
+            'roku' => 'roku',
+            'saina' => 'saina',
+            'sp' => 'sp',
+            'sho' => 'sho',
+            'ss' => 'ss',
+            'snxt' => 'snxt',
+            'stan' => 'stan',
+            'stz' => 'stz',
+            'tbs' => 'tbs',
+            'tk' => 'tk',
+            'tvnz' => 'tvnz',
+            'wtch' => 'wtch',
+            'abma' => 'abma',
+            'adn' => 'adn',
+            'animax' => 'animax',
+            'ao' => 'ao',
+            'at-x' => 'at-x',
+            'baha' => 'baha',
+            'b-global' => 'b-global',
+            'bstation' => 'b-global',
+            'bsp' => 'bsp',
+            'nhk-bsp' => 'bsp',
+            'bs4' => 'bs4',
+            'bs5' => 'bs5',
+            'ex-bs' => 'bs5',
+            'bs-ex' => 'bs5',
+            'bs6' => 'bs6',
+            'bs7' => 'bs7',
+            'bsj' => 'bs7',
+            'bs-tx' => 'bs7',
+            'bs8' => 'bs8',
+            'bs-fuji' => 'bs8',
+            'bs11' => 'bs11',
+            'bs12' => 'bs12',
+            'cr' => 'cr',
+            'cs-fuji one' => 'cs-fuji one',
+            'cx' => 'cx',
+            'dmm' => 'dmm',
+            'ex' => 'ex',
+            'cs3' => 'cs3',
+            'ex-cs1' => 'cs3',
+            'cs-ex1' => 'cs3',
+            'csa' => 'cs3',
+            'fod' => 'fod',
+            'funi' => 'funi',
+            'hidive' => 'hidive',
+            'hidi' => 'hidive',
+            'kbc' => 'kbc',
+            'm-on!' => 'm-on!',
+            'nhkg' => 'nhkg',
+            'nhke' => 'nhke',
+            'ntv' => 'ntv',
+            'tx' => 'tx',
+            'unxt' => 'unxt',
+            'u-next' => 'unxt',
+            'waka' => 'waka',
+            'wowow' => 'wowow',
+            'ytv' => 'ytv',
+        ];
+
+        $common_networks = [
+            'nf' =>
+            [
+                'name' => 'NetFlix',
+                'slug' => 'netflix',
+            ],
+            'amzn' =>
+            [
+                'name' => 'Amazon Prime Video',
+                'slug' => 'amazon-prime-video',
+            ],
+            'hs' =>
+            [
+                'name' => 'Hotstar',
+                'slug' => 'hotstar',
+            ],
+            'dsnp' =>
+            [
+                'name' => 'Disney+',
+                'slug' => 'disney-plus',
+            ],
+            'zee5' =>
+            [
+                'name' => 'ZEE5',
+                'slug' => 'zee5',
+            ],
+            'sonyliv' =>
+            [
+                'name' => 'Sony Liv',
+                'slug' => 'sony-liv',
+            ],
+            'voot' =>
+            [
+                'name' => 'VOOT',
+                'slug' => 'voot',
+            ],
+            'jio' =>
+            [
+                'name' => 'JioCinema',
+                'slug' => 'jio-cinema',
+            ],
+            'mx' =>
+            [
+                'name' => 'Tokyo MX',
+                'slug' => 'tokyo-mx',
+            ],
+            'altbalaji' =>
+            [
+                'name' => 'ALTBalaji',
+                'slug' => 'alt-balaji',
+            ],
+            'ullu' =>
+            [
+                'name' => 'Ullu',
+                'slug' => 'ullu',
+            ],
+            'crunchyroll' =>
+            [
+                'name' => 'Crunchyroll',
+                'slug' => 'crunchyroll',
+            ],
+            'hulu' =>
+            [
+                'name' => 'Hulu Networks',
+                'slug' => 'hulu',
+            ],
+            'hbo' =>
+            [
+                'name' => 'HBO',
+                'slug' => 'hbo',
+            ],
+            'hoichoi' =>
+            [
+                'name' => 'Hoichoi',
+                'slug' => 'hoichoi',
+            ],
+            'tvf' =>
+            [
+                'name' => 'TVF',
+                'slug' => 'tvf',
+            ],
+            'acorntv' =>
+            [
+                'name' => 'Acorn TV',
+                'slug' => 'acorn-tv',
+            ],
+            'thecw' =>
+            [
+                'name' => 'The CW',
+                'slug' => 'the-cw',
+            ],
+            'cbs' =>
+            [
+                'name' => 'CBS Corporation',
+                'slug' => 'cbs',
+            ],
+            'bms' =>
+            [
+                'name' => 'BookMyShow',
+                'slug' => 'bookmyshow',
+            ],
+            'atvp' =>
+            [
+                'name' => 'Apple TV+',
+                'slug' => 'apple-tv-plus',
+            ],
+            'max' =>
+            [
+                'name' => 'MAX',
+                'slug' => 'max',
+            ],
+            'abc' =>
+            [
+                'name' => 'American Broadcasting Company',
+                'slug' => 'abc',
+            ],
+            'aubc' =>
+            [
+                'name' => 'Australian Broadcasting Corporation',
+                'slug' => 'aubc',
+            ],
+            'as' =>
+            [
+                'name' => 'Adult Swim',
+                'slug' => 'adult-swim',
+            ],
+            'apps' =>
+            [
+                'name' => 'Disney Plus MENA',
+                'slug' => 'disney-plus-mena',
+            ],
+            'bbc' =>
+            [
+                'name' => 'British Broadcasting Corporation',
+                'slug' => 'bbc',
+            ],
+            'bcore' =>
+            [
+                'name' => 'Sony Pictures Core',
+                'slug' => 'sony-pictures-core',
+            ],
+            'bluray' =>
+            [
+                'name' => 'BluRay Disc',
+                'slug' => 'blu-ray-disc',
+            ],
+            'boom' =>
+            [
+                'name' => 'Boomerang',
+                'slug' => 'boomerang',
+            ],
+            'cbc' =>
+            [
+                'name' => 'Canadian Broadcasting Corporation',
+                'slug' => 'cbc',
+            ],
+            'cc' =>
+            [
+                'name' => 'Comedy Central',
+                'slug' => 'comedy-central',
+            ],
+            'cnlp' =>
+            [
+                'name' => 'Canal+',
+                'slug' => 'canal-plus',
+            ],
+            'crav' =>
+            [
+                'name' => 'Crave',
+                'slug' => 'crave',
+            ],
+            'criterion' =>
+            [
+                'name' => 'The Criterion Collection',
+                'slug' => 'criterion',
+            ],
+            'cw' =>
+            [
+                'name' => 'The CW',
+                'slug' => 'the-cw',
+            ],
+            'dcu' =>
+            [
+                'name' => 'DC Universe',
+                'slug' => 'dc-universe',
+            ],
+            'dscp' =>
+            [
+                'name' => 'Discovery+',
+                'slug' => 'discovery-plus',
+            ],
+            'dsny' =>
+            [
+                'name' => 'Disney Networks',
+                'slug' => 'disney-networks',
+            ],
+            'fbwatch' =>
+            [
+                'name' => 'Facebook Watch',
+                'slug' => 'facebook-watch',
+            ],
+            'free' =>
+            [
+                'name' => 'Freeform',
+                'slug' => 'freeform',
+            ],
+            'fox' =>
+            [
+                'name' => 'Fox Broadcasting Company',
+                'slug' => 'fox',
+            ],
+            'gplay' =>
+            [
+                'name' => 'Google Play',
+                'slug' => 'google-play',
+            ],
+            'hmax' =>
+            [
+                'name' => 'HBOMax',
+                'slug' => 'hbo-max',
+            ],
+            'hplay' =>
+            [
+                'name' => 'Hungama Play',
+                'slug' => 'hungama-play',
+            ],
+            'htsr' =>
+            [
+                'name' => 'Hotstar',
+                'slug' => 'hotstar',
+            ],
+            'ip' =>
+            [
+                'name' => 'BBC iPlayer',
+                'slug' => 'bbc-iplayer',
+            ],
+            'it' =>
+            [
+                'name' => 'iTunes',
+                'slug' => 'itunes',
+            ],
+            'jc' =>
+            [
+                'name' => 'JioCinema',
+                'slug' => 'jiocinema',
+            ],
+            'lgp' =>
+            [
+                'name' => 'Lionsgate Play',
+                'slug' => 'lionsgate-play',
+            ],
+            'life' =>
+            [
+                'name' => 'Lifetime',
+                'slug' => 'lifetime',
+            ],
+            'ma' =>
+            [
+                'name' => 'Movies Anywhere',
+                'slug' => 'movies-anywhere',
+            ],
+            'mmax' =>
+            [
+                'name' => 'ManoramaMAX',
+                'slug' => 'manoramamax',
+            ],
+            'mtv' =>
+            [
+                'name' => 'MTV Networks',
+                'slug' => 'mtv',
+            ],
+            'mubi' =>
+            [
+                'name' => 'Mubi',
+                'slug' => 'mubi',
+            ],
+            'nbc' =>
+            [
+                'name' => 'National Broadcasting Company',
+                'slug' => 'nbc',
+            ],
+            'nick' =>
+            [
+                'name' => 'Nickelodeon',
+                'slug' => 'nickelodeon',
+            ],
+            'oar' =>
+            [
+                'name' => 'Original Aspect Ratio',
+                'slug' => 'original-aspect-ratio',
+            ],
+            'pcok' =>
+            [
+                'name' => 'Peacock',
+                'slug' => 'peacock',
+            ],
+            'pmtp' =>
+            [
+                'name' => 'Paramount Plus',
+                'slug' => 'paramount-plus',
+            ],
+            'pf' =>
+            [
+                'name' => 'PureFlix',
+                'slug' => 'pureflix',
+            ],
+            'red' =>
+            [
+                'name' => 'YouTube Premium',
+                'slug' => 'youtube-premium',
+            ],
+            'roku' =>
+            [
+                'name' => 'Roku',
+                'slug' => 'roku',
+            ],
+            'saina' =>
+            [
+                'name' => 'SainaPlay',
+                'slug' => 'saina-play',
+            ],
+            'sp' =>
+            [
+                'name' => 'SainaPlay',
+                'slug' => 'saina-play',
+            ],
+            'sho' =>
+            [
+                'name' => 'Showtime',
+                'slug' => 'showtime',
+            ],
+            'ss' =>
+            [
+                'name' => 'Simply South',
+                'slug' => 'simply-south',
+            ],
+            'snxt' =>
+            [
+                'name' => 'SunNXT',
+                'slug' => 'sun-nxt',
+            ],
+            'stan' => ['name' => 'Stan', 'slug' => 'stan',],
+            'stz' => ['name' => 'STARZ', 'slug' => 'starz',],
+            'tbs' => ['name' => 'Turner Broadcasting System', 'slug' => 'turner-broadcasting-system',],
+            'tk' => ['name' => 'Tentkotta', 'slug' => 'tentkotta',],
+            'tvnz' => ['name' => 'TVNZ', 'slug' => 'tvnz',],
+            'wtch' => ['name' => 'Watcha', 'slug' => 'watcha',],
+            'abma' => ['name' => 'Abema', 'slug' => 'abema',],
+            'adn' => ['name' => 'Anime Digital Network (French)', 'slug' => 'anime-digital-network',],
+            'animax' => ['name' => 'Animax', 'slug' => 'animax',],
+            'ao' => ['name' => 'Anime Onegai (Spanish)', 'slug' => 'anime-onegai',],
+            'at-x' => ['name' => 'Anime Theatre X', 'slug' => 'anime-theatre-x',],
+            'baha' => ['name' => 'Bahamut Animation Madness (Chinese)', 'slug' => 'bahamut-animation-madness',],
+            'b-global' => ['name' => 'Bilibili', 'slug' => 'bilibili',],
+            'bsp' => ['name' => 'NHK BS Premium', 'slug' => 'nhk-bs-premium',],
+            'bs4' => ['name' => 'BS Nippon TV', 'slug' => 'bs-nippon-tv',],
+            'bs5' => ['name' => 'BS TV Asahi', 'slug' => 'bs-tv-asahi',],
+            'bs6' => ['name' => 'BS-TBS', 'slug' => 'bs-tbs',],
+            'bs7' => ['name' => 'BS TV TOKYO', 'slug' => 'bs-tv-tokyo',],
+            'bs8' => ['name' => 'BS Fuji', 'slug' => 'bs-fuji',],
+            'bs11' => ['name' => 'Nippon BS Broadcasting', 'slug' => 'nippon-bs-broadcasting',],
+            'bs12' => ['name' => 'BS12 トゥエルビ', 'slug' => 'bs12',],
+            'cr' => ['name' => 'Crunchyroll', 'slug' => 'crunchyroll',],
+            'cs-fuji one' => ['name' => 'Fuji TV One', 'slug' => 'fuji-tv-one',],
+            'cx' => ['name' => 'Fuji TV', 'slug' => 'fuji-tv',],
+            'dmm' => ['name' => 'DMM', 'slug' => 'dmm',],
+            'ex' => ['name' => 'TV Asahi', 'slug' => 'tv-asahi',],
+            'cs3' => ['name' => 'TV Asahi Channel 1', 'slug' => 'tv-asahi-channel-1',],
+            'fod' => ['name' => 'Fuji TV On Demand', 'slug' => 'fuji-tv-on-demand',],
+            'funi' => ['name' => 'Funimation', 'slug' => 'funimation',],
+            'hidive' => ['name' => 'HIDIVE', 'slug' => 'hidive',],
+            'kbc' => ['name' => 'Kyushu Asahi Broadcasting', 'slug' => 'kyushu-asahi-broadcasting',],
+            'm-on!' => ['name' => 'MUSIC ON! TV', 'slug' => 'music-on-tv',],
+            'nhkg' => ['name' => 'NHK General TV', 'slug' => 'nhk-general-tv',],
+            'nhke' => ['name' => 'NHK Education TV', 'slug' => 'nhk-education-tv',],
+            'ntv' => ['name' => 'Nippon TV', 'slug' => 'nippon-tv',],
+            'tx' => ['name' => 'TV TOKYO', 'slug' => 'tv-tokyo',],
+            'unxt' => ['name' => 'U-NEXT', 'slug' => 'u-next',],
+            'waka' => ['name' => 'Wakanim', 'slug' => 'wakanim',],
+            'wowow' => ['name' => 'Wowow', 'slug' => 'wowow',],
+            'ytv' => ['name' => 'Yomiuri TV', 'slug' => 'yomiuri-tv',],
+        ];
+
+
+        // $name_split = preg_split('/[\s._-]+/', strtolower($name));
+        $result = [];
+
+        foreach ($name_split as $part) {
+            // fp_log_error("Current part: " . $part);
+            $part_lower = strtolower($part);
+            if (array_key_exists($part_lower, $network_from_name)) {
+                $slug = $network_from_name[$part_lower];
+                if (array_key_exists($slug, $common_networks)) {
+                    $result[] = [
+                        'name' => $common_networks[$slug]['name'],
+                        'slug' => $common_networks[$slug]['slug'],
+                    ];
+                }
+            }
+        }
+
+        return $result;
+    }
+
     function processFPData($fpData)
     {
         $single_screenshot = [];
@@ -467,11 +1079,86 @@ class CreatePostHelper extends FP_moviesHelpers
         $resolution = [];
         $audios = [];
         $subtitles = [];
+        $qualities = [];
+        $networks = [];
 
         $single_screenshot_quality_sorted = array();
         $splash_screenshot_quality_sorted = array();
 
         $size_quality_type = array();
+
+        $quality_from_name = [
+            'bluray'            =>           'BluRay',
+            'blu ray'           =>           'BluRay',
+            'blu-ray'           =>           'BluRay',
+            'blu.ray'           =>           'BluRay',
+            'brrip'             =>           'BRRip',
+            'br rip'            =>           'BRRip',
+            'br.rip'            =>           'BRRip',
+            'brrip'             =>           'BRRip',
+
+            'camrip'            =>           'CAMRip',
+            'cam rip'           =>           'CAMRip',
+            'cam-rip'           =>           'CAMRip',
+            'cam.rip'           =>           'CAMRip',
+
+            'dvdrip'            =>           'DVDRip',
+            'dvd rip'           =>           'DVDRip',
+            'dvd-rip'           =>           'DVDRip',
+            'dvd.rip'           =>           'DVDRip',
+            'dvdrip'            =>           'DVDRip',
+
+            'dvdscr'            =>           'DVDScr',
+            'dvd scr'           =>           'DVDScr',
+            'dvd-scr'           =>           'DVDScr',
+            'dvd.scr'           =>           'DVDScr',
+            'dvdscr'            =>           'DVDScr',
+
+            'imax'              =>           'IMAX',
+
+            'hdcam'             =>           'HDCAM',
+            'hd cam'            =>           'HDCAM',
+            'hd.cam'            =>           'HDCAM',
+            'hd-cam'            =>           'HDCAM',
+            'hdts'              =>           'HDTS',
+            'hd.ts'             =>           'HDTS',
+            'hd ts'             =>           'HDTS',
+            'hdtc'              =>           'HDTC',
+            'hd-tc'             =>           'HDTC',
+            'hd tc'             =>           'HDTC',
+            'hd.tc'             =>           'HDTC',
+            'hdtv'              =>           'HDTV',
+            'hd tv'             =>           'HDTV',
+            'hd-tv'             =>           'HDTV',
+            'hd.tv'             =>           'HDTV',
+            'hdtv'              =>           'HDTV',
+            'hdrip'             =>           'HDRip',
+            'hd rip'            =>           'HDRip',
+            'hd-rip'            =>           'HDRip',
+            'hd.rip'            =>           'HDRip',
+            'hdrip'             =>           'HDRip',
+            'hq s'              =>           'HQ-S',
+            'hq-s'              =>           'HQ-S',
+            'hq.s'              =>           'HQ-S',
+            'hq s'              =>           'HQ-S',
+
+            'pre-dvd'           =>           'PreDVD',
+            'pre dvd'           =>           'PreDVD',
+            'pre.dvd'           =>           'PreDVD',
+            'pre-dvd'           =>           'PreDVD',
+
+            'web-dl'            =>           'WEB-DL',
+            'web dl'            =>           'WEB-DL',
+            'web.dl'            =>           'WEB-DL',
+            'webdl'             =>           'WEB-DL',
+            'webrip'            =>           'WEBRip',
+            'web rip'           =>           'WEBRip',
+            'web-rip'           =>           'WEBRip',
+            'web.rip'           =>           'WEBRip',
+            'webrip'            =>           'WEBRip',
+
+        ];
+
 
         $audio_from_name = [
             'tam' => 'Tamil',
@@ -521,6 +1208,12 @@ class CreatePostHelper extends FP_moviesHelpers
 
             $size_quality_type[$file['quality']][] = $file['size'];
 
+            if (isset($file['name'])) {
+                $name_split = preg_split('/[\s,.-]+/', $file['name']);
+            } else {
+                $name_split = [];
+            }
+
             if (!empty($file['images'])) {
                 foreach ($file['images'] as $image) {
                     if (strpos($image, 'https://filepress.imgpress.xyz') === false) {
@@ -538,7 +1231,7 @@ class CreatePostHelper extends FP_moviesHelpers
             if (!empty($fileDetails['audioLangList']) && is_array($fileDetails['audioLangList'])) {
                 foreach ($fileDetails['audioLangList'] as $audioLang) {
                     if (in_array($audioLang, ['unknown', 'und', 'unspecified', 'Unknown'], true)) {
-                        $name_split = preg_split('/[\s,.-]+/', $file['name']);
+                        // $name_split = preg_split('/[\s,.-]+/', $file['name']);
                         foreach ($name_split as $name) {
                             $name_lowerCase = strtolower($name);
                             if (isset($audio_from_name[$name_lowerCase])) {
@@ -562,14 +1255,26 @@ class CreatePostHelper extends FP_moviesHelpers
                     }
                 }
             }
+
+            // if array not empty
+            if (!empty($name_split)) {
+                $networks = $this->get_network_details($name_split);
+                // fp_log_error("NETWORK -- : " . print_r($networks, TRUE));
+
+                foreach ($name_split as $name) {
+                    $name_lowerCase = strtolower($name);
+                    if (isset($quality_from_name[$name_lowerCase])) {
+                        $qualities[$quality_from_name[$name_lowerCase]] = true;
+                    }
+                }
+            }
         }
 
         // error_log("SIZE_QUALITY_TYPE: " . print_r($size_quality_type, TRUE));
         // error_log("SINGLE_SCREENSHOT_QUALITY_SORTED: " . print_r($single_screenshot_quality_sorted, TRUE));
         // error_log("SPLASH_SCREENSHOT_QUALITY_SORTED: " . print_r($splash_screenshot_quality_sorted, TRUE));
 
-        // $single_screenshot will have 10 images
-        // from highest quality to lowest quality
+        // $single_screenshot will have 10 images   ||  from highest quality to lowest quality
         krsort($single_screenshot_quality_sorted);
         foreach ($single_screenshot_quality_sorted as $quality => $images) {
             if (count($single_screenshot) >= 10) {
@@ -642,6 +1347,7 @@ class CreatePostHelper extends FP_moviesHelpers
         $resolution = array_keys($resolution);
         $audios = array_keys($audios);
         $subtitles = array_keys($subtitles);
+        $qualities = array_keys($qualities);
 
         return [
             'single_screenshot' => $single_screenshot,
@@ -652,11 +1358,13 @@ class CreatePostHelper extends FP_moviesHelpers
             'size_480p' => $size_480p,
             'size_720p' => $size_720p,
             'size_1080p' => $size_1080p,
-            'size_2160p' => $size_2160p
+            'size_2160p' => $size_2160p,
+            'qualities' => $qualities,
+            'networks' => $networks,
         ];
     }
 
-    function fetchTMDBdata($tmdb_id, $postType, $tmdbkey, $apilang = 'en-US', $network = array())
+    function fetchTMDBdata($tmdb_id, $postType, $tmdbkey, $apilang = 'en-US')
     {
         $args = array(
             'api_key' => $tmdbkey,
@@ -790,7 +1498,10 @@ class CreatePostHelper extends FP_moviesHelpers
             $networks = array();
             if (is_array($network) && !empty($network)) {
                 foreach ($network as $net) {
-                    $networks[] = $net['name'];
+                    $networks[] = [
+                        'name' => $net['name'],
+                        'slug' => $net['name'],
+                    ];
                 }
             }
             $postData['networks'] = $networks;

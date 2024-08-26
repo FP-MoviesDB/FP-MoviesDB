@@ -73,3 +73,9 @@
 * ADD: cast, crew & collection Taxonomy
 * ADD: enable/disable developer tools open protection
 * Many Other Security and Performance updates.
+
+= 1.2.4 =
+* HotFix : Default Quality set throwing error.
+
+= 1.2.5 =
+* Enhanced to set Networks and Quality from FileNames directly if available.

@@ -61,6 +61,8 @@ class FP_CreatePost extends CreatePostHelper
             $resolution = $processedData['resolution'];
             $audios = $processedData['audios'];
             $subtitles = $processedData['subtitles'];
+            $qualities = $processedData['qualities'];
+            $networks = $processedData['networks'];
         }
 
 
@@ -74,12 +76,11 @@ class FP_CreatePost extends CreatePostHelper
 
 
         $post_template_Default = get_option('mtg_postDefault_settings', []);
-        
+
         $post_template_default_network = $this->get_arrayValue_with_fallback($post_template_Default, 'default_network', '');
-        // $post_template_default_network = get_option_with_fallback('mtg_default_network', 'Hollywood');
         $post_template_default_network = $this->normalize_to_array($post_template_default_network);
 
-        $postData = $this->fetchTMDBdata($tmdb_id, $postType, $this->tmdbkey, $this->apilang, $post_template_default_network);
+        $postData = $this->fetchTMDBdata($tmdb_id, $postType, $this->tmdbkey, $this->apilang);
 
         $post_template_title = $this->get_arrayValue_with_fallback($post_template_Default, 'title', '{title}');
         $post_template_slug = $this->get_arrayValue_with_fallback($post_template_Default, 'slug', '{title}');
@@ -87,18 +88,34 @@ class FP_CreatePost extends CreatePostHelper
         $post_template_category = $this->get_arrayValue_with_fallback($post_template_Default, 'category', $postType);
         $post_template_tags = $this->get_arrayValue_with_fallback($post_template_Default, 'tags', '');
         // $post_template_quality = $this->get_arrayValue_with_fallback($post_template_Default, 'quality', false);
-        $post_template_quality_values = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
+
+        if (!empty($qualities)) {
+            $quality_values_final = $qualities;
+        } else {
+            $quality_values_final = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
+            $quality_values_final = $this->normalize_to_array($quality_values_final);
+        }
 
         // ┌───────────────────────────────┐
         // │ ADD FP DATA TO $POSTDATA   │
         // └───────────────────────────────┘
-        $postData['quality'] = $post_template_quality_values;
+        $postData['quality'] = $quality_values_final;
         $postData['audio'] = implode('-', $audios);
         $audio_count = count($audios);
         $postData['c_audio'] = $audio_count > 0 && $audio_count <= 2 ? implode('-', $audios) : 'Multi Audio';
         $sub_count = count($subtitles);
         $postData['c_subs'] = $sub_count == 1 ? 'ESub' : ($sub_count > 1 ? 'MSubs' : '');
         $postData['p_type_2'] = $postType_2;
+
+        if (isset($postData['networks'])) {
+            $postData['networks'] = array_merge($postData['networks'], $networks);
+        } else {
+            if (!empty($networks) && is_array($networks)) {
+                $postData['networks'] = $networks;
+            } else {
+                $postData['networks'] = $post_template_default_network;
+            }
+        }
 
         $overview = sanitize_text_field($postData['overview']);
 
@@ -121,15 +138,15 @@ class FP_CreatePost extends CreatePostHelper
         // $isQuality = get_option_with_fallback('mtg_selectors[mtg_quality]', false);
         // $isNetwork = get_option_with_fallback('mtg_selectors[mtg_network]', false);
 
-        $networkUpdatedValue = array();
-        if (!empty($postData['networks']) && $postData['networks']) {
-            $networkUpdatedValue = array_merge($postData['networks'], $post_template_default_network);
-        } else {
-            $networkUpdatedValue = $post_template_default_network;
-        }
-        // error_log("NETWORK_UPDATED_VALUE: " . print_r($networkUpdatedValue, TRUE));
-        // error_log("NETWORD_TYPE: " . gettype($networkUpdatedValue));
-        $networkUpdatedValue = array_unique($networkUpdatedValue);
+        // $networkUpdatedValue = array();
+        // if (!empty($postData['networks']) && $postData['networks']) {
+        //     $networkUpdatedValue = array_merge($postData['networks'], $post_template_default_network);
+        // } else {
+        //     $networkUpdatedValue = $post_template_default_network;
+        // }
+        // // error_log("NETWORK_UPDATED_VALUE: " . print_r($networkUpdatedValue, TRUE));
+        // // error_log("NETWORD_TYPE: " . gettype($networkUpdatedValue));
+        // $networkUpdatedValue = array_unique($networkUpdatedValue);
 
 
         if (!empty($post_template_tags)) {
@@ -177,12 +194,10 @@ class FP_CreatePost extends CreatePostHelper
         // error_log("POST_ID: " . print_r($post_id, TRUE));
         // error_log("POSTER_URL: " . print_r($tmdbData['poster_url'], TRUE));
 
-        fp_log_error('Stage 1');
-
 
         if (!empty($postData['poster_path'])) {
             // error_log("POSTER_PATH: " . print_r($postData['poster_path'], TRUE));
-            $image_size = $this -> get_arrayValue_with_fallback($post_template_Default, 'featured_image_size', 'w780');
+            $image_size = $this->get_arrayValue_with_fallback($post_template_Default, 'featured_image_size', 'w780');
             $image_name = $this->get_arrayValue_with_fallback($post_template_Default, 'image_name', '');
             $image_set_success = $this->set_featured_image_from_url($post_id, $postData, $image_size, $image_name);
             if (!$image_set_success) {
@@ -190,8 +205,6 @@ class FP_CreatePost extends CreatePostHelper
                 $all_updates_successful = false;
             }
         }
-
-        fp_log_error('Stage 2');
 
         // genre, audio and year is a taxonomy term, so we need to create a function to handle this
 
@@ -206,7 +219,7 @@ class FP_CreatePost extends CreatePostHelper
 
         // error_log("Saving single_screenshot: " . $single_screenshot);
 
-        $meta_data = array( 
+        $meta_data = array(
             '_content_type' => $postType,
             'mtg_post_type' => $postType_2,
             'mtg_tmdb_id' => $postData['tmdb_id'],
@@ -313,8 +326,10 @@ class FP_CreatePost extends CreatePostHelper
         }
 
         if ($isNetwork === 'on') {
+            $networkUpdatedValue = $postData['networks'];
             if (!empty($networkUpdatedValue)) {
                 $network_ids = $this->process_taxonomy_terms('mtg_network', $networkUpdatedValue);
+                fp_log_error('NETWORK_IDS: ' . print_r($network_ids, TRUE));
                 wp_set_post_terms($post_id, $network_ids, 'mtg_network');
             }
         }
