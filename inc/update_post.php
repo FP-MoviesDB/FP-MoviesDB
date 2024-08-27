@@ -51,6 +51,12 @@ class FP_UpdatePost extends CreatePostHelper
         $fp_postData = $_POST['fp_postData'] ?? [];
         $this->validation_init($fp_postData);
 
+        // error_log("POST ID: " . print_r($this->post_id, TRUE));
+        // error_log("TMDB ID: " . print_r($this->tmdb_id, TRUE));
+        // error_log("POST TYPE: " . print_r($this->post_type, TRUE));
+        // error_log("TMDB API KEY: " . print_r($this->tmdbkey, TRUE));
+        // error_log("FP API KEY: " . print_r($this->fpkey, TRUE));
+
         $postType_2 = $this->post_type === 'tv' ? 'Series' : ucfirst($this->post_type);
         $fpData = $this->fetchFPdata($this->tmdb_id, $this->post_type, $this->fpkey);
         $this->validate_array($fpData, 'Failed to fetch data from FP API');
@@ -84,6 +90,8 @@ class FP_UpdatePost extends CreatePostHelper
             $quality_values_final = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array('HD'));
             $quality_values_final = $this->normalize_to_array($quality_values_final);
         }
+
+        $isAdult = $postData['adult'];
 
         // ┌───────────────────────────────┐
         // │ ADD FP DATA TO $POSTDATA   │
@@ -222,8 +230,12 @@ class FP_UpdatePost extends CreatePostHelper
 
         if ($isGenre === 'on') {
             $genres = $postData['genres'];
+
             if (!empty($genres)) {
                 $genre_names = $this->genre_id_to_name($this->post_type, $genres);
+                if ($isAdult || $isAdult === 'on') {
+                    $genre_names[] = 'Adult';
+                }
                 $genre_ids = $this->process_taxonomy_terms('mtg_genre', $genre_names);
                 if ($term_differs('mtg_genre', $genre_ids)) {
                     $genre_update_result = wp_set_post_terms($this->post_id, $genre_ids, 'mtg_genre');
@@ -260,6 +272,7 @@ class FP_UpdatePost extends CreatePostHelper
                         $all_updates_successful = false;
                     }
                 }
+
             }
         }
 
@@ -306,17 +319,23 @@ class FP_UpdatePost extends CreatePostHelper
             $collection = $postData['collection'];
             // error_log("COLLECTION: " . print_r($collection, TRUE));
             if (!empty($collection)) {
-
+                // send collection as array
                 $collection_ids = $this->process_taxonomy_terms('mtg_collection', array($collection));
                 $collection_update_result = wp_set_post_terms($this->post_id, $collection_ids, 'mtg_collection');
                 if (is_wp_error($collection_update_result)) {
-
+                    // error_log('Failed to update collection terms for post ID: ' . $this->post_id);
+                    // $all_updates_successful = true;
                 }
             }
         }
 
         $return_data = array(
-
+            // 'post_id' => (int)$this->post_id,
+            // 'post_type' => $this->post_type,
+            // 'post_edit_url' => admin_url("post.php?post={$this->post_id}&action=edit"),
+            // 'preview_url' => wp_get_shortlink($this->post_id),
+            // 'all_updates_successful' => $all_updates_successful,
+            // 'tmdb_id' => $this->tmdb_id,
         );
 
         wp_send_json_success($return_data, 200);

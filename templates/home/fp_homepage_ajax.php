@@ -77,9 +77,10 @@ if (!function_exists('fp_load_posts_view')) {
                 break;
             case 'latest':
             default:
-                $args['orderby'] = 'date';
-                $args['order'] = 'DESC';
-                break;
+                $args['orderby'] = array(
+                    'modified' => 'DESC',
+                    'date' => 'DESC',
+                );
         }
 
         // error_log('args: ' . print_r($args, true));

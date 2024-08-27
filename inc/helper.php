@@ -507,6 +507,8 @@ class CreatePostHelper extends FP_moviesHelpers
             'sonylivfilm' => 'sonyliv',
             'voot' => 'voot',
             'voot select' => 'voot',
+            'chtv' => 'chtv',
+            'chaupal' => 'chtv',
             'vootselect' => 'voot',
             'vootseries' => 'voot',
             'vootfilm' => 'voot',
@@ -627,6 +629,7 @@ class CreatePostHelper extends FP_moviesHelpers
             'adn' => 'adn',
             'animax' => 'animax',
             'ao' => 'ao',
+            'aha' => 'aha',
             'at-x' => 'at-x',
             'baha' => 'baha',
             'b-global' => 'b-global',
@@ -665,13 +668,25 @@ class CreatePostHelper extends FP_moviesHelpers
             'ntv' => 'ntv',
             'tx' => 'tx',
             'unxt' => 'unxt',
+            'vmax' => 'vmax',
             'u-next' => 'unxt',
             'waka' => 'waka',
             'wowow' => 'wowow',
             'ytv' => 'ytv',
+            'iDragon' => 'iDragon',
+            'vroot' => 'vroot',
+            'shemaroo' => 'shemaroo',
         ];
 
         $common_networks = [
+            'vroot' => [
+                'name' => 'VRoot',
+                'slug' => 'vroot',
+            ],
+            'Shemaroo' => [
+                'name' => 'Shemaroo',
+                'slug' => 'shemaroo',
+            ],
             'nf' =>
             [
                 'name' => 'NetFlix',
@@ -757,6 +772,11 @@ class CreatePostHelper extends FP_moviesHelpers
                 'name' => 'Acorn TV',
                 'slug' => 'acorn-tv',
             ],
+            'aha' =>
+            [
+                'name' => 'Aha',
+                'slug' => 'aha',
+            ],
             'thecw' =>
             [
                 'name' => 'The CW',
@@ -766,6 +786,11 @@ class CreatePostHelper extends FP_moviesHelpers
             [
                 'name' => 'CBS Corporation',
                 'slug' => 'cbs',
+            ],
+            'chtv' =>
+            [
+                'name' => 'Chaupal',
+                'slug' => 'chaupal',
             ],
             'bms' =>
             [
@@ -1049,9 +1074,11 @@ class CreatePostHelper extends FP_moviesHelpers
             'ntv' => ['name' => 'Nippon TV', 'slug' => 'nippon-tv',],
             'tx' => ['name' => 'TV TOKYO', 'slug' => 'tv-tokyo',],
             'unxt' => ['name' => 'U-NEXT', 'slug' => 'u-next',],
+            'vmax' => ['name' => 'VMAX', 'slug' => 'vivamax',],
             'waka' => ['name' => 'Wakanim', 'slug' => 'wakanim',],
             'wowow' => ['name' => 'Wowow', 'slug' => 'wowow',],
             'ytv' => ['name' => 'Yomiuri TV', 'slug' => 'yomiuri-tv',],
+            'iDragon' => ['name' => 'iDragon', 'slug' => 'idragon',],
         ];
 
 
@@ -1440,6 +1467,8 @@ class CreatePostHelper extends FP_moviesHelpers
             $genre_names = array();
         }
 
+        $adult = $this->Disset($json_tmdb, 'adult');
+
         $credits = $this->Disset($json_tmdb, 'credits');
 
         if (!empty($credits) && is_array($credits)) {
@@ -1491,6 +1520,7 @@ class CreatePostHelper extends FP_moviesHelpers
             'cast' => (isset($cast)) ? $cast : array(),
             'crew' => (isset($crew)) ? $crew : array(),
             'collection' => $collection_name,
+            'adult' => $adult,
         );
 
         if ($postType === 'tv') {

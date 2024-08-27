@@ -96,6 +96,8 @@ class FP_CreatePost extends CreatePostHelper
             $quality_values_final = $this->normalize_to_array($quality_values_final);
         }
 
+        $isAdult = $postData['adult'];
+
         // ┌───────────────────────────────┐
         // │ ADD FP DATA TO $POSTDATA   │
         // └───────────────────────────────┘
@@ -106,6 +108,7 @@ class FP_CreatePost extends CreatePostHelper
         $sub_count = count($subtitles);
         $postData['c_subs'] = $sub_count == 1 ? 'ESub' : ($sub_count > 1 ? 'MSubs' : '');
         $postData['p_type_2'] = $postType_2;
+        
 
         if (isset($postData['networks'])) {
             $postData['networks'] = array_merge($postData['networks'], $networks);
@@ -287,6 +290,11 @@ class FP_CreatePost extends CreatePostHelper
             if (!empty($genres)) {
                 $genre_names = $this->genre_id_to_name($postType, $genres);
                 // error_log("GENRE_NAMES: " . print_r($genre_names, TRUE));
+
+                // OR network contains 'VMAX'
+                if ($isAdult || $isAdult === 'on') {
+                    $genre_names[] = 'Adult';
+                }
 
                 $genre_ids = $this->process_taxonomy_terms('mtg_genre', $genre_names);
 

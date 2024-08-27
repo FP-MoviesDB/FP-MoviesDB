@@ -144,8 +144,10 @@ if (!function_exists('fp_display_home')) {
                 break;
             case 'latest':
             default:
-                $args['orderby'] = 'date';
-                $args['order'] = 'DESC';
+                $args['orderby'] = array(
+                    'modified' => 'DESC',
+                    'date' => 'DESC',
+                );
                 break;
         }
 

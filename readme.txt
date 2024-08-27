@@ -83,3 +83,6 @@
 = 1.2.6 =
 * FIX: Bulk Import Error.
 * FIX: Link Page Error.
+
+= 1.2.7 =
+* Latest now sortBy modified followed by postDate.
