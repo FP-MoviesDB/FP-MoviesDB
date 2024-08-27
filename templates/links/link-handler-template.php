@@ -7,10 +7,9 @@ require_once FP_MOVIES_DIR . 'helper/fp_get_sLink.php';
 require_once FP_MOVIES_DIR . 'helper/fp_get_gLink.php';
 
 
-if (!file_exists(FP_CACHE_DIR . '/sessions')) mkdir(FP_CACHE_DIR . '/sessions', 0755, true);
-session_save_path(FP_CACHE_DIR . '/sessions');
-
 if (session_status() === PHP_SESSION_NONE) {
+    if (!file_exists(FP_CACHE_DIR . '/sessions')) mkdir(FP_CACHE_DIR . '/sessions', 0755, true);
+    session_save_path(FP_CACHE_DIR . '/sessions');
     if (session_start() === false) {
         fp_log_error('Session failed to start.');
     }
