@@ -139,6 +139,9 @@ class CreatePostHelper extends FP_moviesHelpers
         if (empty($input)) {
             return array();  // Return an empty array if input is empty
         }
+        if (is_array($input)) {
+            return $input;  // Return the input as is if it's already an array
+        }
         $response = array_map('trim', explode(',', $input));  // Split by commas, trim each item, and return the array
         // error_log("normalize_to_array__response as String: " . print_r($response, TRUE));
         // error_log(json_encode($response));

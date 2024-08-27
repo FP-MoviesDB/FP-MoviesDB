@@ -28,7 +28,7 @@ if (!class_exists('FP_Universal_Shortcode')) {
 
             $d_content = base64_decode($atts['content']);
 
-            // fp_log_error('Universal DECODED (base64): ' . $d_content);
+            fp_log_error('Universal DECODED (base64): ' . $d_content);
 
             if ($content_type === 'text') {
                 // fp_log_error('Universal content (text): ' . esc_html($d_content));

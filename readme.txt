@@ -79,3 +79,7 @@
 
 = 1.2.5 =
 * Enhanced to set Networks and Quality from FileNames directly if available.
+
+= 1.2.6 =
+* FIX: Bulk Import Error.
+* FIX: Link Page Error.

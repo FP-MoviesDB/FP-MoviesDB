@@ -51,12 +51,6 @@ class FP_UpdatePost extends CreatePostHelper
         $fp_postData = $_POST['fp_postData'] ?? [];
         $this->validation_init($fp_postData);
 
-        // error_log("POST ID: " . print_r($this->post_id, TRUE));
-        // error_log("TMDB ID: " . print_r($this->tmdb_id, TRUE));
-        // error_log("POST TYPE: " . print_r($this->post_type, TRUE));
-        // error_log("TMDB API KEY: " . print_r($this->tmdbkey, TRUE));
-        // error_log("FP API KEY: " . print_r($this->fpkey, TRUE));
-
         $postType_2 = $this->post_type === 'tv' ? 'Series' : ucfirst($this->post_type);
         $fpData = $this->fetchFPdata($this->tmdb_id, $this->post_type, $this->fpkey);
         $this->validate_array($fpData, 'Failed to fetch data from FP API');
@@ -87,7 +81,7 @@ class FP_UpdatePost extends CreatePostHelper
         if (!empty($qualities)) {
             $quality_values_final = $qualities;
         } else {
-            $quality_values_final = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array(''));
+            $quality_values_final = $this->get_arrayValue_with_fallback($post_template_Default, 'default_quality', array('HD'));
             $quality_values_final = $this->normalize_to_array($quality_values_final);
         }
 
@@ -123,19 +117,6 @@ class FP_UpdatePost extends CreatePostHelper
         $isCast = $this->get_arrayValue_with_fallback($selectors_settings, 'cast', false);
         $isCrew = $this->get_arrayValue_with_fallback($selectors_settings, 'crew', false);
         $isCollection = $this->get_arrayValue_with_fallback($selectors_settings, 'collection', false);
-
-        // $networkUpdatedValue = array();
-        // if (!empty($postData['networks']) && $postData['networks']) {
-        //     $networkUpdatedValue = array_merge($postData['networks'], $post_template_default_network);
-        // } else {
-        //     $networkUpdatedValue = $post_template_default_network;
-        // }
-        // $networkUpdatedValue = array_unique($networkUpdatedValue);
-        // if (!empty($post_template_tags)) {
-        //     $tag_names = $this->normalize_to_array($post_template_tags);
-        //     $tag_names = $this->replace_template_placeholders($tag_names, $postData);
-        //     $tag_ids = $this->process_taxonomy_terms('post_tag', $tag_names);
-        // }
 
         $category_replace = $this->replace_template_placeholders($post_template_category, $postData);
         $category_names = $this->normalize_to_array($category_replace);
@@ -279,11 +260,6 @@ class FP_UpdatePost extends CreatePostHelper
                         $all_updates_successful = false;
                     }
                 }
-                // fp_log_error('QUALITY IDs Type: ' . gettype($quality_ids));
-                // $q_result = wp_set_post_terms($this->post_id, $quality_ids, 'mtg_quality');
-                // fp_log_error('Post ID: ' . $this->post_id);
-                // fp_log_error('QUALITY IDS: ' . print_r($quality_ids, TRUE));
-                // fp_log_error('QUALITY RESULT: ' . print_r($q_result, TRUE));
             }
         }
 
@@ -330,23 +306,17 @@ class FP_UpdatePost extends CreatePostHelper
             $collection = $postData['collection'];
             // error_log("COLLECTION: " . print_r($collection, TRUE));
             if (!empty($collection)) {
-                // send collection as array
+
                 $collection_ids = $this->process_taxonomy_terms('mtg_collection', array($collection));
                 $collection_update_result = wp_set_post_terms($this->post_id, $collection_ids, 'mtg_collection');
                 if (is_wp_error($collection_update_result)) {
-                    // error_log('Failed to update collection terms for post ID: ' . $this->post_id);
-                    // $all_updates_successful = true;
+
                 }
             }
         }
 
         $return_data = array(
-            // 'post_id' => (int)$this->post_id,
-            // 'post_type' => $this->post_type,
-            // 'post_edit_url' => admin_url("post.php?post={$this->post_id}&action=edit"),
-            // 'preview_url' => wp_get_shortlink($this->post_id),
-            // 'all_updates_successful' => $all_updates_successful,
-            // 'tmdb_id' => $this->tmdb_id,
+
         );
 
         wp_send_json_success($return_data, 200);

@@ -2,12 +2,19 @@
 /* Template Name: Link Handler Template */
 if (!defined('ABSPATH')) exit;
 
-// session_start();
-if (!isset($_SESSION)) session_start();
-
 require_once FP_MOVIES_DIR . 'helper/fp_links_encryption.php';
 require_once FP_MOVIES_DIR . 'helper/fp_get_sLink.php';
 require_once FP_MOVIES_DIR . 'helper/fp_get_gLink.php';
+
+
+if (!file_exists(FP_CACHE_DIR . '/sessions')) mkdir(FP_CACHE_DIR . '/sessions', 0755, true);
+session_save_path(FP_CACHE_DIR . '/sessions');
+
+if (session_status() === PHP_SESSION_NONE) {
+    if (session_start() === false) {
+        fp_log_error('Session failed to start.');
+    }
+}
 
 $encrypted_url = get_query_var('encrypted_url');
 $captcha_valid = $_SESSION['captcha_valid'] ?? false;
@@ -90,26 +97,7 @@ if ($encrypted_url) {
                     $final_url = $gyani_encrypted_url ? $gyani_encrypted_url : $decrypted_url;
                 }
             }
-            // if ($soraLinksEnabled) {
-            //     if (function_exists('sora_client_url')) {
-            //         $sora_encrypted_url = sora_client_url($decrypted_url);
-            //     } else {
-            //         $sora_encrypted_url = "<p>Sora Links Plugin either not installed or not activated.</p>";
-            //     }
-            // }
-            // if ($gyaniLinksEnabled) {
-            //     $gyani_api_token = isset($encryption_settings['mtg_gyanilink_api_token']) ? $encryption_settings['mtg_gyanilink_api_token'] : '';
-            //     if (!empty($gyani_api_token)) {
-            //         $long_url = urlencode($decrypted_url);
-            //         $api_url = "https://gyanilinks.com/api?api=$gyani_api_token&url=$long_url";
-            //         $result = @json_decode(file_get_contents($api_url), TRUE);
-            //         if ($result && isset($result['status']) && $result['status'] === 'error') {
-            //             $gyani_encrypted_url = false;
-            //         } else {
-            //             $gyani_encrypted_url = $result['shortenedUrl'];
-            //         }
-            //     }
-            // }
+
             global $fp_min_m;
             // $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
             $font_url = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&family=Roboto:wght@500;600;700;800&display=swap';
@@ -219,7 +207,7 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
     echo '<!DOCTYPE html><html lang="en-US"><head>';
     if ($captcha_method === 'recaptcha') {
         echo '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-        
+
         // wp_enqueue_script('sp-l-safety', FP_MOVIES_URL . 'templates/js/fp_cSecurity.js', array(''), FP_MOVIES_VERSION, true);
     } elseif ($captcha_method === 'turnstile') {
         echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
@@ -315,6 +303,7 @@ function display_admin_links()
     body {
         margin: 0;
         padding: 0;
+        font-family: "Nunito", "Roboto", "Poppins", sans-serif;
     }
     .admin-link-container{
         height: 100vh;
@@ -327,6 +316,9 @@ function display_admin_links()
     .admin-link-container h1 {
         text-align: center;
         font-family: "Poppins", sans-serif;
+    }
+    h1, p, a {
+        font-family: inherit;
     }
     .redirect-btn{
         margin-top: 10px;
