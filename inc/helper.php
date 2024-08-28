@@ -259,11 +259,18 @@ class CreatePostHelper extends FP_moviesHelpers
     }
 
 
-    function set_featured_image_from_url($post_id, $tmdbData, $image_size = 'w780', $image_name = '')
+    function set_featured_image_from_url($post_id, $tmdbData, $image_size = 'w780', $image_name = '', $check_existing = false)
     {
         include FP_MOVIES_DIR . 'helper/fp_get_img_gradient.php';
         $poster_path = $tmdbData['poster_path'];
         if (empty($poster_path)) return true;
+
+        if ($check_existing) {
+            $existing_poster_path = get_post_meta($post_id, 'poster_path', true);
+            if ($existing_poster_path == $poster_path && has_post_thumbnail($post_id)) {
+                return true;
+            }
+        }
 
         require_once(ABSPATH . 'wp-admin/includes/image.php');
         require_once(ABSPATH . 'wp-admin/includes/file.php');
@@ -1486,7 +1493,10 @@ class CreatePostHelper extends FP_moviesHelpers
 
             if (!empty($crew) && is_array($crew)) {
                 $crew = array_map(function ($member) {
-                    return $member['name'];
+                    // only Directing, Writing, Production
+                    if (in_array($member['department'], ['Directing', 'Writing', 'Production'])) {
+                        return $member['name'];
+                    }
                 }, $crew);
             } else {
                 $crew = array();

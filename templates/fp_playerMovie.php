@@ -59,7 +59,7 @@ class FP_PlayerMovie
                 <?php if (!empty($title)) : ?>
                     <div class="play-title-wrapper">
                         <div class="play-title">
-                            <h1 data-text="<?php echo esc_attr($title); ?>"><?php echo esc_html($title); ?></h1>
+                            <span style="font-size: 2rem;" data-text="<?php echo esc_attr($title); ?>"><?php echo esc_html($title); ?></span>
                         </div>
                     </div>
                 <?php endif; ?>

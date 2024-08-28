@@ -41,18 +41,18 @@
 * FIX - Link Session Issue.
 
 = 1.2.0 =
-* ADD Post Modified Date option at Post Editor
-* ADD [fp-universal-view] shortcode
-* ADD Taxonomy will Shows in Nav/Menu/UI
-* ADD Roboto, Poppins & Nunito Font
+* ADD Post Modified Date option at Post Editor.
+* ADD [fp-universal-view] shortcode.
+* ADD Taxonomy will Shows in Nav/Menu/UI.
+* ADD Roboto, Poppins & Nunito Font.
 * FIX Shortcodes: 
 *   -No Longer forces font-family.
 * 	-Fix Homepage low width css issue.
-* 	-Added Option to show image local/tmdb
+* 	-Added Option to show image local/tmdb.
 * Many Other Security and Performance updates.
 
 = 1.2.1 =
-* HotFix : Fatal error - Uncaught Error in logs handler
+* HotFix : Fatal error - Uncaught Error in logs handler.
 
 = 1.2.2 =
 * FIX: Template Changes:
@@ -60,14 +60,14 @@
 * -Padding to Universal View.
 * -IMDB BOX Title CSS.
 * -Increased Default Quality Width.
-* FIX: fp-universal-view shortcodes various bugs
+* FIX: fp-universal-view shortcodes various bugs.
 
 = 1.2.3 =
-* FIX: error thrown when IMAGICK extension not available
-* FIX: quality default term
-* FIX: error thrown while uploading featured image
+* FIX: error thrown when IMAGICK extension not available.
+* FIX: quality default term.
+* FIX: error thrown while uploading featured image.
 * ADD: updated css.
-* ADD: Universal view now support text,html-scripts,php,shortcodes
+* ADD: Universal view now support text,html-scripts,php,shortcodes.
 * 
 * [Enable it from plugin MAIN Settings]
 * ADD: cast, crew & collection Taxonomy
@@ -78,11 +78,17 @@
 * HotFix : Default Quality set throwing error.
 
 = 1.2.5 =
-* Enhanced to set Networks and Quality from FileNames directly if available.
+* Enhance Networks and Quality auto get from FileNames directly if available.
 
 = 1.2.6 =
 * FIX: Bulk Import Error.
 * FIX: Link Page Error.
 
 = 1.2.7 =
+* Updated Network Lists.
 * Latest now sortBy modified followed by postDate.
+
+-- v1.2.8 -- 
+* ADD: Ability to Sort Posts with Taxonomy Items.
+* FIX: Image reUploading when updating post.
+* FIX: Notice showing when limit set to -1.

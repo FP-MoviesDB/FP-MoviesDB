@@ -5,7 +5,7 @@
  * Description:         A advanced WordPress plugin to publish movies and TV shows. Join Telegram Channel for all Future Updates and support: <a href="https://t.me/FP_MoviesDB">FP MoviesDB</a>
  * Author:              MSHTeam
  * Author URI:          https://t.me/FP_MoviesDB
- * Version:             1.2.7
+ * Version:             1.2.8
  * Text Domain:         fp-moviesdb
  * Requires PHP:        8.1
  * Requires at least:   6.5
@@ -121,10 +121,10 @@ if (!class_exists('MoviePostGenerator')) {
         {
             $ajax_url = admin_url('admin-ajax.php', 'https');
             if (!defined('FP_MOVIES_MODE')) define('FP_MOVIES_MODE', 'prod');
-            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.2.7');
+            if (!defined('FP_MOVIES_VERSION')) define('FP_MOVIES_VERSION', '1.2.8');
             if (!defined('FP_MOVIES_WP_REQUIRE')) define('FP_MOVIES_WP_REQUIRE', '6.5');
             if (!defined('FP_MOVIES_PHP_REQUIRE')) define('FP_MOVIES_PHP_REQUIRE', '8.1');
-            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.2.7');
+            if (!defined('FP_MOVIES_FILES')) define('FP_MOVIES_FILES', '1.2.8');
             if (!defined('FP_MOVIES_AUTHOR'))  define('FP_MOVIES_AUTHOR',  'WP_DEBUG');
             if (!defined('FP_MOVIES_NAME'))    define('FP_MOVIES_NAME',    'FP Movies');
             if (!defined('FP_MOVIES_TEXT_DOMAIN')) define('FP_MOVIES_TEXT_DOMAIN', 'fp-movies-plugin');
@@ -306,12 +306,16 @@ if (!class_exists('MoviePostGenerator')) {
             }
 
             $memory_limit = ini_get('memory_limit');
-            if ($this->convert_memory_size($memory_limit) < 256 * 1024 * 1024 && get_user_meta(get_current_user_id(), 'fp_memory_limit_notice', true) !== 'dismissed') {
-                add_action('admin_notices', function () {
-                    echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends 256MB or higher.</p></div>';
-                    $this->fp_enqueue_dismiss_script('fp_memory_limit_notice');
-                });
+            if ($memory_limit !== '-1') {
+                $memory_in_bytes = $this->convert_memory_size($memory_limit);
+                if ($memory_in_bytes < 256 * 1024 * 1024 && get_user_meta(get_current_user_id(), 'fp_memory_limit_notice', true) !== 'dismissed') {
+                    add_action('admin_notices', function () {
+                        echo '<div class="notice error is-dismissible"><p>FP MoviesDB recommends 256MB or higher.</p></div>';
+                        $this->fp_enqueue_dismiss_script('fp_memory_limit_notice');
+                    });
+                }
             }
+
 
             $execution_time = ini_get('max_execution_time');
             if ($execution_time != 0 && $execution_time < 90 && get_user_meta(get_current_user_id(), 'fp_execution_time_notice', true) !== 'dismissed') {
