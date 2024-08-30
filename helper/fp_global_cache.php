@@ -25,7 +25,7 @@ function fp_decrypt_data($data)
 }
 
 
-function fp_store_cache($key, $data, $expiry = 60 * 60 * 24) //60*60*24
+function fp_store_cache($key, $data, $expiry = 60 * 60 * 60 * 24 * 7) //60*60*24
 {
     // error_log('Storing cache for key: ' . $key);
     $cache_file = FP_CACHE_DIR . '/' . md5($key) . '.cache';

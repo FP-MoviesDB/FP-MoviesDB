@@ -3,13 +3,13 @@
 if (!defined('ABSPATH')) exit;
 
 if (!function_exists('term_to_link')) {
-    function term_to_link($genre_terms_link, $output_base) {
+    function term_to_link($genre_terms_link, $output_base, $limit = 5) {
         if (!is_array($genre_terms_link)) {
             return '';
         }
         $i = 1;
         foreach ($genre_terms_link as $term) {
-            if ($i > 5) {
+            if ($i > $limit) {
                 $output_base .= '...';
                 break;
             }

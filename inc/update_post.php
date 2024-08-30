@@ -12,6 +12,7 @@ class FP_UpdatePost extends CreatePostHelper
     protected $post_id = '';
     protected $tmdb_id = '';
     protected $post_type = '';
+    protected $response_required = false;
 
     function __construct()
     {
@@ -31,6 +32,7 @@ class FP_UpdatePost extends CreatePostHelper
         $this->post_id = $postData['post_id'];
         $this->tmdb_id = $postData['tmdb_id'];
         $this->post_type = $postData['post_type'];
+        $this->response_required = $postData['response_required'] ?? false;
 
         if (empty($this->post_id) || empty($this->tmdb_id) || empty($this->post_type)) {
             wp_send_json_error(array('message' => 'Invalid post data 2'), 400);
@@ -272,7 +274,6 @@ class FP_UpdatePost extends CreatePostHelper
                         $all_updates_successful = false;
                     }
                 }
-
             }
         }
 
@@ -329,15 +330,20 @@ class FP_UpdatePost extends CreatePostHelper
             }
         }
 
-        $return_data = array(
-            // 'post_id' => (int)$this->post_id,
-            // 'post_type' => $this->post_type,
-            // 'post_edit_url' => admin_url("post.php?post={$this->post_id}&action=edit"),
-            // 'preview_url' => wp_get_shortlink($this->post_id),
-            // 'all_updates_successful' => $all_updates_successful,
-            // 'tmdb_id' => $this->tmdb_id,
-        );
+        $return_data = [];
 
+        if ($this->response_required) {
+            $return_data = [
+                'post_id' => (int)$this->post_id,
+                'post_type' => $this->post_type,
+                'post_edit_url' => admin_url("post.php?post={$this->post_id}&action=edit"),
+                'preview_url' => wp_get_shortlink($this->post_id),
+                'all_updates_successful' => $all_updates_successful,
+                'tmdb_id' => $this->tmdb_id,
+            ];
+            wp_send_json_success($return_data, 200);
+            return;
+        }
         wp_send_json_success($return_data, 200);
         return;
     }

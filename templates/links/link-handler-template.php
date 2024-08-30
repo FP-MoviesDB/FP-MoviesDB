@@ -211,14 +211,14 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
     } elseif ($captcha_method === 'turnstile') {
         echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>';
     }
-    global $fp_min_m;
-    $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
-    echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
-    display_captcha_styles();
     // page title: Verifying Request
     echo '<title>Verifying Request</title>';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
     echo '<meta name="robots" content="noindex, nofollow">';
+    global $fp_min_m;
+    $poppins_url = esc_url(FP_MOVIES_URL) . 'fonts/poppins' . $fp_min_m . '.css';
+    echo '<link href="' . esc_url($poppins_url) . '" rel="stylesheet" type="text/css">';
+    display_captcha_styles();
     echo '</head><body>';
     echo '<div class="verification-container">';
     echo '<h1>Please Complete the captcha to Proceed</h1>';
@@ -247,7 +247,11 @@ function display_captcha_form($captcha_method, $site_key, $encrypted_url)
 
 function display_captcha_styles()
 {
-    echo '<style>
+    echo '<style> body{margin:0;padding:0}a,body,h1,h2,h3,h4,h5,h6,p{font-family:Nunito,Roboto,Poppins,sans-serif}.verification-container{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:Nunito,Poppins,sans-serif}.verification-container h1{text-align:center}.g-recaptcha{margin-bottom:20px}.captcha-submit{padding:10px 20px;background-color:#0073aa;color:#fff;border:none;border-radius:5px;cursor:pointer}.captcha-box-wrapper,.captcha-submit-wrapper{display:flex;justify-content:center;align-items:center}#captcha-box{min-width:300px;min-height:80px} </style>';
+}
+
+// NON-MINIFIED CSS CODE
+/*
 
         body {
             margin: 0;
@@ -292,8 +296,9 @@ function display_captcha_styles()
             min-width: 300px;
             min-height: 80px;
         }
-    </style>';
-}
+
+
+*/
 
 
 function display_admin_links()

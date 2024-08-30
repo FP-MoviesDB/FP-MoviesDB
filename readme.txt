@@ -96,3 +96,8 @@
 -- v1.2.9 --
 * IMPROVED: HomePage Pagination improved, LEFT/RIGHT Icons Updated and Link on Title.
 * IMPROVED: DevToolsBlocker Function.
+
+-- v1.3.0 --
+* UPDATE: Shortcodes default cache expiry to 7 days.
+* ADD: Existing post can be updated via FPMovies Homepage.
+* Add: Cast, Crew and Collection into IMDB_BOX.

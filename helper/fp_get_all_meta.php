@@ -217,6 +217,9 @@ function get_movie_tv_post_meta($post_id)
         'fp_resolution_ORG' => get_cached_terms($post_id, 'mtg_resolution'),
         'fp_quality_ORG' => get_cached_terms($post_id, 'mtg_quality'),
         'fp_network_ORG' => get_cached_terms($post_id, 'mtg_network'),
+        'fp_cast_ORG' => get_cached_terms($post_id, 'mtg_cast'),
+        'fp_crew_ORG' => get_cached_terms($post_id, 'mtg_crew'),
+        'fp_collection_ORG' => get_cached_terms($post_id, 'mtg_collection'),
 
         'fp_genres' => get_term_names($post_id, 'mtg_genre', $separator),
         'fp_years' => get_term_names($post_id, 'mtg_year', $separator),
@@ -224,6 +227,9 @@ function get_movie_tv_post_meta($post_id)
         'fp_resolution' => get_term_names($post_id, 'mtg_resolution', $separator),
         'fp_quality' => strtoupper(get_term_names($post_id, 'mtg_quality', $separator)),
         'fp_network' => get_term_names($post_id, 'mtg_network', $separator),
+        'fp_cast' => get_term_names($post_id, 'mtg_cast', $separator),
+        'fp_crew' => get_term_names($post_id, 'mtg_crew', $separator),
+        'fp_collection' => get_term_names($post_id, 'mtg_collection', $separator),
     );
 
     // $end_time = microtime(true); // End timing

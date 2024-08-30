@@ -68,6 +68,7 @@ function load_assets($hook)
     wp_localize_script('mts_generator', 'movieTvVars', array(
         'ajax_url' => FP_MOVIES_AJAX,
         'nonce' => wp_create_nonce('movie_tv_nonce'),
+        'updateNonce' => wp_create_nonce('fp_post_update_nonce'),
         'wp_edit_post_link' => FP_MOVIES_WEBSITE_HOME_URL,
         'plugin_url' => FP_MOVIES_URL,
         'apiKeys' => $api_key_array
