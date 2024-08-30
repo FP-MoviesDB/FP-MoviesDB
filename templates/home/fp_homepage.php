@@ -178,13 +178,13 @@ if (!function_exists('fp_display_home')) {
                             // } else {
                             //     $landscape_img = FP_MOVIES_TMDB_IMG_BASE_URL . 'original' . $landscape_img_tmdb_path;
                             // }
-                            
+
                             // $portrait_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_poster_path', true);
 
 
                             $image_url = '';
                             $landscape_img_tmdb_path = get_post_meta(get_the_ID(), 'mtg_backdrop_path', true);
-                            
+
                             if (empty($landscape_img_tmdb_path)) {
                                 $landscape_img = esc_url(FP_MOVIES_URL) . 'img/image-not-found.webp';
                             } else {
@@ -211,7 +211,7 @@ if (!function_exists('fp_display_home')) {
 
                             if (empty($image_url)) {
                                 $image_url = esc_url(FP_MOVIES_URL) . 'img/poster-not-found.png';
-                            } 
+                            }
                             // else {
                             //     $image_url = FP_MOVIES_TMDB_IMG_BASE_URL . $image_size . $portrait_img_tmdb_path;
                             // }
@@ -303,9 +303,9 @@ if (!function_exists('fp_display_home')) {
                     <div class="start-tab-wrapper">
                         <h2 class="fp-homepage-title"><?php echo esc_html($f_atts['heading']); ?></h2>
                         <div class="pagination-wrapper-mobile">
-                            <div class="pg_arrow pagination-left pagination-left-mobile"> &lt; </div>
+                            <div class="pg_arrow pagination-left pagination-left-mobile"><i class="bi bi-caret-left-fill"></i></div>
                             <div class="page_number page_number-mobile">1</div>
-                            <div class="pg_arrow pagination-right pagination-right-mobile"> &gt; </div>
+                            <div class="pg_arrow pagination-right pagination-right-mobile"><i class="bi bi-caret-right-fill"></i></div>
                         </div>
                     </div>
                     <div class="end-tab-wrapper">
@@ -316,9 +316,9 @@ if (!function_exists('fp_display_home')) {
                             <div id='random' class='end-tab-item'>Random</div>
                         </div>
                         <div class="pagination-wrapper-pc">
-                            <div class="pg_arrow pagination-left pagination-left-pc"> &lt; </div>
+                            <div class="pg_arrow pagination-left pagination-left-pc"><i class="bi bi-caret-left-fill"></i></div>
                             <div class="page_number page_number-pc">1</div>
-                            <div class="pg_arrow pagination-right pagination-right-pc"> &gt; </div>
+                            <div class="pg_arrow pagination-right pagination-right-pc"><i class="bi bi-caret-right-fill"></i></div>
                         </div>
                     </div>
                 </div>
@@ -414,8 +414,9 @@ if (!function_exists('fp_display_home')) {
                                         <div class="h-play" style="background: url('<?php echo esc_url($play_background_url); ?>') no-repeat center center; background-size: 80px 80px;"></div>
                                     </a>
                                 </div>
-
-                                <div class="fp-image-title <?php echo esc_attr($title_wrap) ?>" style="background: <?php echo esc_attr($gradientCss); ?>"><?php echo esc_html($title); ?></div>
+                                <a href="<?php echo esc_url($permalink); ?>">
+                                    <div class="fp-image-title <?php echo esc_attr($title_wrap) ?>" style="background: <?php echo esc_attr($gradientCss); ?>"><?php echo esc_html($title); ?></div>
+                                </a>
                                 <?php if ($f_atts['show_ratings'] === 'true') : ?>
                                     <div class="fp-image-ab-wrapper-base fp-image-rating-wrapper"> <?php echo $ratings_html; ?> </div>
                                 <?php endif; ?>

@@ -173,7 +173,9 @@ if (!function_exists('fp_load_posts_view')) {
                             <div class="h-play" style="background: url('<?php echo esc_url($play_background_url); ?>') no-repeat center center; background-size: 80px 80px;"></div>
                         </a>
                     </div>
-                    <div class="fp-image-title <?php echo esc_attr($title_wrap) ?>" style="background: <?php echo esc_attr($gradientCss); ?>"><?php echo esc_html($title); ?></div>
+                    <a href="<?php echo esc_url($permalink); ?>">
+                        <div class="fp-image-title <?php echo esc_attr($title_wrap) ?>" style="background: <?php echo esc_attr($gradientCss); ?>"><?php echo esc_html($title); ?></div>
+                    </a>
 
                     <?php if ($home_data['show_ratings'] === 'true') : ?>
                         <div class="fp-image-ab-wrapper-base fp-image-rating-wrapper"> <?php echo $ratings_html; ?> </div>

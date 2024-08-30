@@ -92,3 +92,7 @@
 * ADD: Ability to Sort Posts with Taxonomy Items.
 * FIX: Image reUploading when updating post.
 * FIX: Notice showing when limit set to -1.
+
+-- v1.2.9 --
+* IMPROVED: HomePage Pagination improved, LEFT/RIGHT Icons Updated and Link on Title.
+* IMPROVED: DevToolsBlocker Function.

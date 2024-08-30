@@ -14,6 +14,8 @@ class FP_Movies_Shortcodes
     private static $font_enqueued = false;
     private static $view_enqueued = false;
 
+    private static $isBootstrapIconEnqueued = false;
+
     private static $isCacheEnabled = null;
     private static $current_post_id = null;
     private static $current_post_type = null;
@@ -59,6 +61,7 @@ class FP_Movies_Shortcodes
 
         wp_register_style('fp_movies_global_css', esc_url(FP_MOVIES_URL) . '/templates/global/global' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         wp_register_style('fp-google-fonts', 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&family=Poppins:wght@500;600;700;800&family=Roboto:wght@500;600;700;800&display=swap', array(), null, 'all');
+        wp_register_style('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css', array(), '1.11.3', 'all');
 
         wp_register_style('fp-movie-player-css', esc_url(FP_MOVIES_URL) . '/templates/css/fp_playerMovie' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
         wp_register_style('fp-post-title', esc_url(FP_MOVIES_URL) . '/templates/css/fp_postTitle' . $fp_min_m . '.css', array(), FP_MOVIES_FILES, 'all');
@@ -137,6 +140,11 @@ class FP_Movies_Shortcodes
 
         // wp_enqueue_style('fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', array(), '5.15.3', 'all');
 
+        if (!self::$isBootstrapIconEnqueued) {
+            wp_enqueue_style('bootstrap-icons');
+            self::$isBootstrapIconEnqueued = true;
+        }
+
         if (!self::$php_enqueued) {
             require_once FP_MOVIES_DIR . 'templates/global/global.php';
             self::$php_enqueued = true;
@@ -196,7 +204,7 @@ class FP_Movies_Shortcodes
 
         if (!self::$isDevProtectionEnqueued) {
             $isDevProtectionValues = ["on", 1, "1", "true", true];
-            fp_log_error('Dev protection Status: ' . self::$isDevProtectionEnabled);
+            // fp_log_error('Dev protection Status: ' . self::$isDevProtectionEnabled);
             if (self::$isDevProtectionEnabled && in_array(self::$isDevProtectionEnabled, $isDevProtectionValues)) {
                 if (current_user_can('administrator')) return;
 

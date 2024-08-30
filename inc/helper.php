@@ -947,7 +947,7 @@ class CreatePostHelper extends FP_moviesHelpers
             'jc' =>
             [
                 'name' => 'JioCinema',
-                'slug' => 'jiocinema',
+                'slug' => 'jio-cinema',
             ],
             'lgp' =>
             [
@@ -1510,6 +1510,15 @@ class CreatePostHelper extends FP_moviesHelpers
             $collection_name = '';
         }
 
+        // vote average is 7 if no vote average and if vote count is less than 5 and vote average is 10 then put 7.5
+        $vote_average = $this->Disset($json_tmdb, 'vote_average');
+        $vote_count = $this->Disset($json_tmdb, 'vote_count');
+        if (empty($vote_average) && $vote_count < 5) {
+            $vote_average = 7;
+        } elseif ($vote_average === 10 && $vote_count < 5) {
+            $vote_average = 7.5;
+        }
+
         $postData = array(
             'p_type' => $postType,
             'title' => $title,
@@ -1517,8 +1526,8 @@ class CreatePostHelper extends FP_moviesHelpers
             'overview' => $this->Disset($json_tmdb, 'overview'),
             'poster_path' => $this->Disset($json_tmdb, 'poster_path'),
             'backdrop_path' => $this->Disset($json_tmdb, 'backdrop_path'),
-            'vote_average' => $this->Disset($json_tmdb, 'vote_average'),
-            'vote_count' => $this->Disset($json_tmdb, 'vote_count'),
+            'vote_average' => $vote_average,
+            'vote_count' => $vote_count,
             'release_date' => $release_date,
             'release_years' => $release_years,
             'release_year' => $release_years[0] ?? '',
