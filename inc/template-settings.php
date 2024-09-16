@@ -20,7 +20,7 @@ function theme_template_settings()
         wp_nonce_field('mts_generator_settings_action', 'mts_generator_settings_nonce');
         $text_settings_old = [
             'mtg_template_post_title' => ['label' => 'Post Main Title', 'placeholder' => '{title} ({l_year}) {p_type}'],
-            'mtg_template_post_title_separator' => ['label' => 'Title Taxonomy Separator', 'placeholder' => '-'],
+            'mtg_template_post_title_separator' => ['label' => 'Title Taxonomy Separator', 'placeholder' => ' - '],
             'mtg_template_post_info_title_shortcodes' => ['label' => 'PostInfo Title', 'placeholder' => '{p_type} Info:'],
             'mtg_template_synopsis_title' => ['label' => 'Synopsis/Storyline Title', 'placeholder' => 'SYNOPSIS/PLOT:'],
             'mtg_template_post_screenshot_title_shortcodes' => ['label' => 'Screenshot Title', 'placeholder' => '{title} {p_type} Screenshots:'],
@@ -52,29 +52,8 @@ function theme_template_settings()
             'sPlayer_Backdrop_Quality' => 'original'
         ]);
 
-        // error_log("DEFAULTS: " . print_r($defaults_template_options, true));
-
-        // $template_settings = get_option('mtg_template_settings', []);
-        // $template_settings = wp_parse_args($template_settings, array_column($text_settings, 'default', array_keys($text_settings)));
-
         $template_settings = get_option('mtg_template_settings', []);
-        // error_log("TEMPLATE SETTINGS: " . print_r($template_settings, true));
         $template_settings = wp_parse_args($template_settings, $defaults_template_options);
-
-        // $template_settings = wp_parse_args($template_settings, [
-        //     'enable_shortcode_cache' => 0,
-        //     'sTitle_Title' => '',
-        //     'sTitle_Separator' => '',
-        //     'sInfo_Title' => '',
-        //     'sSynopsis_Title' => '',
-        //     'sScreenshot_Title' => '',
-        //     'sSingle_Screenshot_Limit' => '',
-        //     'sSplash_Screenshot_Limit' => '',
-        //     'sLinks_Movies_Title' => '',
-        //     'sLinks_Series_Title' => '',
-        //     'sDownload_BaseURL' => '',
-        //     'sPlayer_Fallback_Image_URL' => ''
-        // ]);
 
 
 
@@ -138,7 +117,8 @@ function theme_template_settings()
             'tv_episode_packs_single_season_color' => ['label' => 'Post Links TV Episode Packs Single Season', 'description' => 'text color for the tv "episode packs single season".', 'default' => '#d2691e'],
 
         ];
-        ?> <!-- CLOSED ABOVE PHP -->
+        ?>
+        <!-- CLOSED ABOVE PHP -->
 
         <table class="form-table" style="max-width: 80%;">
             <div class="mtg_submit_btn" style="text-align: center;">
@@ -150,8 +130,6 @@ function theme_template_settings()
                 <th scope="row">Enable Shortcode Cache</th>
                 <td>
                     <input type="checkbox" name="mtg_template_settings[enable_shortcode_cache]" value="1" <?php checked(isset($template_settings['enable_shortcode_cache']) ? $template_settings['enable_shortcode_cache'] : 0, 1); ?> />
-                    <!-- <input type="checkbox" name="mtg_template_enable_shortcode_cache" value="1" <?php // checked(get_option('mtg_template_enable_shortcode_cache'), 1); 
-                                                                                                        ?> /> -->
                     <p class="description">Enable Shortcode Cache.<br>SpeedUp Page Load After initial request.</p>
                 </td>
             </tr>
@@ -161,15 +139,14 @@ function theme_template_settings()
                 $option_value = isset($template_settings[$name]) ? $template_settings[$name] : '';
                 // if type is available then use it else use text
                 $type = $data['type'] ?? 'text';
+                if ($name === 'sTitle_Separator') {
+                    $option_value = str_replace(' ', '&nbsp;', esc_attr($option_value));
+                }
             ?>
                 <tr valign="top">
                     <th scope="row"><?php echo esc_html($data['label']); ?></th>
                     <td>
-                        
-                    <!-- <input type="text" name="<?php // echo esc_attr($name); ?>" value="<?php // echo esc_attr(get_option($name)); ?>" class="regular-text" placeholder="<?php // echo esc_attr($data['placeholder']); ?>" /> -->
-                        
                         <input type="<?php echo esc_attr($type); ?>" name="mtg_template_settings[<?php echo esc_attr($name); ?>]" value="<?php echo esc_attr($option_value); ?>" class="regular-text" placeholder="<?php echo esc_attr($data['placeholder']); ?>" />
-
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -290,6 +267,14 @@ function theme_template_settings()
                     <div class="grid-item">Separator</div>
                     <div class="grid-item">-</div>
                 </div>
+
+                <div class="grid-row">
+                    <div class="grid-item">{resolution}</div>
+                    <div class="grid-item">-</div>
+                    <div class="grid-item">Resolution</div>
+                    <div class="grid-item">480p-720p-1080p</div>
+                </div>
+
 
             </div>
             <div class="shortcode-usage">

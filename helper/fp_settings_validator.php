@@ -88,7 +88,10 @@ function mtg_sanitize_template_settings($input)
 {
     $sanitized_input = array();
     foreach ($input as $key => $value) {
-        if (is_bool($value)) {
+        if ($key === 'sTitle_Separator') {
+            // Use wp_unslash to preserve spaces
+            $sanitized_input[$key] = wp_unslash($value);
+        } elseif (is_bool($value)) {
             $sanitized_input[$key] = (bool) $value;
         } else {
             $sanitized_input[$key] = sanitize_text_field($value);

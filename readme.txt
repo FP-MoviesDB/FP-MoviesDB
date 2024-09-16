@@ -101,3 +101,10 @@
 * UPDATE: Shortcodes default cache expiry to 7 days.
 * ADD: Existing post can be updated via FPMovies Homepage.
 * Add: Cast, Crew and Collection into IMDB_BOX.
+
+-- v1.3.1 --
+* ADD: {resolution} in SinglePage available customizations.
+* FIX: SinglePage Separator.
+* FIX: SinglePage Custom Title Not Showing.
+* FIX: Custom Title not working.
+* UPDATE: HomePage padding CSS.

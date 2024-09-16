@@ -62,7 +62,7 @@ class FPMovieLinks extends CreatePostHelper
             $data = json_decode(wp_remote_retrieve_body($response), TRUE);
             // Log the data if the logging function exists
             if (function_exists('fp_log_error')) {
-                fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
+                // fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
             }
         } else {
             // Fallback to using `file_get_contents` if `wp_remote_get` is not available
@@ -70,7 +70,7 @@ class FPMovieLinks extends CreatePostHelper
             $data = json_decode($response, TRUE);
             // Log the data if the logging function exists
             if (function_exists('fp_log_error')) {
-                fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
+                // fp_log_error('Movie Links Data: ' . print_r($data, TRUE));
             }
         }
         $combined_data = [];
@@ -148,7 +148,7 @@ class FPMovieLinks extends CreatePostHelper
 
         // chec if fp_log_error function exists and log the data
         if (function_exists('fp_log_error')) {
-            fp_log_error('Movie Links Data: ' . print_r($combined_data, TRUE));
+            // fp_log_error('Movie Links Data: ' . print_r($combined_data, TRUE));
         }
 
 

@@ -83,7 +83,8 @@ class CreatePostHelper extends FP_moviesHelpers
             'network' => 'network',
             'separator' => 'separator',
             'p_type' => 'p_type',
-            'p_type_2' => 'p_type_2'
+            'p_type_2' => 'p_type_2',
+            'resolution' => 'resolution'
         ];
         $replaced = preg_replace_callback($pattern, function ($matches) use ($data, $keyMap) {
             $templateKey = $matches[1];
@@ -103,6 +104,8 @@ class CreatePostHelper extends FP_moviesHelpers
             // Return the original placeholder if no data is found
             return $matches[0];
         }, $template);
+
+        // fp_log_error("REPLACED VALUE: " . print_r($replaced, TRUE));
 
         // error_log("replace_template_placeholders__replaced: " . print_r($replaced, TRUE));
         return $replaced;
@@ -157,8 +160,12 @@ class CreatePostHelper extends FP_moviesHelpers
                 $term_slug = $term['slug'];  // Use the slug for lookup
                 $term_title = $term['name']; // Use the name for the title
             } else {
-                $term_slug = $term;  // Otherwise, use the term as both slug and title
-                $term_title = ucwords($term_slug); // Capitalize for title
+                if ($term) {
+                    $term_slug = $term;  // Otherwise, use the term as both slug and title
+                    $term_title = ucwords($term_slug); // Capitalize for title
+                } else {
+                    continue;
+                }
             }
 
             $term = term_exists($term_slug, $taxonomy_name);
@@ -293,9 +300,12 @@ class CreatePostHelper extends FP_moviesHelpers
             $org_name = str_replace('/', '', $poster_path);
             $final_title = (!empty($org_name)) ? $org_name : $title . " " . $p_type;
         } else {
-            $final_title = $this->format_title($this->replace_template_placeholders($image_name, $tmdbData));
+            $final_title = $this->replace_template_placeholders($image_name, $tmdbData);
+            // $final_title = $this->format_title($this->replace_template_placeholders($image_name, $tmdbData));
         }
 
+        // fp_log_error("final_title: " . print_r($final_title, TRUE));
+        // final_title: The Boy in the Striped Pyjamas (2008)~PMZRips
 
         // Prepare an array of post data for the attachment.
         $file = [
@@ -306,11 +316,6 @@ class CreatePostHelper extends FP_moviesHelpers
             'size'     => filesize($temp_file),
         ];
 
-        $overrides = [
-            'test_form' => false,
-            'test_size' => true,
-        ];
-
         // This function creates the attachment in the database.
         $attachment_id = media_handle_sideload($file, $post_id);
 
@@ -319,6 +324,14 @@ class CreatePostHelper extends FP_moviesHelpers
             @wp_delete_file($temp_file);
             // error_log('Error sideloading image: ' . $attachment_id->get_error_message());
             return false;
+        } else {
+            // update media title, caption, alt text, description with the $final_title
+            wp_update_post([
+                'ID'         => $attachment_id,
+                'post_title' => $final_title,
+                'post_excerpt' => $final_title,
+                'post_content' => $final_title,
+            ]);
         }
 
         // Set the image as the post's thumbnail.

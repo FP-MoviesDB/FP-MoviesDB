@@ -19,11 +19,6 @@ class FP_CreatePost extends CreatePostHelper
 
 
 
-
-
-
-
-
     function handle_create_post()
     {
         fp_log_error('Create post request received');
@@ -202,6 +197,7 @@ class FP_CreatePost extends CreatePostHelper
             // error_log("POSTER_PATH: " . print_r($postData['poster_path'], TRUE));
             $image_size = $this->get_arrayValue_with_fallback($post_template_Default, 'featured_image_size', 'w780');
             $image_name = $this->get_arrayValue_with_fallback($post_template_Default, 'image_name', '');
+            // fp_log_error('Image Name: ' . $image_name);
             $image_set_success = $this->set_featured_image_from_url($post_id, $postData, $image_size, $image_name);
             if (!$image_set_success) {
                 // error_log('Failed to set featured image for post ID: ' . $post_id);

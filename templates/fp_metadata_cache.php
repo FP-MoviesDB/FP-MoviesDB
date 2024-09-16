@@ -32,7 +32,7 @@ class FP_Movies_Metadata_Cache {
             'network' => $data['fp_network'],
             'separator' => $data['fp_separator'],
             'post_type' => $data['fp_post_type'],
-            'resolutions' => $data['fp_resolution'],
+            'resolution' => $data['fp_resolution'],
         ];
     }
 

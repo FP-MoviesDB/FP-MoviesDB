@@ -21,6 +21,9 @@ if (!class_exists('FP_PostTitle')) {
             $meta_data = FP_Movies_Metadata_Cache::get_meta_data($post_id);
             $template_settings = FP_Movies_Shortcodes::get_template_settings();
 
+            // fp_log_error("CHECKING TEMPLATE SETTINGS");
+            // fp_log_error(message: print_r($template_settings, true));
+
             $postData = array();
             if (empty($meta_data)) {
                 $meta_data = get_movie_tv_post_meta($post_id);
@@ -38,6 +41,7 @@ if (!class_exists('FP_PostTitle')) {
                     'network' => $meta_data['fp_network'],
                     'separator' => $meta_data['fp_separator'],
                     'post_type' => $meta_data['fp_post_type'],
+                    'resolution' => $meta_data['fp_resolution'],
                 );
             } else {
                 try {
@@ -50,7 +54,7 @@ if (!class_exists('FP_PostTitle')) {
 
 
             // $user_title = get_option_with_fallback('mtg_template_post_title', "{title} ({l_year}) {p_type}");
-            $user_title = $this->get_arrayValue_with_fallback($template_settings, 'sPost_Title', "{title} ({l_year}) {p_type}");
+            $user_title = $this->get_arrayValue_with_fallback($template_settings, 'sTitle_Title', "{title} ({l_year}) {p_type}");
             $post_title = $this->format_title($this->replace_template_placeholders($user_title, $postData));
 
 ?>
